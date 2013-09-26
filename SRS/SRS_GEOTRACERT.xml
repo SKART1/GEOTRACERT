@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<article lang="ru">
+	<articleinfo>
+		<title>Название статьи</title>
+		<author>
+			<firstname>имя автора</firstname>
+			<surname>фамилия автора</surname>
+		</author>
+		<copyright>
+			<year>текущий год</year>
+			<holder>кому принадлежат авторские права</holder>
+		</copyright>
+	</articleinfo>
+	<para>
+		Вводный абзац.
+	</para>
+	<section>
+		<title>Название первого раздела</title>
+		<para>
+			Первый абзац первого раздела.
+		</para>
+	</section>
+</article>
