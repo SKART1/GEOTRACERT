@@ -1,23 +1,61 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <article lang="ru">
-	<articleinfo>
-		<title>Название статьи</title>
-		<author>
-			<firstname>имя автора</firstname>
-			<surname>фамилия автора</surname>
-		</author>
-		<copyright>
-			<year>текущий год</year>
-			<holder>кому принадлежат авторские права</holder>
-		</copyright>
-	</articleinfo>
-	<para>
-		Вводный абзац.
-	</para>
-	<section>
-		<title>Название первого раздела</title>
-		<para>
-			Первый абзац первого раздела.
-		</para>
-	</section>
+  <articleinfo>
+    <title>Спецификация требований к системе GEOTRACERT</title>
+    <author>
+      <firstname>Артур</firstname>
+      <surname>Еников</surname>
+    </author>
+    <author>
+      <firstname>Дмитрий</firstname>
+      <surname>Киселёв</surname>
+    </author>
+    <copyright>
+      <year>2013</year>
+      <holder>Артур Еников</holder>
+      <holder>Дмитрий Киселёв</holder>
+    </copyright>
+  </articleinfo>
+  <abstract>
+    <para>TODO: Написать аннотацию данного документа.</para>
+  </abstract>
+  <orderedlist>
+    <listitem>
+	  <section id="intro">
+		<title>Введение</title>
+		<orderedlist inheritnum="inherit" numeration="arabic">
+		  <listitem>
+		      <section>
+				<title>Назначение</title>
+			    <para>TODO: Определить назначение данного документа и задать его целевую аудиторию.</para>
+		      </section>
+		    </listitem>
+		  <listitem>
+		    <section>
+				<title>Область применения</title>
+			    <para>TODO: Идентифицировать производимый продукт по имени. Пояснить, что он должен делать и чего делать не должен. Описать применение ПО, включая выгоды, намерения и цели.</para>
+		    </section>
+		    </listitem>
+		  <listitem>
+		    <section>
+				<title>Определения, акронимы и сокращения</title>
+			    <para>TODO: Описать терминологию данного документа. Эта информация может быть представлена в виде ссылок на одно или более приложений к SRS либо на другие документы.</para>
+		    </section>
+		    </listitem>
+		  <listitem>
+		    <section>
+				<title>Ссылки</title>
+			    <para>TODO: Представить полный перечень документов, на которые есть ссылки где-либо в SRS. Идентифицировать каждый документ по названию, дате и опубликовавшей организации. Задать источники, из которых могут быть получены эти документы.</para>
+		    </section>
+		    </listitem>
+		  <listitem>
+		    <section>
+				<title>Обзор</title>
+			    <para>TODO: Описать содержимое и пояснить организацию остальной части SRS.</para>
+		    </section>
+			</listitem>
+		</orderedlist>
+	  </section>
+	</listitem>
+  </orderedlist>
 </article>
