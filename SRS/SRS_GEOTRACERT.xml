@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="windows-1251"?>
 <article lang="ru">
   <articleinfo>
     <title>Спецификация требований к системе GEOTRACERT</title>
@@ -22,14 +23,16 @@
     <title>Введение</title>
     <section>
       <title>Назначение</title>
-      <para>TODO: Определить назначение данного документа и задать его целевую аудиторию.</para>
+      <para>Данное техническое задание предназначено для описания основной функциональности разрабатываемого сервиса.</para>
     </section>
     <section>
       <title>Область применения</title>
+      <para>Сервис предназначен для визуального представления пути трафиика между задданым узлом и сервером.</para>
       <para>TODO: Идентифицировать производимый продукт по имени. Пояснить, что он должен делать и чего делать не должен. Описать применение ПО, включая выгоды, намерения и цели.</para>
     </section>
     <section>
       <title>Определения, акронимы и сокращения</title>
+      <para>ХОП-транзитный участок или переход — участок сети между двумя узлами сети, по которому передаются сетевые пакеты.</para>
       <para>TODO: Описать терминологию данного документа. Эта информация может быть представлена в виде ссылок на одно или более приложений к SRS либо на другие документы.</para>
     </section>
     <section>
@@ -38,34 +41,35 @@
     </section>
     <section>
       <title>Обзор</title>
+      <para>Данное ТЗ имеет стандартную структуру. В разделе 2 будет представлены основные функциональные и нефункциональные требования к системе. Описана основная структура системы. Описаны интерфейсы и средства взаимодействия различных компонентов и модулей системы. Приложены схемотические представления интерфейса пользователя.</para>
       <para>TODO: Описать содержимое и пояснить организацию остальной части SRS.</para>
     </section>
   </section>
   <section id="general">
-	  <title>Общее описание</title>
-	  <section>
-		  <title>Позиционирование продукта</title>
-		  <para>TODO: </para>
-	  </section>
-	  <section>
-		  <title>Функции продукта</title>
-		  <para>TODO: </para>
-	  </section>
-	  <section>
-		  <title>Характеристики пользователей</title>
-		  <para>TODO: </para>
-	  </section>
-	  <section>
-		  <title>Ограничения</title>
-		  <para>TODO: </para>
-	  </section>
-	  <section>
-		  <title>Предположения и зависимости</title>
-		  <para>TODO: </para>
-	  </section>
-	  <section>
-		  <title>Распределение требований</title>
-		  <para>TODO: </para>
-	  </section>
+    <title>Общее описание</title>
+    <section>
+      <title>Позиционирование продукта</title>
+      <para>TODO:</para>
+    </section>
+    <section>
+      <title>Функции продукта</title>
+      <para>TODO:</para>
+    </section>
+    <section>
+      <title>Характеристики пользователей</title>
+      <para>TODO:</para>
+    </section>
+    <section>
+      <title>Ограничения</title>
+      <para>TODO:</para>
+    </section>
+    <section>
+      <title>Предположения и зависимости</title>
+      <para>TODO:</para>
+    </section>
+    <section>
+      <title>Распределение требований</title>
+      <para>TODO:</para>
+    </section>
   </section>
 </article>
