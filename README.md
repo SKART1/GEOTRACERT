@@ -1,4 +1,4 @@
 GEOTRACERT
 ==========
 
-Server and client (web front) for geotracert service
+Server and client (web front) for geotracert service.
