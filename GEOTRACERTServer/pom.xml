@@ -73,67 +73,7 @@
 			</plugin> 
             
                               
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			<!--                      DOCKBOOK PLUGIN                                    -->
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->  
-			<plugin>
-				<groupId>com.agilejava.docbkx</groupId>
-				<artifactId>docbkx-maven-plugin</artifactId>
-				<version>2.0.14</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate-html</goal>
-							<goal>generate-pdf</goal>
-						</goals>
-						<phase>install</phase>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.docbook</groupId>
-						<artifactId>docbook-xml</artifactId>
-						<version>4.4</version>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<sectionAutolabel>1</sectionAutolabel>
-					<fop1Extensions>1</fop1Extensions>
-					<fonts>
-						<font>
-							<name>Arial</name>
-							<style>normal</style>                                    
-							<weight>normal</weight>
-							<embedFile>${basedir}/src/fonts/arial.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/arial.xml</metricsFile>
-						</font>
-						<font>
-							<name>Arial</name>
-							<style>normal</style>                                    
-							<weight>bold</weight>
-							<embedFile>${basedir}/src/fonts/arialbd.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/arialbd.xml</metricsFile>
-						</font>
-						<font>
-							<name>Arial</name>
-							<style>italic</style>                                    
-							<weight>normal</weight>
-							<embedFile>${basedir}/src/fonts/ariali.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/ariali.xml</metricsFile>
-						</font>
-						<font>
-							<name>Arial</name>
-							<style>italic</style>                                    
-							<weight>bold</weight>
-							<embedFile>${basedir}/src/fonts/arialbi.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/arialbi.xml</metricsFile>
-						</font>
-					</fonts>
-					<bodyFontFamily>Arial</bodyFontFamily>
-					<titleFontFamily>Arial</titleFontFamily>
-				</configuration>
-			</plugin>
+			
 		</plugins>
 	</build>
   
