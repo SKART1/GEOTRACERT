@@ -1,8 +1,12 @@
 *.class
-#maven
+#maven#
 target/
 
 # Package Files #
 *.jar
 *.war
 *.ear
+
+# dockbook #
+SRS/result/
+*.pdf
