@@ -63,8 +63,20 @@
 					</listitem>
 					<listitem>
 						<para id="def_metric">
-							<emphasis role="bold">Метрика:</emphasis>
-						</para>
+							<emphasis role="bold">Метрика:</emphasis>численные характеристики
+							описывающие качсетво соединения между двумя точками. Основа для
+							выбора маршрута между пунктами назначения.<ulink
+								url="http://en.wikipedia.org/wiki/Metrics_(networking)"
+								>Википедия</ulink></para>
+					</listitem>
+					<listitem>
+						<para id="def_marchrut"><emphasis role="bold">Маршрутизация</emphasis>: процесс определения
+							маршрута следования информации в сетях связи. <ulink
+								url="http://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F"
+								>Википедия</ulink></para>
+					</listitem>
+					<listitem>
+						<para id="def_baloon"><emphasis role="bold" id="">Балун:</emphasis></para>
 					</listitem>
 				</orderedlist>
 			</para>
@@ -148,7 +160,14 @@
 			</section>
 			<section>
 				<title>Пользовательские интерфейсы</title>
-				<para> </para>
+				<para> Пользователь взаимодействует с сервисом через сайт. На сайте расположенна карта и строка
+					для ввода интересуещего IP-адреса. На странице есть кнопка, по нажатии которой,
+					при условии корректности введенных в вышеупомянутое поле данных происходит
+					отправка задачи серверу. Ответы сервера загружаются в фоне и динамически
+					появляються на карте, не требую каких-либо действий от пользователя. На карте
+					начинают появляться <link linkend="def_baloon">балуны</link>, рядом с
+					ними</para>
+				<para>Обновление данныех также происходит  динамически .</para>
 				<informaltable frame='all'>
 					<tgroup cols='1'>
 						<tbody>
@@ -163,6 +182,8 @@
 			</section>
 			<section>
 				<title>Аппаратные интерфейсы</title>
+				<para>Сервер и клиент - компьютеры общего назначения. Специфичные требований к аппаратуре
+					отсутвуют.</para>
 				<informaltable frame='all'>
 					<tgroup cols='1'>
 						<tbody>
@@ -192,6 +213,7 @@
 			<section>
 				<title>Коммуникационные интерфейсы</title>
 				<para>Сервис должен использовать протокол HTTP для передачи и получения данных.</para>
+				<para>WebSocket, GeoJson</para>
 				<informaltable frame='all'>
 					<tgroup cols='1'>
 						<tbody>
@@ -238,6 +260,9 @@
 		</section>
 		<section>
 			<title>Характеристики пользователей</title>
+			<para>Для успешного взаимодействия с сервисом требуються базовые знания принципов работы сети
+				Internet. Для ввода данных требуються базовые навыки владения
+				Internet-браузером.</para>
 			<informaltable frame='all'>
 				<tgroup cols='1'>
 					<tbody>
@@ -252,6 +277,7 @@
 		</section>
 		<section>
 			<title>Ограничения</title>
+			<para>TODO: </para>
 			<informaltable frame='all'>
 				<tgroup cols='1'>
 					<tbody>
@@ -303,6 +329,7 @@
 		</section>
 		<section>
 			<title>Предположения и зависимости</title>
+			<para>TODO: </para>
 			<informaltable frame='all'>
 				<tgroup cols='1'>
 					<tbody>
@@ -317,6 +344,7 @@
 		</section>
 		<section>
 			<title>Распределение требований</title>
+			<para>TODO: </para>
 			<informaltable frame='all'>
 				<tgroup cols='1'>
 					<tbody>
