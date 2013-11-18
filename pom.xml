@@ -44,7 +44,7 @@
                             <resources>  
                                 <!-- Откуда -->        
                                 <resource>
-                                    <directory>GEOTRACERTClient/web folder</directory>
+                                    <directory>GEOTRACERTClient/webFolder</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>              
