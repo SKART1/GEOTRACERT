@@ -16,6 +16,7 @@ import org.restlet.Restlet;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.resource.Directory;
+import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
 
 
@@ -62,14 +63,14 @@ public class App extends Application{
         // Attach the application to the component and 
        // component.getDefaultHost().attach("/trace2",new App());  
         
-        component.getDefaultHost().attach("",application);  
+        component.getDefaultHost().attach("/index.html",application);  
         
         component.getDefaultHost().attach("/hello",new App());
         
-     //    component.getDefaultHost().attach("/",
-    //                                  new Redirector(component.getContext().createChildContext(),
-      //                                               " {rh}/C:/Users/art/Documents/GitHub/temp8/GEOTRACERT/GEOTRACERTServer/target/clientFolder/index.html",
-      //                                               Redirector.MODE_CLIENT_SEE_OTHER));
+         component.getDefaultHost().attach("/",
+                                      new Redirector(component.getContext().createChildContext(),
+                                                     "/index.html",
+                                                     Redirector.MODE_CLIENT_SEE_OTHER));
         
         // Start the component.
         component.start();
