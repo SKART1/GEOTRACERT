@@ -27,9 +27,11 @@ import org.restlet.routing.Router;
 
 public class App extends Application
 {    
+   //Solution 1 for relative paths
    static final String pathToIndexBase1 = App.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-    static String pathToIndexBaseCorrect1; 
+   static String pathToIndexBaseCorrect1; 
    
+   //Solution 2 for relative paths
    static final File parentDir = new File(new File("").getAbsolutePath());
    static final String pathToIndexBase2=parentDir.getAbsolutePath();
    static String pathToIndexBaseCorrect2;
@@ -39,21 +41,20 @@ public class App extends Application
      */
      public static void main(String[] args) throws Exception {
 
-            
+        //Solution 1    
         pathToIndexBaseCorrect1="file:////"+pathToIndexBase1.substring(0, pathToIndexBase1.indexOf("target")+6)+"/clientFolder";
-       // "file:///"  /*File.separator+ File.separator*/+ROOT_URI4+"/clientFolder"
-        pathToIndexBaseCorrect2="file:\\\\"+pathToIndexBase2.replaceAll("/", File.separator)+"\\target\\clientFolder";
-          // Create a new Component.     
+       
+        //Solution 2
+        pathToIndexBaseCorrect2="file:"+File.separator+File.separator+File.separator+File.separator+pathToIndexBase2.replaceAll("/", File.separator)+File.separator+File.separator+"target"+File.separator+File.separator+"clientFolder";
+       
         Component component = new Component();
        
        
         
-        System.out.println("App.class.getProtectionDomain().getCodeSource().getLocation().getPath()"); 
+        /*System.out.println("App.class.getProtectionDomain().getCodeSource().getLocation().getPath()"); 
         System.out.println(pathToIndexBaseCorrect1);
         System.out.println("File"+File.pathSeparator+File.pathSeparator);
-        System.out.println(pathToIndexBaseCorrect2);       
-     
-        
+        System.out.println(pathToIndexBaseCorrect2);     */  
         
         
         component.getServers().add(Protocol.HTTP, 8182);  
@@ -73,10 +74,12 @@ public class App extends Application
         
         // Attach the application to the component 
         //main page: index.html
-        component.getDefaultHost().attach("/index.html",application);  
+        component.getDefaultHost().attach("/index.html",application); 
         
+         //just for fun page /hello/hello
         component.getDefaultHost().attach("/hello",new App());
         
+         //redirector from / to /index.html
          component.getDefaultHost().attach("/",
                                       new Redirector(component.getContext().createChildContext(),
                                                      "/index.html",
