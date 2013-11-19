@@ -50,7 +50,7 @@ public class App extends Application
         
         System.out.println("App.class.getProtectionDomain().getCodeSource().getLocation().getPath()"); 
         System.out.println(pathToIndexBaseCorrect1);
-        System.out.println("File");
+        System.out.println("File"+File.pathSeparator+File.pathSeparator);
         System.out.println(pathToIndexBaseCorrect2);       
      
         
