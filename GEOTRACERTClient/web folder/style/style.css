@@ -1,13 +1,39 @@
 body {
-  background:#F8F8FF;  
+	background:#F8F8FF;  
+}
+#main {
+    position: relative;
+}
+#main > h1 {
+	padding-left: 20%;
+	margin: 0 auto;
+}
+#wrapper {
+	width: 90%;
+	height: 600px;
+	margin: auto;
 }
 #frame {
-  width:80%;
-  background:#F8F8FF;
-  border:3px #CCCCCC solid;  
+	width:70%;
+	float: left;
+	background:#F8F8FF;
+	border:3px #CCCCCC solid;  
+	border-radius:8px;
 }
 #map {
-  height:550px;
-  padding:3px;
-  padding-left:3px;
+	height:550px;
+	background:#999;
+	padding:3px;
+	padding-left:3px;
+}
+#inright {
+	float:right;
+}
+#list {
+	width:100%;
+	height: 400px;
+	background:#EEEEEE;
+	border:2px #666666 solid;
+	border-radius:4px;
+	overflow-y:scroll;
 }
