@@ -1,140 +1,81 @@
 <project
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
   
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<!--                               INFORMATIONS                              -->
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<groupId>com.github.321SKART123.GEOTRACERT</groupId>
-	<artifactId>GEOTRACERTServer</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!--                               INFORMATIONS                              -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <groupId>com.github.321SKART123.GEOTRACERT</groupId>
+    <artifactId>GEOTRACERTServer</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>GEOTRACERTServer</name>
-	<url>http://maven.apache.org</url>
+    <name>GEOTRACERTServer</name>
+    <url>http://maven.apache.org</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-	</properties>
-	<repositories>  
-		<repository>  
-			<id>maven-restlet</id>  
-			<name>Public online Restlet repository</name>  
-			<url>http://maven.restlet.org</url>  
-		</repository>  
-	</repositories>  
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.restlet.jse</groupId>
-			<artifactId>org.restlet</artifactId>
-			<version>2.2-SNAPSHOT</version>
-			<type>jar</type>
-		</dependency>
-	</dependencies>
+                    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>        
+    </properties>
+    <repositories>  
+        <repository>  
+            <id>maven-restlet</id>  
+            <name>Public online Restlet repository</name>  
+            <url>http://maven.restlet.org</url>  
+        </repository>  
+    </repositories>  
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>       
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>2.1.4</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
   
   
-	<build>
-		<plugins>
+    <build>
+        <plugins>
             
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			<!--                               PLUGIN FOR EXECUTABLE JAR                 -->
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->         
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId> <!--Плагин собирающий выполняемый сразу jar -->
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.github.skart123.geotracert.geotracertserver.App</mainClass> <!--главный класс ваш КО -->
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef> <!--имя файла -->
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges хз что это -->
-						<phase>package</phase> <!-- bind to the packaging phase хз что это -->
-						<goals>
-							<goal>single</goal> <!-- хз что это -->
-						</goals>
-					</execution>
-				</executions> 
-			</plugin> 
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--                               PLUGIN FOR EXECUTABLE JAR                 -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->         
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId> <!--Плагин собирающий выполняемый сразу jar -->
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.github.skart123.geotracert.geotracertserver.App</mainClass> <!--главный класс ваш КО -->
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef> <!--имя файла -->
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges хз что это -->
+                        <phase>package</phase> <!-- bind to the packaging phase хз что это -->
+                        <goals>
+                            <goal>single</goal> <!-- хз что это -->
+                        </goals>
+                    </execution>
+                </executions> 
+            </plugin> 
             
                               
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			<!--                      DOCKBOOK PLUGIN                                    -->
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->  
-			<plugin>
-				<groupId>com.agilejava.docbkx</groupId>
-				<artifactId>docbkx-maven-plugin</artifactId>
-				<version>2.0.14</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate-html</goal>
-							<goal>generate-pdf</goal>
-						</goals>
-						<phase>install</phase>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.docbook</groupId>
-						<artifactId>docbook-xml</artifactId>
-						<version>4.4</version>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<sectionAutolabel>1</sectionAutolabel>
-					<fop1Extensions>1</fop1Extensions>
-					<fonts>
-						<font>
-							<name>Arial</name>
-							<style>normal</style>                                    
-							<weight>normal</weight>
-							<embedFile>${basedir}/src/fonts/arial.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/arial.xml</metricsFile>
-						</font>
-						<font>
-							<name>Arial</name>
-							<style>normal</style>                                    
-							<weight>bold</weight>
-							<embedFile>${basedir}/src/fonts/arialbd.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/arialbd.xml</metricsFile>
-						</font>
-						<font>
-							<name>Arial</name>
-							<style>italic</style>                                    
-							<weight>normal</weight>
-							<embedFile>${basedir}/src/fonts/ariali.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/ariali.xml</metricsFile>
-						</font>
-						<font>
-							<name>Arial</name>
-							<style>italic</style>                                    
-							<weight>bold</weight>
-							<embedFile>${basedir}/src/fonts/arialbi.ttf</embedFile>
-							<metricsFile>${basedir}/src/fonts/arialbi.xml</metricsFile>
-						</font>
-					</fonts>
-					<bodyFontFamily>Arial</bodyFontFamily>
-					<titleFontFamily>Arial</titleFontFamily>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+			
+        </plugins>
+    </build>
   
 </project>

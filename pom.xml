@@ -20,11 +20,12 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <!--                               PLUGIN Для копирования файлов             -->
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
     <build>
         <plugins>
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--                               PLUGIN Для копирования файлов             -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
@@ -43,7 +44,7 @@
                             <resources>  
                                 <!-- Откуда -->        
                                 <resource>
-                                    <directory>GEOTRACERTClient/web folder</directory>
+                                    <directory>GEOTRACERTClient/webFolder</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>              
@@ -51,9 +52,89 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--                      DOCKBOOK PLUGIN                                    -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->  
+            <plugin>
+                <groupId>com.agilejava.docbkx</groupId>
+                <artifactId>docbkx-maven-plugin</artifactId>
+                <version>2.0.14</version>
+                <executions>
+                    <execution>
+                        <id>generate-html</id>
+                        <goals>
+                            <goal>generate-html</goal>                            
+                        </goals> 
+                        <configuration>
+                            <!-- Где находятся xml файлы для html -->
+                            <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
+                            <!-- Куда выкидывать готовый -->
+                            <targetDirectory>${basedir}/SRS/result/html/</targetDirectory>                           
+                        </configuration>                          
+                        <phase>install</phase>
+                    </execution>
+                    
+                    <execution>
+                        <id>generate-pdf</id>
+                        <goals>                           
+                            <goal>generate-pdf</goal>   
+                        </goals> 
+                        <configuration>
+                            <!-- Где находятся xml файлы для pdf -->
+                            <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
+                            <!-- Куда выкидывать готовый -->                         
+                            <targetDirectory>${basedir}/SRS/result/pdf</targetDirectory>                           
+                        </configuration>                         
+                        <phase>install</phase>                 
+                    </execution>
+                </executions>   
+                 
+                <dependencies>
+                    <dependency>
+                        <groupId>org.docbook</groupId>
+                        <artifactId>docbook-xml</artifactId>
+                        <version>4.4</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+                <configuration>                    
+                    <sectionAutolabel>1</sectionAutolabel>
+                    <fop1Extensions>1</fop1Extensions>
+                    <fonts>
+                        <font>
+                            <name>Arial</name>
+                            <style>normal</style>                                    
+                            <weight>normal</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/arial.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/arial.xml</metricsFile>
+                        </font>
+                        <font>
+                            <name>Arial</name>
+                            <style>normal</style>                                    
+                            <weight>bold</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/arialbd.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/arialbd.xml</metricsFile>
+                        </font>
+                        <font>
+                            <name>Arial</name>
+                            <style>italic</style>                                    
+                            <weight>normal</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/ariali.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/ariali.xml</metricsFile>
+                        </font>
+                        <font>
+                            <name>Arial</name>
+                            <style>italic</style>                                    
+                            <weight>bold</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/arialbi.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/arialbi.xml</metricsFile>
+                        </font>
+                    </fonts>
+                    <bodyFontFamily>Arial</bodyFontFamily>
+                    <titleFontFamily>Arial</titleFontFamily>
+                </configuration>
+            </plugin>
         </plugins>
-    </build>    
-           
-    
-    
+    </build>     
 </project>
