@@ -92,7 +92,6 @@ public class App extends Application {
        // System.out.println("Log files per default in jWebSocket.log if not overwritten in jWebSocket.xml.\n\n");
 
         
-        JWebSocketFactory.run();
         // the following line must not be removed due to GNU LGPL 3.0 license!  
         JWebSocketFactory.printCopyrightToConsole();
         // check if home, config or bootstrap path are passed by command line  
