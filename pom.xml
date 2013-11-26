@@ -7,24 +7,74 @@
     <version>1.0-SNAPSHOT</version>
     <name>GEOTRACERT</name>
     <url>com.github.321SKART123.GEOTRACERT</url>
+     <repositories>  
+        <!--<repository>  
+            <id>maven-restlet</id>  
+            <name>Public online Restlet repository</name>  
+            <url>http://maven.restlet.org</url>  
+        </repository> --> 
+        <repository>
+            <id>googlecode</id>
+            <name>jWebSocket Repository</name>
+            <url>http://jwebsocket.googlecode.com/svn/repo</url>
+        </repository> 
+    </repositories>  
     <modules>
         <module>GEOTRACERTClient</module>
         <module>GEOTRACERTServer</module>
     </modules>
 
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>2.2-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>2.0-M3</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet.lib.sdc</artifactId>
+            <version>1.2.0</version>
+            <type>jar</type>
+        </dependency>
+         <dependency>
+            <groupId>org.jwebsocket</groupId>
+            <artifactId>jWebSocketCommon</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jwebsocket</groupId>
+            <artifactId>jWebSocketServer</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jwebsocket</groupId>
+            <artifactId>jWebSocketServerAPI</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <!--                               PLUGIN Для копирования файлов             -->
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
     <build>
         <plugins>
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--                               PLUGIN Для копирования файлов             -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
@@ -43,17 +93,114 @@
                             <resources>  
                                 <!-- Откуда -->        
                                 <resource>
-                                    <directory>GEOTRACERTClient/web folder</directory>
+                                    <directory>GEOTRACERTClient/webFolder</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>              
                         </configuration>            
                     </execution>
                 </executions>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--                      DOCKBOOK PLUGIN                                    -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->  
+            <plugin>
+                <groupId>com.agilejava.docbkx</groupId>
+                <artifactId>docbkx-maven-plugin</artifactId>
+                <version>2.0.14</version>
+                <executions>
+                    <execution>
+                        <id>generate-html</id>
+                        <goals>
+                            <goal>generate-html</goal>                            
+                        </goals> 
+                        <configuration>
+                            <!-- Где находятся xml файлы для html -->
+                            <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
+                            <!-- Куда выкидывать готовый -->
+                            <targetDirectory>${basedir}/SRS/result/html/</targetDirectory>                           
+                        </configuration>                          
+                        <phase>install</phase>
+                    </execution>
+                    
+                    <execution>
+                        <id>generate-pdf</id>
+                        <goals>                           
+                            <goal>generate-pdf</goal>   
+                        </goals> 
+                        <configuration>
+                            <!-- Где находятся xml файлы для pdf -->
+                            <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
+                            <!-- Куда выкидывать готовый -->                         
+                            <targetDirectory>${basedir}/SRS/result/pdf</targetDirectory>                           
+                        </configuration>                         
+                        <phase>install</phase>                 
+                    </execution>
+                </executions>   
+                 
+                <dependencies>
+                    <dependency>
+                        <groupId>org.docbook</groupId>
+                        <artifactId>docbook-xml</artifactId>
+                        <version>4.4</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+                <configuration>                    
+                    <sectionAutolabel>1</sectionAutolabel>
+                    <fop1Extensions>1</fop1Extensions>
+                    <fonts>
+                        <font>
+                            <name>Arial</name>
+                            <style>normal</style>                                    
+                            <weight>normal</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/arial.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/arial.xml</metricsFile>
+                        </font>
+                        <font>
+                            <name>Arial</name>
+                            <style>normal</style>                                    
+                            <weight>bold</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/arialbd.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/arialbd.xml</metricsFile>
+                        </font>
+                        <font>
+                            <name>Arial</name>
+                            <style>italic</style>                                    
+                            <weight>normal</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/ariali.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/ariali.xml</metricsFile>
+                        </font>
+                        <font>
+                            <name>Arial</name>
+                            <style>italic</style>                                    
+                            <weight>bold</weight>
+                            <embedFile>${basedir}/SRS/source/fonts/arialbi.ttf</embedFile>
+                            <metricsFile>${basedir}/SRS/source/fonts/arialbi.xml</metricsFile>
+                        </font>
+                    </fonts>
+                    <bodyFontFamily>Arial</bodyFontFamily>
+                    <titleFontFamily>Arial</titleFontFamily>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <showDeprecation>true</showDeprecation>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
             </plugin>
         </plugins>
-    </build>    
-           
-    
-    
+    </build>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>
