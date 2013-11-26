@@ -1,0 +1,13 @@
+body {
+  background:#F8F8FF;  
+}
+#frame {
+  width:80%;
+  background:#F8F8FF;
+  border:3px #CCCCCC solid;  
+}
+#map {
+  height:550px;
+  padding:3px;
+  padding-left:3px;
+}
