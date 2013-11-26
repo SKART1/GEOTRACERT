@@ -17,7 +17,11 @@ public class HelloWorldResource extends ServerResource {
 
     @Get
     public String represent() {
-        return "hello, world";
+       
+         return "Resource URI  : " + getReference() + '\n' + "Root URI      : "  
+            + getRootRef() + '\n' + "Routed part   : "  
+            + getReference().getBaseRef() + '\n' + "Remaining part: "  
+            + getReference().getRemainingPart(); 
     }
 
 }
