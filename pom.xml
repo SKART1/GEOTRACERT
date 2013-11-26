@@ -7,18 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>GEOTRACERT</name>
     <url>com.github.321SKART123.GEOTRACERT</url>
-     <repositories>  
-        <!--<repository>  
-            <id>maven-restlet</id>  
-            <name>Public online Restlet repository</name>  
-            <url>http://maven.restlet.org</url>  
-        </repository> --> 
-        <repository>
-            <id>googlecode</id>
-            <name>jWebSocket Repository</name>
-            <url>http://jwebsocket.googlecode.com/svn/repo</url>
-        </repository> 
-    </repositories>  
+    
     <modules>
         <module>GEOTRACERTClient</module>
         <module>GEOTRACERTServer</module>
@@ -73,7 +62,7 @@
     <build>
         <plugins>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-            <!--                               PLUGIN Для копирования файлов             -->
+            <!--                               PLUGIN ??? ??????????? ??????             -->
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -88,10 +77,10 @@
                         </goals>
                         <configuration>
                             <encoding>UTF-8</encoding>
-                            <!-- Куда копируем -->
+                            <!-- ???? ???????? -->
                             <outputDirectory>${basedir}/GEOTRACERTServer/target/clientFolder</outputDirectory> 
                             <resources>  
-                                <!-- Откуда -->        
+                                <!-- ?????? -->        
                                 <resource>
                                     <directory>GEOTRACERTClient/webFolder</directory>
                                     <filtering>false</filtering>
@@ -119,9 +108,9 @@
                             <goal>generate-html</goal>                            
                         </goals> 
                         <configuration>
-                            <!-- Где находятся xml файлы для html -->
+                            <!-- ??? ????????? xml ????? ??? html -->
                             <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
-                            <!-- Куда выкидывать готовый -->
+                            <!-- ???? ?????????? ??????? -->
                             <targetDirectory>${basedir}/SRS/result/html/</targetDirectory>                           
                         </configuration>                          
                         <phase>install</phase>
@@ -133,9 +122,9 @@
                             <goal>generate-pdf</goal>   
                         </goals> 
                         <configuration>
-                            <!-- Где находятся xml файлы для pdf -->
+                            <!-- ??? ????????? xml ????? ??? pdf -->
                             <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
-                            <!-- Куда выкидывать готовый -->                         
+                            <!-- ???? ?????????? ??????? -->                         
                             <targetDirectory>${basedir}/SRS/result/pdf</targetDirectory>                           
                         </configuration>                         
                         <phase>install</phase>                 
@@ -201,6 +190,6 @@
         </plugins>
     </build>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>windows-1250</project.build.sourceEncoding>
     </properties>
 </project>
