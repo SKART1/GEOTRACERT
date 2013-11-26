@@ -70,28 +70,46 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->  
            
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId> <!--ÐŸÐ»Ð°Ð³Ð¸Ð½ ÑÐ¾Ð±Ð¸Ñ€Ð°ÑŽÑ‰Ð¸Ð¹ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÑÐµÐ¼Ñ‹Ð¹ ÑÑ€Ð°Ð·Ñƒ jar -->
+                <artifactId>maven-assembly-plugin</artifactId> <!--Ïëàãèí ñîáèðàþùèé âûïîëíÿåìûé ñðàçó jar -->
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.skart123.geotracert.geotracertserver.App</mainClass> <!--Ð³Ð»Ð°Ð²Ð½Ñ‹Ð¹ ÐºÐ»Ð°ÑÑ Ð²Ð°Ñˆ ÐšÐž -->
+                            <mainClass>com.github.skart123.geotracert.geotracertserver.App</mainClass> <!--ãëàâíûé êëàññ âàø ÊÎ -->
                         </manifest>
                     </archive>
                     <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef> <!--Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð° -->
+                        <descriptorRef>jar-with-dependencies</descriptorRef> <!--èìÿ ôàéëà -->
                     </descriptorRefs>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges Ñ…Ð· Ñ‡Ñ‚Ð¾ ÑÑ‚Ð¾ -->
-                        <phase>package</phase> <!-- bind to the packaging phase Ñ…Ð· Ñ‡Ñ‚Ð¾ ÑÑ‚Ð¾ -->
+                        <id>make-assembly</id> <!-- this is used for inheritance merges õç ÷òî ýòî -->
+                        <phase>package</phase> <!-- bind to the packaging phase õç ÷òî ýòî -->
                         <goals>
-                            <goal>single</goal> <!-- Ñ…Ð· Ñ‡Ñ‚Ð¾ ÑÑ‚Ð¾ -->
+                            <goal>single</goal> <!-- õç ÷òî ýòî -->
                         </goals>
                     </execution>
                 </executions> 
-            </plugin> 
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-  
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>
