@@ -30,9 +30,7 @@ import org.jwebsocket.factory.*;
       System.out.println("ÏÐÎÂÅÐÊÀ 1");
 
     
-    
-
-      System.out.println("ÏÐÎÂÅÐÊÀ 2");
+   
           
 
    //   tokenServer = (TokenServer) JWebSocketFactory.getServer("ts0");
