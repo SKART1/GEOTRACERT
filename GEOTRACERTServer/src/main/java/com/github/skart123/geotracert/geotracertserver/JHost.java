@@ -27,12 +27,12 @@ import org.jwebsocket.factory.*;
   }
   public void init()
   {
-      System.out.println("–ü–†–û–í–ï–†–ö–ê 1");
+      System.out.println("œ–Œ¬≈– ¿ 1");
 
     
     
 
-      System.out.println("–ü–†–û–í–ï–†–ö–ê 2");
+      System.out.println("œ–Œ¬≈– ¿ 2");
           
 
    //   tokenServer = (TokenServer) JWebSocketFactory.getServer("ts0");
@@ -44,9 +44,9 @@ import org.jwebsocket.factory.*;
       }
 
       System.out.println("init exception...");
-      System.out.println("–ü–†–û–í–ï–†–ö–ê 3");
+      System.out.println("œ–Œ¬≈– ¿ 3");
 
-    System.out.println("–ü–†–û–í–ï–†–ö–ê 4");
+    System.out.println("œ–Œ¬≈– ¿ 4");
   }
 
   @Override
@@ -88,7 +88,7 @@ import org.jwebsocket.factory.*;
   }
 */
     
-    public class JHost implements WebSocketServerTokenListener{  
+    public class JHost implements WebSocketServerTokenListener{  // ›ÚÓ ÌÂ Ó¯Ë·Í‡
     private TokenServer tokenserver;  
     
   
@@ -96,7 +96,7 @@ import org.jwebsocket.factory.*;
     public void init()  
     {  
      
-           // String args = new String("–ª–æ–ª");
+           // String args = new String("ÎÓÎ");
             // the following line must not be removed due to GNU LGPL 3.0 license!  
             
 JWebSocketFactory.printCopyrightToConsole();  
