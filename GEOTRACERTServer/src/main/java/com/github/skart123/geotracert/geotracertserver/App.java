@@ -11,13 +11,14 @@ package com.github.skart123.geotracert.geotracertserver;
 
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.jwebsocket.config.JWebSocketConfig;
+import org.jwebsocket.config.JWebSocketServerConstants;
+import org.jwebsocket.factory.JWebSocketFactory;
+import org.jwebsocket.server.TokenServer;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.data.Protocol;
-import org.restlet.data.Reference;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
@@ -87,6 +88,42 @@ public class App extends Application
         
         // Start the component.
         component.start();
+        
+        
+        //SOCKETS!!!!
+        // We MUST show this to Licence Agreement
+        System.setProperty(JWebSocketServerConstants.JWEBSOCKET_HOME, pathToIndexBase2);
+        System.out.println(System.getProperty(JWebSocketServerConstants.JWEBSOCKET_HOME));
+                
+        JWebSocketFactory.printCopyrightToConsole();
+                
+        // check if home, config or bootstrap path are passed by command line
+        JWebSocketConfig.initForConsoleApp(args);
+
+        try {
+            // start the jWebSocket Server
+            JWebSocketFactory.start();
+
+            TokenServer lServer = (TokenServer)JWebSocketFactory.getServer("ts0");
+            //TokenServer lServer = JWebSocketFactory.getTokenServer();
+            if( lServer != null ) {
+              // and add the sample listener to the server's listener chain
+              lServer.addListener(new JWebSocketTokenListenerSample());
+            }
+
+
+            // run server until shut down request
+            JWebSocketFactory.run();          
+       } 
+        catch (Exception lEx) {
+                System.out.println(
+                                lEx.getClass().getSimpleName()
+                                + " on starting jWebSocket server: "
+                                + lEx.getMessage());
+        } 
+        finally {
+                JWebSocketFactory.stop();
+        }       
     }
     
     @Override
