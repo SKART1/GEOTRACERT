@@ -53,16 +53,6 @@
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>  
-                            <!-- Копируем config сокетов -->
-                            <!-- Куда копируем -->
-                            <outputDirectory>${basedir}/GEOTRACERTServer/target/socketConfig</outputDirectory> 
-                            <resources>  
-                                <!-- Откуда -->        
-                                <resource>
-                                    <directory>${basedir}/GEOTRACERTServer/socketConfig</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>               
                         </configuration>            
                     </execution>
                 </executions>

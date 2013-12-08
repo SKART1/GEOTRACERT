@@ -124,7 +124,36 @@
                 </executions> 
             </plugin> 
             
-                              
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--                               PLUGIN Для копирования файлов             -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <!-- Копируем config сокетов -->
+                            <!-- Куда копируем -->
+                            <outputDirectory>${basedir}/target/socketConfig</outputDirectory> 
+                            <resources>  
+                                <!-- Откуда -->        
+                                <resource>
+                                    <directory>${basedir}/socketConfig</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>               
+                        </configuration>            
+                    </execution>
+                </executions>
+            </plugin>                   
 			
         </plugins>
     </build>
