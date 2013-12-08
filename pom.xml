@@ -43,15 +43,26 @@
                         </goals>
                         <configuration>
                             <encoding>UTF-8</encoding>
+                            <!-- Копируем файлы клиента в папку webFolder сервера -->
                             <!-- Куда копируем -->
                             <outputDirectory>${basedir}/GEOTRACERTServer/target/clientFolder</outputDirectory> 
                             <resources>  
                                 <!-- Откуда -->        
                                 <resource>
-                                    <directory>GEOTRACERTClient/webFolder</directory>
+                                    <directory>${basedir}/GEOTRACERTClient/webFolder</directory>
                                     <filtering>false</filtering>
                                 </resource>
-                            </resources>              
+                            </resources>  
+                            <!-- Копируем config сокетов -->
+                            <!-- Куда копируем -->
+                            <outputDirectory>${basedir}/GEOTRACERTServer/target/socketConfig</outputDirectory> 
+                            <resources>  
+                                <!-- Откуда -->        
+                                <resource>
+                                    <directory>${basedir}/GEOTRACERTServer/socketConfig</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>               
                         </configuration>            
                     </execution>
                 </executions>
