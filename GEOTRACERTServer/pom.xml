@@ -76,7 +76,8 @@
         <dependency>
             <groupId>org.jwebsocket</groupId>
             <artifactId>jWebSocketServer</artifactId>
-            <version>1.0</version>            
+            <version>1.0</version> 
+            <type>jar</type>           
         </dependency>
         
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -85,7 +86,8 @@
         <dependency>
             <groupId>org.jwebsocket</groupId>
             <artifactId>jWebSocketSamples</artifactId>
-            <version>1.0</version>            
+            <version>1.0</version>  
+            <type>jar</type>          
         </dependency>    
     </dependencies>
     
