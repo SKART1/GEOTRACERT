@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Custom Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Custom Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null;
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+
+			var lWSC = null;
+
+			function connect() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				var lURL = jws.getDefaultServerURL();
+
+				log( "Connecting to " + lURL + " ..." );
+				try {
+					lWSC.open( lURL, {
+
+						// use custom sub protocol
+						subProtocol: jws.WS_SUBPROT_CUSTOM,
+
+						// OnOpen callback
+						OnOpen: function( aEvent ) {
+							log( "jWebSocket connection established." );
+							// no authentication here! Anyway, show green
+							// icon when using custom protocol.
+							jws.$("simgStatus").src = "../../images/authenticated.png";
+						},
+
+						// OnMessage callback
+						OnMessage: function( aEvent ) {
+							log( "jWebSocket message received: '" + aEvent.data + "'" );
+							jws.$("slblClientId").innerHTML =
+								"&nbsp;Client&#x2011;Id:&nbsp;"
+								+ lWSC.getId() + "&nbsp;"
+								+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" );
+						},
+
+						// OnClose callback
+						OnClose: function( aEvent ) {
+							log( "jWebSocket connection closed." );
+							jws.$("simgStatus").src = "../../images/disconnected.png";
+							jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+						}
+
+					});
+				} catch( ex ) {
+					log( "Exception: " + ex.message );
+				}
+			}
+
+			function disconnect() {
+				if( lWSC ) {
+					log( "Disconnecting..." );
+					try {
+						// closing from client side does not fire onclose event!
+						// hence fire event explicitly here!
+						lWSC.close({ fireClose: true });
+						log( "Disconnected." );
+					} catch( ex ) {
+						log( "Exception: " + ex.message );
+					}
+				}
+			}
+
+			function send() {
+				var lMsg = eMessage.value;
+				log( "Sending '" + lMsg + "'..." );
+				try {
+					lWSC.sendStream( lMsg );
+					log( "Message sent." );
+				} catch( ex ) {
+					log( "Exception: " + ex.message );
+				}
+			}
+
+			function initPage() {
+				eLog = jws.$( "sdivChat" );
+				eMessage = jws.$( "stxfMsg" );
+
+				if( window.WebSocket ) {
+					lWSC = new jws.jWebSocketBaseClient();
+				} else {
+					jws.$( "sbtnConnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnDisconnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
+					jws.$( "stxfMsg" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnSend" ).setAttribute( "disabled", "disabled" );
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+			}
+
+			function exitPage() {
+				disconnect();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<!--	remarked temporarily due to chrome 5 browser bug
+		<script type="text/javascript">
+			var lFrameElem = this.frameElement;
+			if( !lFrameElem ) {
+				location.replace( "../../index.htm?page=demos/fundamentals/fundamentals.htm" );
+			}
+		</script>
+		-->
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Custom Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<p>This demo shows how to easily set up a minimum communication w/o any protocol between a jWebSocket client and a jWebSocket server.
+		This example is based on the class <code>org.jwebsocket.connectors.UserConnector</code> 
+		which simply echos the text/plain request back to the client. If you are 
+		not sure whether your favorite browser supports WebSockets please refer 
+		to our <a target="_top" href="http://jwebsocket.org/jws_for_all.htm">jWebSocket Cross-Browser
+		Compatibility</a> page.</p>
+		<div id="sdivChat" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnConnect" type="button" value="Connect" onclick="connect();"
+							   title="Connects to the jWebSocket using a custom (i.e. non-token based) sub protocol.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnDisconnect" type="button" value="Disconnect" onclick="disconnect();"
+							   title="Disconnects from the jWebSocket Server.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();"
+							   title="Clears the result and event log above.">
+					</td>
+					<td class="stdDlg" width="5">Message</td>
+					<td class="stdDlg" width="">
+						<input class="stxfDlg" id="stxfMsg" type="text" value="Please type your message here!" style="width:100%"
+							   title="Message send to the server to be echoed back with a prefix.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnSend" type="button" value="Echo" onclick="send();"
+							   title="Send the message to the jWebSocket Server and retrieve the echo.">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

@@ -1,0 +1,230 @@
+*{
+	font-family: "Verdana";
+}
+
+.form input{
+	color: #969696;
+}
+
+#functional_box{
+	width: 100% !important;
+}
+
+#functional_box_header{
+    color: #414141;
+    font-family: fantasy;
+    font-size: 12px;
+    margin-left: 10px;
+    margin-bottom: 2px;
+	float: left;
+    width: 600px;
+    height: 24px; 
+}
+
+#functional_box_header a{
+    background: #c8c8c8;
+    display: inline;
+    border: 1px solid #C8C8C8;
+    border-bottom: none;
+    -moz-border-radius: 6px 6px 0 0;
+    -webkit-border-radius: 6px 6px 0px 0px;
+    border-radius: 6px 6px 0px 0px;
+    text-decoration: none;
+    cursor: pointer;
+	float: left;
+	padding: 0 20px 0 20px;
+	font-size: 11px;
+	font-style: normal;  
+	margin-right: 3px;
+	height: 25px;
+}
+
+#functional_box_header a span{
+    margin-top: 6px;
+    float: left;
+}
+
+#functional_box_header a:hover{
+    background: #E4E4E4;
+}
+
+#functional_box_header a.pressed{
+    background: #E4E4E4;
+}
+
+.text{
+    overflow: auto;
+    padding: 5px 3px 3px 10px;
+    color: #797878;
+    font-size: 11px;
+}
+
+#functional_box_content{
+    background: #E4E4E4;    
+    height: auto;
+    border: 1px solid #C8C8C8;
+	float: left;
+	width: 97%;
+	padding: 9px;
+}
+
+.functional_box_content_buttons{
+    height: 30px;
+    margin-top: 5px;
+    padding: 5px 5px 5px 20px;
+	text-align: center;
+}
+
+.functional_box_content_buttons > div{
+    display: inline;
+    height: 25px;
+    float:left;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+#functional_box_content #functional_box_content{
+	height: auto;
+}
+
+#functional_box_content .area{
+	float: left;
+	height: 180px;
+}
+
+#functional_box_content .form label {
+	font-size: 10px;
+	font-weight: bold;
+	color: #969696;
+	float: left;
+	padding: 2px 0 2px 5px;
+	text-align: left;
+}
+
+#functional_box_content .form{
+	width: 65%;
+	height: auto;
+	margin-bottom: 10px;
+}
+
+#functional_box_content .form label{
+	width: 100%;
+	float: left;
+}
+
+#functional_box_content .form input{
+	margin-bottom: 10px;
+	float: left;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#functional_box_content .form input[type="text"]{
+	width: 130px;
+}
+
+#functional_box_content .bt_container{
+	float: left;
+}
+
+#functional_box_content .text{
+	float: left;
+	width: 30%;
+	height: auto;
+	padding: 5px;
+}
+#functional_box_content .right{
+	float: left;
+	width: 40%;
+}
+
+#button_container{
+    margin-top: 8px;
+}
+
+.tab_element{
+	display: none;
+	width: 43%;
+	float: left;
+}
+
+.is_public{
+	width: auto !important;
+	float: left;
+}
+
+.public_cb{
+	width: 42%;
+	padding-top: 5px;
+	float: left;
+}
+
+/*    KEYS LIST AREA    */
+.keys_list_area{
+	color: #969696;
+	width: 23%;
+	padding: 10px;
+	font-size: 9pt;
+	margin: 5px;
+	float: right;
+	background: white;
+	-moz-border-radius: 6px 6px 6px 6px;
+    -webkit-border-radius: 6px 6px 6px 6px;
+    border-radius: 6px 6px 6px 6px;
+	word-wrap: break-word;
+}
+
+.keys_list{
+	width: 100%;
+}
+
+.keys_list ul{
+	list-style: none;
+	padding: 0 0 0 10px;
+	margin: 7px 0 0 0;
+	overflow: auto;
+	max-height: 95px;
+	float: left;
+	width: 99%;
+}
+
+.keys_list ul.public{
+	max-height: 110px;
+}
+
+.keys_list ul li{
+	padding: 2px 0 0 16px;
+	border-bottom: #f7f7f7 1px solid;
+}
+
+.keys_list ul.private li{
+	background: url( images/private.png) 0px 5px no-repeat; 
+}
+
+.keys_list ul.public li{
+	background: url( images/public.png) 0px 5px no-repeat; 
+}
+
+.keys_list ul li.no_keys{
+	border-bottom: none;
+	padding: 0 5px 0 0;
+	background: none;
+}
+
+.keys_title{
+	padding-top: 5px;
+	width: 100% !important;
+	float: left;
+}
+
+.client_name{
+	width: 45%;
+	float: right;
+	font-size: 9pt;
+	color: #969696;
+}
+
+.client_name .id{
+	padding-left: 3px;
+	float: left;
+}

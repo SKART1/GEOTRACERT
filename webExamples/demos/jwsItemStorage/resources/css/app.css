@@ -1,0 +1,96 @@
+/* Collections Toolbar*/
+.c_add {
+    background-image: url( ../images/c_add.png ) !important;
+}
+.c_remove {
+    background-image: url( ../images/c_remove.png ) !important;
+}
+.c_clear {
+    background-image: url( ../images/c_clear.png ) !important;
+}
+.c_details {
+    background-image: url( ../images/c_details.png ) !important;
+}
+.c_restart {
+    background-image: url( ../images/c_restart.png ) !important;
+}
+.c_edit {
+    background-image: url( ../images/c_edit.png ) !important;
+}
+.c_open {
+    background-image: url( ../images/c_open.png ) !important;
+}
+
+/* Definitions Toolbar*/
+.d_add {
+    background-image: url( ../images/d_add.png ) !important;
+}
+.d_remove {
+    background-image: url( ../images/d_remove.png ) !important;
+}
+.d_details {
+    background-image: url( ../images/d_details.png ) !important;
+}
+.d_edit {
+    background-image: url( ../images/d_edit.png ) !important;
+}
+.d_extend {
+    background-image: url( ../images/d_extend.png ) !important;
+}
+.attr_remove {
+    background-image: url( ../images/attr_remove.gif ) !important;
+}
+.attr_edit {
+    background-image: url( ../images/attr_edit.png ) !important;
+}
+.attr_add {
+    background-image: url( ../images/attr_add.png ) !important;
+}
+
+/* Items Toolbar*/
+.i_add {
+    background-image: url( ../images/i_add.png ) !important;
+}
+.i_remove {
+    background-image: url( ../images/i_remove.png ) !important;
+}
+.i_details {
+    background-image: url( ../images/i_details.png ) !important;
+}
+.i_edit {
+    background-image: url( ../images/i_edit.png ) !important;
+}
+.i_details {
+    background-image: url( ../images/i_details.png ) !important;
+}
+
+/* Shared */
+.history {
+    background-image: url( ../images/history.png ) !important;
+}
+.find {
+    background-image: url( ../images/find.png ) !important;
+}
+.key {
+    background-image: url( ../images/key.png ) !important;
+}
+
+/* Introduction */
+.intro_text{
+	font-size: smaller;
+	padding-top: 5px;
+	padding-bottom: 10px;
+	padding-right: 10px;
+	line-height:11pt;
+}
+.header_text{
+	font-size: smaller;
+	padding-top: 5px;
+	padding-bottom: 10px;
+}
+.question{
+	font-size: smaller;
+	font-weight: bold;
+	padding-top: 10px;
+	padding-bottom: 5px;
+}

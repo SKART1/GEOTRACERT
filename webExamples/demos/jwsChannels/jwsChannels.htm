@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Channels Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+
+		<title>jWebSocket Channels Demo</title>
+
+		<!-- JQUERY STYLES -->
+		<link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+
+		<!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+		<link rel="stylesheet" type="text/css" href="css/jwsChannels.css"/>
+
+		<!-- JQUERY DEPENDENCIES -->
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+        <script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/dialogs.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+		<!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src="../../res/js/jwsChannelPlugIn.js"></script>
+
+		<!--  PUBLIC WIDGETS   -->
+		<script type="text/javascript" src='../../res/js/widgets/wAuth.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/wLog.js'></script>
+
+		<script type="text/javascript" src='js/wChannels.js'></script>
+
+		<!--  MAIN JAVASCRIPT FILE   -->
+		<script type="text/javascript" src='js/init.js'></script>
+
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocket Channels Demo</h1>
+                <div id="demo_box_header_login">
+                    <div id="logoff_area">
+                        <div id="user_info">
+                            <div id="user_info_name"></div> <div>&nbsp;|&nbsp;</div>
+                            <div id="logoff_button" class="button">Logout</div>
+                        </div>
+                    </div>
+                    <div id="login_area">
+                        <div id="login_form">
+                            <label class="first">Username</label>
+                            <label class="second">Password</label>
+                            <input type="text" id="user_text" value="root"/>
+                            <input type="password" id="user_password" value="root"/>
+                        </div>
+                        <div id="login_button" class="button">Login</div>
+                    </div>
+                </div>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div>
+					<div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+                    <!--    basic_channels_box   -->
+                    <div id="basic_channels_box" class="box">
+                        <div id="basic_channels_box_header">
+                            <a id="switch_channels_btn" class="active">Channels</a>
+                            <a id="switch_subscriptions_btn">Subscriptions</a>
+                            <a id="switch_subscribers_btn">Subscribers</a>
+                        </div>
+                        <div id="basic_channels_box_content">
+							<div id="channel_table_container" class="rounded_top">
+								<div id="channels_area">
+									<table id="channels_table" 
+										   border="0" class="rounded_top" cellspacing="0">
+										<tr class="table_header">
+											<td class="rounded_left">Name</td>
+											<td>Id</td>
+											<td>Type</td>
+											<td class="rounded_right">System</td>
+										</tr>
+										<tr class="no_channels">
+											<td rowspan="4">
+												There are not channels to show.
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div id="subscriptions_area">
+									<table id="subscriptions_table" border="0" 
+										   class="rounded_top" cellspacing="0">
+										<tr class="table_header">
+											<td class="rounded_left">Name</td>
+											<td>Id</td>
+											<td>Type</td>
+											<td>System</td>
+										</tr>
+										<tr class="no_channels">
+											<td rowspan="4">
+												There are not subscriptions to show.
+											</td>
+										</tr>
+									</table>
+								</div> 
+								<div id="subscribers_area">
+									<table id="subscribers_table" border="0" 
+										   class="rounded_top" cellspacing="0">
+										<tr class="table_header">
+											<td class="rounded_top">id</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							
+							<div id="channel_subscribe_area">
+								<div id="resize_channels_area">
+									<div class="more">+</div>
+									<div class="less">-</div>
+								</div>
+								<div id="subscribe_btn" class="button">Subscribe</div>
+								<div id="unsubscribe_btn" class="button">Unsubscribe</div>
+								<div id="getchannels_btn" class="button">Get Channels</div>
+							</div>
+							<div id="channel_management_area">
+								<div id="management_area">
+									<div class="box left_area">
+										<div class="box left_area1">
+											<input type="text" id="txt_access_key" 
+												   value="access" tabindex="3"
+												   title="Access key to authorize 
+												   publish operations"/>
+											<input type="text" id="txt_channel_id" 
+												   class="gray_input"
+												   value="channel id" tabindex="5"
+												   title="Channel identifier to 
+												   create or remove channels"/>
+										</div>
+										<div class="box left_area2">
+											<input type="text" id="txt_secret_key" 
+												   value="secret" tabindex="4"
+												   title="Secret key to authorize 
+												   publish operations"/>
+											<input type="text" id="txt_channel_name"
+												   class="gray_input"
+												   value="channel name" tabindex="6"
+												   title="Channel name to 
+												   create new channels"/>
+										</div>
+									</div>
+									<div class="box" id="management_options">
+										<input type="radio" name="visibility" 
+											   value="public" checked="checked" />Public
+										<input type="radio" name="visibility" 
+											   value="private" /> Private <br/>
+										<input type="checkbox" name="system" 
+											   value="ON" />System
+									</div>
+								</div>
+								<div class="box">
+									<div id="authenticate_btn" class="button">Authenticate</div>
+									<div id="createchannel_btn" class="button">New Channel</div>
+									<div id="deletechannel_btn" class="button">Delete Channel</div>
+								</div>
+							</div>
+							<div id="channel_publish_area" class="rounded_bottom">
+								<input type="text" id="txt_message" 
+									   class="gray_input"
+									   value="Type your message..." 
+									   title="Message to be published"/>
+								<div id="publish_btn" class="button">Publish</div>
+							</div>
+                        </div>
+                    </div>
+					<div id="demo_box_description" class="box">
+						This demo shows how messages can be retrieved and broadcasted 
+						using a publish/subscribe mechanism based on multiple channels.
+					</div>
+					<!--       LOG BOX           -->
+					<div id="log_box" class="box">
+						<div id="log_box_header">
+							<div id="show_hide_log" class="hide">Hide Log</div>
+							<div id="clear_log">Clear Log</div>
+						</div>
+						<div id="log_box_content" class="log_box_visible"></div>
+					</div>
+
+					<!--       DOWNLOAD_BUTTON   -->
+					<div id="demo_box_footer">
+						<div id="jws_download_button" class="button download">
+							<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+							   target="blank">Download jWebSocket</a>
+						</div>
+					</div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </body>
+</html>

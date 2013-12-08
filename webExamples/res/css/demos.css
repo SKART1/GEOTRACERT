@@ -1,0 +1,642 @@
+/*
+//	****************************************************************************
+//	jWebSocket demo.css (Community Edition, CE)
+//	****************************************************************************
+//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+//  Alexander Schulze, Germany (NRW)
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
+//	****************************************************************************
+*/
+
+/* 
+    Document   : tests
+    Created on : Apr 6, 2012, 4:04:19 PM
+    Author     : vbarzana
+    Description: This is the main Stylesheet for all jWebSocket Demos
+*/
+#demo_box, #functional_box_content, 
+#message_box{
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+#container{
+    -webkit-border-radius: 0px 0px 5px 5px;
+    -moz-border-radius: 0px 0px 5px 5px;
+    border-radius: 0px 0px 5px 5px;
+}
+
+body{
+    margin: 0px;
+    font-family: Verdana, sans-serif;
+	/*overflow: hidden;*/
+}
+#demo_box{
+    float: left;
+    width: 700px;
+    height: 100%;
+    border: 1px solid #C8C8C8;
+}
+
+@font-face {
+    font-family: Verdana;
+    src: url(verdana.ttf);
+}
+
+/*----------------- CONTAINER --------------*/
+div#container{
+    margin-top: 0px;
+    float: left;
+    width: 100%;
+    background: #EAF4DC;
+}
+
+/*----------------- DEMO_HEADER --------------*/
+#demo_box_header{
+    float: left;
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    -webkit-border-radius: 6px 6px 0px 0px;
+    border-radius: 6px 6px 0px 0px;
+    background: #2584C1 url(../img/header.png) repeat-x;
+    height: 50px;
+    width: 100%;
+
+
+    background: rgb(134,173,216); /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzg2YWRkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyNTg1YzEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  rgba(134,173,216,1) 0%, rgba(37,133,193,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(134,173,216,1)), color-stop(100%,rgba(37,133,193,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* IE10+ */
+    background: linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86add8', endColorstr='#2585c1',GradientType=0 ); /* IE6-8 */
+
+
+}
+#demo_box_header h1{
+    font-family: Arial !important;
+    color: #FFFFFF;
+    font-size: 18px;
+    margin-left: 12px;
+    margin-top: 14px;
+    width: 270px;
+    float: left;
+    font-weight: normal;
+}
+
+#demo_box_header_login{
+    float:right;
+    width: 400px;
+    height: 36px;
+    color:white;
+}
+
+#login_form{
+    float:left;
+    width: 200px;
+    height: 50px;
+    padding-top: 5px;
+}
+
+#login_form .first{
+    float: left;
+    padding-left: 3px;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+#login_form .second{
+    float: left;
+    padding-left: 40px;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+#user_text{
+    float: left;
+	width: 85px !important;
+}
+
+#user_password{
+    float: left;
+    margin-left: 5px;
+	width: 85px !important;
+}
+
+#login_button{
+    float: left;
+    margin-top: 17px;
+}
+
+#connect_button{
+	float: left;
+    margin-top: 17px;
+    margin-left: 5px;
+}
+
+#disconnect_button{
+	float: right;
+    margin-top: 17px;
+    margin-left: 5px;
+}
+
+#logoff_area{
+    height: 50px;
+    float: right;
+	padding-top: 2px;
+    padding-right: 12px;
+}
+
+#connect_area{
+	height: 50px;
+    float: right;
+    padding-right: 10px;
+	width: 120px;
+}
+
+#user_info{
+    float:left;
+    padding-top: 15px;
+}
+
+#user_info div{
+    display: inline;
+    float:left;
+}
+
+#logoff_button{
+	float: left;
+}
+
+
+#login_form label{
+    font-family: Verdana, sans-serif;
+    font-weight: normal;
+    color: white;
+    font-size: 10px;
+
+}
+
+input[type=text],
+input[type=password], textarea{
+    font-size: 12px;
+    text-shadow: 0 1px 0 white;    
+    border-color: white;
+    border-style: solid;
+    border-width: 1px;
+    height: 20px;
+    padding: 0px;
+
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+
+
+    -moz-box-shadow:inset 1px 1px 2px 0 #B8BABE;
+    -webkit-box-shadow:inset 1px 1px 2px 0 #B8BABE;
+    box-shadow:inset 1px 1px 2px 0 #B8BABE;
+}
+
+input[type=text]:focus,
+input[type=password]:focus, textarea:focus{
+    outline: none;
+}
+
+#demo_box_header_login input[type=text], #demo_box_header_login input[type=password]{
+    width: 95px;
+    padding-left: 5px;
+}
+
+textarea{
+    float: left;
+    width: 147px;
+    height: 30px;
+    resize: none;
+    padding: 5px;
+}
+/*----------------- DEMO_HEADER --------------*/
+
+
+/*--------------- DEMO_STATUSBAR -------------*/
+#demo_box_statusbar{
+    float: right;
+    height: 20px;
+    font-size: 10px;
+    font-family: "Verdana";
+    min-width: 422px;
+    background: #ffffff;
+    /*margin-left: 300px;*/
+    padding-left: 4px;
+    margin-right: 12px;
+    border: 1px solid #C8C8C8;
+    border-top: none;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-topright: 0px;
+    -webkit-border-radius: 0px 0px 6px 6px;
+    border-radius: 0px 0px 6px 6px;
+}
+
+#demo_box_statusbar div{
+    float: left;
+    display: inline;
+    padding-right: 4px;
+    padding-left:4px;
+    height: 16px;
+    margin-top: 3px;
+}
+
+#demo_box_statusbar .line{
+    border-right: 1px solid #C8C8C8;
+    width: 1px;
+    height: 12px;
+    margin-top: 4px;
+    margin-left: -10px;
+}
+
+#client_status{
+    padding-left: 15px !important;
+}
+
+#client_status.online{
+    background: url(../img/connected.png) no-repeat 1px 1px;
+}
+
+#client_status.authenticated{
+    background: url(../img/authenticated.png) no-repeat 1px 1px;
+}
+
+#client_status.offline{
+    background: url(../img/disconnected.png) no-repeat 1px 1px;
+}
+/*--------------- DEMO_STATUSBAR -------------*/
+
+
+/*----------------- DEMO_LOG_BOX -------------*/
+#demo_box_description{
+    margin-top: 10px;
+    padding: 5px 15px 5px 15px;
+    font-size: 11px;
+}
+/*-------------- DEMO_DESCRIPTION ------------*/
+
+
+/*---------------- DEMO_SCENARIO -------------*/
+#demo_box_scenario{
+    float: left;
+    margin: 10px; 
+    padding: 5px;
+}
+
+
+#scenario_container{
+	width: 98%;
+	float: left;
+	padding: 5px;
+}
+
+/*---------------- DEMO_SCENARIO -------------*/
+#log_box{
+    width: 100%;
+    margin-top: 20px;
+	float: left;
+}
+
+#log_box_header{
+	float: left;
+    z-index: 1;
+    margin-top: 2px;
+    background: #e4e4e4;
+    width: 190px;
+    height: 25px;
+    border: 1px solid #C8C8C8;
+    border-bottom: none;
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+    -webkit-border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    top:1px;
+    text-align: center;
+}
+
+#log_box_header div{
+    color: #0f79c3;
+    text-decoration: underline;
+    display: inline;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+    padding: 5px 5px 3px 10px;
+    cursor: pointer;
+    float:left;
+    font-weight: normal;
+
+}
+
+#show_hide_log{
+    padding-right: 30px !important;
+    border-right: 1px solid #C8C8C8;
+    width: 60px;
+}
+
+#show_hide_log.show{
+    background: url(../img/show_log.png) no-repeat 75px 3px;
+}
+
+#show_hide_log.hide{
+    background: url(../img/hide_log.png) no-repeat 75px 3px;
+}
+
+#log_box_content{
+    width: 98%;
+    float: left;
+    z-index: 0;
+    background: #FFFFFF;
+    border: 1px solid #C8C8C8;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-topright: 6px;
+    -moz-border-radius-bottomright: 6px;
+    -moz-border-radius-bottomleft: 6px;
+    -webkit-border-radius: 0px 6px 6px 6px;
+    border-radius: 0px 6px 6px 6px;
+    overflow: auto;
+    padding: 5px;
+    font-size: 8pt;
+	line-height: 20px;
+	word-wrap: break-word;
+}
+
+.log_box_hidden{
+    height: 2px;
+	max-height: 2px;
+    padding:0px 5px 0 5px !important;
+    /*background: white;*/
+	overflow: hidden !important;
+}
+
+.log_box_visible{
+    height: 200px;
+	max-height: 200px;
+	min-height: 200px;
+	overflow: auto !important;
+}
+/*----------------- DEMO_LOG_BOX -------------*/
+
+
+/*----------------- DEMO_FOOTER --------------*/
+#demo_box_footer{
+    float:right;
+}
+
+#jws_download_button{
+    cursor: pointer;
+    height: 25px;
+    float:right;
+    margin: 5px 5px 5px 0;
+}
+
+#jws_download_button a{
+    text-decoration: none;
+	background: none;
+	color: white;
+}
+/*----------------- DEMO_FOOTER --------------*/
+
+
+/*----------------- BUTTONS --------------*/
+.button{
+    float: left;
+    height: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: Verdana, sans-serif;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+} 
+
+.button .btn_left,
+.button .btn_center,
+.button .btn_right{
+    float: left;
+    height: 25px;
+}
+.button .r_download{
+    float: left;
+    height: 25px;
+    width: 26px;
+}
+
+.button .btn_left,
+.button .btn_right{
+    float: left;
+    height: 25px;
+    width: 9px;
+}
+
+.button .btn_center{
+    font-family: "Verdana";
+    font-weight: bold !important;
+    color: white;
+    text-shadow: 0px 1px #678613;
+    text-align: center;
+    font-size: 11px;
+    padding-top: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.button .btn_center{
+    background: url(../../res/img/buttons/n_c.png) top left repeat-x;
+}
+.button .btn_left{
+    background: url(../../res/img/buttons/n_l.png) top left no-repeat;
+}
+.button .btn_right{
+    background: url(../../res/img/buttons/n_r.png) top left no-repeat;
+}
+
+.button .r_download{
+    background: url(../../res/img/buttons/n_r_download.png) top left no-repeat;
+}
+
+.button.onmouseout .btn_center{
+    background: url(../../res/img/buttons/n_c.png) top left repeat-x;
+}
+.button.onmouseout .btn_left{
+    background: url(../../res/img/buttons/n_l.png) top left no-repeat;
+}
+.button.onmouseout .btn_right{
+    background: url(../../res/img/buttons/n_r.png) top left no-repeat;
+}
+.button.onmouseout .r_download{
+    background: url(../../res/img/buttons/n_r_download.png) top left no-repeat;
+}
+
+.button.onmouseover .btn_center{
+    background: url(../../res/img/buttons/h_c.png) top left repeat-x;
+}
+.button.onmouseover .btn_left{
+    background: url(../../res/img/buttons/h_l.png) top left no-repeat;
+}
+.button.onmouseover .btn_right{
+    background: url(../../res/img/buttons/h_r.png) top left no-repeat;
+}
+
+.button.onmouseover .r_download{
+    background: url(../../res/img/buttons/h_r_download.png) top left no-repeat;
+}
+
+.button.onmousedown .btn_center{
+    background: url(../../res/img/buttons/p_c.png) top left repeat-x;
+}
+.button.onmousedown .btn_left{
+    background: url(../../res/img/buttons/p_l.png) top left no-repeat;
+}
+.button.onmousedown .btn_right{
+    background: url(../../res/img/buttons/p_r.png) top left no-repeat;
+}
+
+.button.onmousedown .r_download{
+    background: url(../../res/img/buttons/p_r_download.png) top left no-repeat;
+}
+
+p{
+    font-family: Verdana, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    margin-top: 17px;
+    margin-bottom: 17px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.box{
+    float: left;
+}
+
+.tooltip{
+	margin-top: 3px;
+	z-index: 999;
+	display: none;
+	position: absolute;
+	width: 188px;
+}
+
+.tooltip .top{
+	background: url(../../res/img/tooltip_top.png) no-repeat;
+	width: 188px;
+	height: 21px;
+}
+
+.tooltip .middle{
+	background: url(../../res/img/tooltip_center.png) repeat-y;
+	width: 150px;
+	font-size: 11px;
+	font-family: "Verdana";
+	color: #FFFFFF;
+	padding: 0 25px 0 14px;
+}
+
+.tooltip .bottom{
+	background: url(../../res/img/tooltip_bottom.png) no-repeat;
+	width: 188px;
+	height: 13px;
+}
+
+/* ----------------------- CHECKBOXES PERSONALIZATION -------------------------- */
+input[type="checkbox"]{
+	font-style: "Verdana";
+    font-size: 8px !important;
+    color: #333333 !important;
+}
+
+.checkbox {
+	width: 18px !important;
+	height: 20px !important;
+	padding: 0 0 0 0px;
+	/*background: url(img/cb_n.png) no-repeat !important;*/
+	/*display: block;*/
+	float: left !important;
+	margin: 0px 0px 0 0px;
+}
+/* ----------------------- CHECKBOXES PERSONALIZATION -------------------------- */
+
+
+/* ----------------------------- ICONS --------------------------------------*/
+#icon{
+	float: left;
+	width: 45px;
+	height: 45px;
+}
+
+#icon.icon_error{
+	background: url( ../img/error.png ) no-repeat;
+}
+
+#icon.icon_information{
+	background: url( ../img/information.png ) no-repeat;
+}
+
+#icon.icon_warning{
+	background: url( ../img/warning.png ) no-repeat;
+}
+
+#icon.icon_alert{
+	background: url( ../img/alert.png ) no-repeat;
+}
+
+#icon.icon_important{
+	background: url( ../img/important.png ) no-repeat;
+}
+/* ----------------------------- ICONS --------------------------------------*/
+
+
+/* ----------------------- JQUERY UI DIALOG PERSONALIZATION -------------------------- */
+.ui-widget{
+	font-size: 12px !important;
+}
+.ui-dialog-buttonpane{
+	padding: 5px 5px 0 0 !important;
+	float: left !important;
+	width: 100% !important;
+}
+.ui-dialog-content{
+	min-height: 70px !important;
+}
+.ui-widget-header{
+	background: rgb(134,173,216); /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzg2YWRkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyNTg1YzEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) !important;
+    background: -moz-linear-gradient(top,  rgba(134,173,216,1) 0%, rgba(37,133,193,1) 100%) !important; /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(134,173,216,1)), color-stop(100%,rgba(37,133,193,1))) !important; /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%) !important; /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%) !important; /* IE10+ */
+    background: linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%) !important; /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86add8', endColorstr='#2585c1',GradientType=0 ) !important; /* IE6-8 */
+	color: white !important;
+}
+
+.ui-dialog-titlebar{
+	padding: 5px 5px 5px 12px !important;
+	font-size: 12px;
+}
+/* ----------------------- JQUERY UI DIALOG PERSONALIZATION -------------------------- */

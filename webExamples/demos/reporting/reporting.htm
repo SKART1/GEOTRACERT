@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Reporting Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Reporting Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script src="../../res/js/jwsDemoPlugIn.js" type="text/javascript"></script>
+		<script src="../../res/js/jwsReportingPlugIn.js" type="text/javascript"></script>
+
+		<script type="text/javascript" language="JavaScript">
+			
+			var
+				gReportParams = [];
+			
+			function getReports() {
+				log( "Retreiving list of reports via jWebSocket..." );
+				if( lWSC.isConnected() ) {
+					lWSC.reportingGetReports({
+						OnResponse: function( aToken ) {
+							// log("Reports " + JSON.stringify( aToken ) );
+						}
+					});
+				} else {
+					log( "Not connected." );
+				}
+			}
+
+			function getReportParams() {
+				var lReportId = eReportSel.value;
+				log( "Retreiving parameters for report '" + lReportId + "' via jWebSocket..." );
+				if( lWSC.isConnected() ) {
+					lWSC.reportingGetReportParams( lReportId, {
+						OnResponse: function( aToken ) {
+							// log("Reports " + JSON.stringify( aToken ) );
+						}
+					});
+				} else {
+					log( "Not connected." );
+				}
+			}
+
+			function createReport() {
+				var lReportId = eReportSel.value;
+				log( "Creating Report..." );
+				
+				if( lWSC.isConnected() ) {
+					var lParams = [];
+					/*
+					for(var lIdx = 0, lCnt = gReportParams.length; lIdx < lCnt; lIdx++ ) {
+						var lParam = gReportParams[ lIdx ];
+						lParams.push({
+							name: lParam.name,
+							type: lParam.type,
+							value: lParam.elem.value
+						});
+					}
+					*/
+					lParams.push({ name: "aFrom", type: "datetime", value: "2011-05-20T13:04:00Z" });
+					lParams.push({ name: "aTo", type: "datetime", value: "2011-05-25T00:00:00Z" });
+					lWSC.reportingCreateReport(lReportId, lParams, {
+						OnResponse: function( aToken ) {
+							var lW = jws.$("sdivPdf").scrollWidth;
+							if( isNaN( lW ) || lW <= 10 ) {
+								lW = 400;
+							}
+							if( aToken.code == 0) {
+								jws.ReportingPlugIn.displayPDF( jws.$("sdivPdf"), aToken.url, lW, 300);
+								// window.open( aToken.url, "jWebSocket Report", "" );
+							} else {
+								log("Report creation error: " + aToken.msg );
+							}	
+						}
+					});
+				} else {
+					log( "Not connected." );
+				}
+			}
+
+			function handleReportAvail() {
+				// show pdf
+				log("Report is available");
+			}
+			
+			function handleReports( aToken ) {
+				// remove all existing reports in drop down box
+				while( eReportSel.options.length > 0 ) {
+					var lOption = eReportSel.options[ 0 ];
+					eReportSel.removeChild(lOption);
+				}
+				// add all reports from incoming token
+				for( var lIdx = 0, lCnt = aToken.reports.length; lIdx < lCnt; lIdx++ ) {
+					/*
+					var lOption = document.createElement("option");
+					lOption.value = aToken.reports[ lIdx ].reportname;
+					lOption.text = aToken.reports[ lIdx ].reportname;
+					*/
+					var lOption = new Option(
+						aToken.reports[ lIdx ].reportname,
+						aToken.reports[ lIdx ].reportname
+					);
+					eReportSel.options[ lIdx ] = lOption; // appendChild(lOption);
+				}
+			}
+			
+			function handleReportParams( aToken ) {
+				// remove all existing reports in drop down box
+				
+				eFilterDiv.innerHTML = "";
+				gReportParams = [];
+				// analyze report params from incoming token
+				var lTable = document.createElement("table");
+				for( var lIdx = 0, lCnt = aToken.params.length; lIdx < lCnt; lIdx++ ) {
+					var lParam = aToken.params[ lIdx ];
+					var lDescr = lParam.description;
+					if( lDescr ) {
+						var lTR = document.createElement("tr");
+						var lTD1 = document.createElement("td");
+						var lTD2 = document.createElement("td");
+						var lLbl = document.createElement("span");
+						var lInp = document.createElement("input");
+						lInp.id = "param." + lParam.name;
+
+						gReportParams.push({
+							name: lParam.name,
+							type: lParam.type,
+							elem: lInp
+						});
+						
+						lTD1.appendChild(lLbl);
+						lTD2.appendChild(lInp);
+						lTR.appendChild(lTD1);
+						lTR.appendChild(lTD2);
+						lTable.appendChild(lTR);
+
+						lLbl.innerHTML = lDescr;
+					}	
+				}
+				eFilterDiv.appendChild(lTable);
+			}
+
+			function initPage() {
+				eReportSel = jws.$( "sselReports" );
+				eFilterDiv = jws.$( "sdivFilter" );
+				lWSC.setReportingCallbacks({
+					OnReportAvail: handleReportAvail,
+					OnReports: handleReports,
+					OnReportParams: handleReportParams
+				});
+			}
+
+			function exitPage() {
+				// processExitPage();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<script type="text/javascript">
+			jws.DemoPlugIn.buildDemoPage({
+				title: "Reporting",
+				header: "jWebSocket Reporting Demo",
+				description: "This demo shows how to easily create reports via jWebSocket."
+			});
+			processInitPage();
+		</script>
+
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" >
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnGetReports" type="button" value="Get Reports" onclick="getReports();"
+							   title="Gets the list of avaliable reports.">
+					</td>
+					<td class="stdDlg" width="5">
+						<select id="sselReports" title="Available Reports on the server." style="width:150px">
+						</select>
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnGetReportParams" type="button" value="Get Params" onclick="getReportParams();"
+							   title="Gets the list of avaliable reports.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtCreateReport" type="button" value="Create Report" onclick="createReport();"
+							   title="Creates the currently selected report using the given parameters.">
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="sdivContainer" id="sdivFilter">
+			
+		</div>
+		
+		<div class="sdivContainer" id="sdivPdf">
+			
+		</div>
+		
+
+	</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Stockticker Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type"
+			  content="text/html; charset=windows-1252">
+		<title>jWebSocket JMS Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<link rel="stylesheet" href="css/jmsStockTicker.css" />
+		<!-- load the jWebSocket JavaScript client library -->
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<!-- this one imports the client side JMS plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsJMSPlugIn.js"></script>
+		<script type="text/javascript" language="JavaScript">
+			var eLog = null, eKeepAlive = null, eMessage = null, eChannelId = null, eChannelName = null, eAccessKey = null, eSecretKey = null, eIsPrivate = null, eIsSystem = null, eKeepAlive = null, eChannelSel = null;
+
+			function log(aString) {
+				eLog.innerHTML += aString + "<br>";
+				if (eLog.scrollHeight > eLog.clientHeight) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lWSC = null;
+
+			function login() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				log("Login to " + jws.getDefaultServerURL() + " ...");
+				try {
+					var lRes = lWSC.logon(
+							jws.getDefaultServerURL(),
+							jws.GUEST_USER_LOGINNAME,
+							jws.GUEST_USER_PASSWORD,
+							{
+								// OnOpen callback
+								OnOpen: function(aEvent) {
+									log("<font style='color:#888'>jWebSocket connection established.</font>");
+									jws.$("simgStatus").src = "../../images/connected.png";
+								},
+								OnWelcome: function() {
+									//getChannels();
+								},
+								// OnMessage callback
+								OnMessage: function(aEvent) {
+									/*
+									 log("<font style='color:#888'>jWebSocket message received: '"
+									 + aEvent.data + "'</font>");
+									 */
+									if (lWSC.isLoggedIn()) {
+										jws.$("simgStatus").src = "../../images/authenticated.png";
+									} else {
+										jws.$("simgStatus").src = "../../images/connected.png";
+									}
+									jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;"
+											+ lWSC.getId()
+											+ "&nbsp;"
+											+ (jws.browserSupportsNativeWebSockets ? "(native)"
+											: "(flashbridge)");
+								},
+								// OnClose callback
+								OnClose: function(aEvent) {
+									log("<font style='color:#888'>jWebSocket connection closed.</font>");
+									jws.$("simgStatus").src = "../../images/disconnected.png";
+									jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+								}
+
+							});
+				} catch (ex) {
+					log("Exception: " + ex.message);
+				}
+			}
+
+			// log out the client from the jWebSocket server
+			function logout() {
+				if (lWSC) {
+					lWSC.stopKeepAlive();
+					log("Disconnecting...");
+					var lRes = lWSC.close({
+						timeout: 3000
+					});
+					log(lWSC.resultToString(lRes));
+				}
+			}
+
+			function listen() {
+				log("Listen...");
+				lWSC.listenJms(getConnectionFactoryName(), getDestinationName(),
+						isPubSubDomain());
+			}
+
+			function unlisten() {
+				log("Unlisten...");
+				lWSC.unlistenJms(getConnectionFactoryName(), getDestinationName(),
+						isPubSubDomain());
+			}
+
+
+			function onHandleJmsTextMessage(aEvent) {
+				/*var msg = aEvent.msgPayLoad;
+				 log("text message received:");
+				 log(msg + " with the following JMS headers: " + getJmsHeadersToString(aEvent));*/
+			}
+
+			function onHandleJmsMap(aEvent) {
+				/*var msg = aEvent.msgPayLoad;
+				 log("map received:");
+				 log(msg);*/
+			}
+
+			function onHandleJmsMapMessage(aEvent) {
+				/*var msg = aEvent.msgPayLoad;
+				 log("map message received:");
+				 log(msg + " with the following JMS headers: " + getJmsHeadersToString(aEvent));*/
+			}
+
+			function getConnectionFactoryName() {
+				return jws.$("stxfConnectionFactoryName").value;
+			}
+
+			function getDestinationName() {
+				return jws.$("stxfDestinationName").value;
+			}
+
+			function isPubSubDomain() {
+				return jws.$("stxfPubSubDomain").checked;
+			}
+
+
+			var connection = null;
+			var stockRowIndexes = {};
+
+			function onHandleJmsText(message) {
+				//log("jms text received: '"+message+"'");
+				var stockTable = jws.$("stockTable");
+				var body = message.msgPayLoad;
+
+				// extract the stock data fields
+				var fields = body.split(':');
+				var company = fields[0];
+				var ticker = fields[1];
+				var price = fields[2];
+
+				// lookup the table row
+				var stockRowIndex = stockRowIndexes[ticker];
+				var stockRow = stockTable.rows[stockRowIndex];
+
+				// lazily populate the table row, with 5 cells
+				if (stockRow === undefined) {
+					var stockRowIndex = stockTable.rows.length;
+					stockRow = stockTable.insertRow(stockRowIndex);
+					for (var cell = 0; cell < 5; cell++) {
+						stockRow.insertCell(cell);
+					}
+					stockRow.cells[0].className = 'company';
+					stockRow.cells[1].className = 'ticker';
+					stockRow.cells[2].className = 'price';
+					stockRow.cells[3].className = 'change';
+					stockRow.cells[4].className = 'percent';
+					stockRowIndexes[ticker] = stockRowIndex;
+				}
+
+				// detect price change
+				var oldPrice = Number(stockRow.cells[2].innerHTML);
+				var oldChange = Number(stockRow.cells[3].innerHTML);
+				var change = ((oldPrice !== 0) ? (price - oldPrice) : 0).toFixed(2);
+				var percent = ((oldPrice !== 0) ? (change / oldPrice * 100) : 0).toFixed(1);
+
+				// update the table row cell data
+				stockRow.cells[0].innerHTML = company;
+				stockRow.cells[1].innerHTML = ticker;
+				stockRow.cells[2].innerHTML = price;
+				stockRow.cells[3].innerHTML = change;
+				stockRow.cells[4].innerHTML = percent;
+
+				// update the table row cell styles
+				var oldSign = (oldChange !== 0) ? oldChange / Math.abs(oldChange) : 0;
+				var sign = (change !== 0) ? change / Math.abs(change) : 0;
+				if (sign !== oldSign) {
+					switch (sign) {
+						case 1:
+							stockRow.cells[3].className = 'upChange';
+							stockRow.cells[4].className = 'upPercent';
+							break;
+						case -1:
+							stockRow.cells[3].className = 'downChange';
+							stockRow.cells[4].className = 'downPercent';
+							break;
+					}
+				}
+			}
+
+			function initPage() {
+				eLog = jws.$("sdivChat");
+				eMessage = jws.$("stxfMsg");
+
+				if (jws.browserSupportsWebSockets()) {
+					lWSC = new jws.jWebSocketJSONClient();
+					lWSC.setJMSCallbacks({
+						OnHandleJmsText: onHandleJmsText,
+						OnHandleJmsTextMessage: onHandleJmsTextMessage,
+						OnHandleJmsMap: onHandleJmsMap,
+						OnHandleJmsMapMessage: onHandleJmsMapMessage
+					});
+				} else {
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert(lMsg);
+					log(lMsg);
+				}
+			}
+
+			function exitPage() {
+				lWSC.stopKeepAlive();
+				logout();
+			}
+
+		</script>
+	</head>
+
+	<body onload="initPage();" onunload="exitPage();">
+		<!--	remarked temporarily due to chrome 5 browser bug
+			<script type="text/javascript">
+				var lFrameElem = this.frameElement;
+				if( !lFrameElem ) {
+					location.replace( "../../index.htm?page=demos/streaming/streaming.htm" );
+				}
+			</script>
+		-->
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket JMS Stock Ticker Demo</td>
+				<td class="tdHeader" width="1%">
+					<img id="simgStatus" src="../../images/disconnected.png" align="right" />
+				</td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span>
+				</td>
+			</tr>
+		</table>
+		<div id="sdivChat" class="sdivContainer"
+			 style="position: relative; height: 100px; overflow: auto;"></div>
+
+		<div id="table_header">
+			<h4>Stock Ticker Demo</h4>
+
+			<p>This is a demo of a Web client that
+				communicates with a JMS message broker to receive
+				stock information. Both broker and quote service must be running.</p>
+
+			<table id="stockTable" class="stockTable" cellSpacing="0">
+				<thead>
+					<tr>
+						<th class="company" width="60%">Company</th>
+						<th class="ticker" width="100px">Ticker</th>
+						<th class="price" width="120px">Price</th>
+						<th class="change" width="120px">Change</th>
+						<th class="percent" width="120px">% Change</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<br>
+		</div>
+
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0"
+				   width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5"><input class="sbtnDlg"
+														id="sbtnConnect" type="button" value="Login" onclick="login();"
+														title="Authenticates you against the jWebSocket Server (using 'guest' account).">
+					</td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg"
+														id="sbtnDisconnect" type="button" value="Logout"
+														onclick="logout();"
+														title="Logs you out and disconnects from the jWebSocket server.">
+					</td>
+					<td class="stdDlg" width="5">&nbsp;ConnectionFactory Name:</td>
+					<td width="70">
+						<input class="stxfDlg"
+							   id="stxfConnectionFactoryName" type="text" readonly="readonly"
+							   value="connectionFactory" style="width: 99%"
+							   title="Name of the ConnectionFactory for creating JMS connections.">
+					</td>
+
+				</tr>
+				<tr class="strDlg">
+					<td width="">
+						<input class="sbtnDlg" id="sbtnListen"
+							   type="button" value="Listen" onclick="listen();"
+							   title="Listen to a JMS destination.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg"
+							   id="sbtnClear" type="button" value="Clear Log"
+							   onclick="clearLog();"
+							   title="Clears the result and event log above.">
+					</td>
+					<td class="stdDlg" width="5">&nbsp;Destination Name:</td>
+
+					<td width="70">
+						<input class="stxfDlg" id="stxfDestinationName"
+							   type="text" value="stockTopic" style="width: 99%" readonly="readonly"
+							   title="Enter the name of a JMS destination.">
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td width="">
+						<input class="sbtnDlg" id="sbtUnlisten"
+							   type="button" value="Unlisten" onclick="unlisten();"
+							   title="Unlisten from a JMS destination." />
+					</td>
+					<td width=""><!-- input class="sbtnDlg" id="sbtnSendText"
+						type="button" value="Send Text" onclick="sendText();"
+						title="Send text"-->
+					</td>
+					<td class="stdDlg" width="5">&nbsp;Topic:</td>
+					<td width="70">
+						<input class="stxfDlg" id="stxfPubSubDomain"
+							   type="checkbox" title="isPubSubDomain" disabled="disabled"
+							   value="true" checked="checked" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td width="">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

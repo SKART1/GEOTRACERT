@@ -1,0 +1,56 @@
+#demo_box{
+	width: 718px;
+}
+
+.description_box{
+    float: left;
+    width: 63%;
+}
+
+.description_box p{
+    margin-left: 3px;
+}
+
+#message_box{
+	background: #E4E4E4;
+	width: 35%;
+	border: 1px solid #C8C8C8;
+	float: left;
+	padding: 5px;
+	margin-top: 20px;
+}
+
+.choices, .buttons{
+	float: left;
+	font-size: 11px;
+}
+
+.choices {
+	width: 120px;
+	padding-bottom: 8px;
+	margin-left: 5px;
+}
+
+.choices .choice_label, .choices .radio_button{
+	float: left;
+	margin-top: 7px;
+	margin-left: 3px;
+}
+
+.choices div{
+	width: 100%;
+	float: left;
+}
+
+.buttons{
+	width: 105px;
+	margin: 5px 0 0 12px;
+}
+
+.buttons .button .btn_center{
+	width: 70px;
+}
+
+#unregister_btn{
+	margin-top: 7px;
+}

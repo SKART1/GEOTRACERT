@@ -36,7 +36,7 @@ import org.jwebsocket.token.Token;
  */
 public class JWebSocketTokenListenerSample implements WebSocketServerTokenListener {
 
-	private static Logger mLog = Logging.getLogger(null);
+	private static Logger mLog = Logging.getLogger(JWebSocketTokenListenerSample.class);
                 
 	/**
 	 *
@@ -112,7 +112,8 @@ public class JWebSocketTokenListenerSample implements WebSocketServerTokenListen
 	 */
 	@Override
 	public void processClosed(WebSocketServerEvent aEvent) {
-		if (mLog.isDebugEnabled()) {
+		
+                if (mLog.isDebugEnabled()) {
 			mLog.debug("Client '" + aEvent.getConnector() + "' disconnected.");
 		}
 	}

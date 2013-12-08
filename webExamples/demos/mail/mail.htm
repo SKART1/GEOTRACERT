@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Mail Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Mail Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- load the jWebSocket JavaScript client library -->
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<!-- this one imports the client side mail plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsMailPlugIn.js"></script>
+		<script type="text/javascript" src="../../res/js/jwsFilesystemPlugIn.js"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null;
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lWSC = null;
+			var gUsername = null;
+			var mCurrentMailID = null;
+
+			function logon() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				var lURL = jws.getDefaultServerURL();
+
+				gUsername = eUsername.value;
+				var lPassword = ePassword.value;
+
+				log( "Connecting to " + lURL + " and logging in as '" + gUsername + "'..." );
+				var lRes = lWSC.logon( lURL, gUsername, lPassword, {
+					
+					// OnOpen callback
+					OnOpen: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection established.</font>" );
+						jws.$("simgStatus").src = "../../images/connected.png";
+					},
+					// OnMessage callback
+					OnMessage: function( aEvent, aToken ) {
+						log( "<font style='color:#888'>jWebSocket '" + aToken.type + "' token received, full message: '" + aEvent.data + "</font>" );
+						if( lWSC.isLoggedIn() ) {
+							jws.$("simgStatus").src = "../../images/authenticated.png";
+						} else {
+							jws.$("simgStatus").src = "../../images/connected.png";
+						}
+						jws.$("slblClientId").innerHTML =
+							"&nbsp;Client&#x2011;Id:&nbsp;"
+							+ lWSC.getId() + "&nbsp;"
+							+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" );
+					},
+					// OnClose callback
+					OnClose: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection closed.</font>" );
+						jws.$("simgStatus").src = "../../images/disconnected.png";
+						jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+					}
+				});
+
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function logoff() {
+				if( lWSC ) {
+					log( "Logging off " + ( gUsername != null ? "'" + gUsername + "'" : "" ) + " and disconnecting..." );
+					// the timeout below  is optional, if you use it you'll get a good-bye message.
+					var lRes = lWSC.close({ timeout: 3000 });
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+			function sendMail() {
+				lWSC.sendMail( mCurrentMailID, {} );
+			}
+
+			function createMail() {
+				lWSC.createMail(
+					"a.schulze@jwebsocket.org", // from
+					eTo.value, // to
+					eCC.value, // cc
+					eBCC.value, // bcc
+					eSubject.value, // subject
+					eBody.value, // body
+					jws.MailPlugIn.TEXT_MAIL, // format (is html?)
+					{
+					}
+				);
+			}
+
+			function dropMail() {
+				lWSC.dropMail(
+					mCurrentMailID,
+					{
+						
+					}
+				);
+			}
+
+			function addAttachment() {
+				log( "uploading local file to the jWebSocket server..." );
+				// OnLocalFileLoaded refers to onLocalFileLoadedObs
+				var lRes =
+					lWSC.fileLoadLocal( jws.$( "sinpUpload" ), {
+					OnSuccess: function( aToken ) {
+						lWSC.addAttachment(
+							mCurrentMailID, 
+							aToken.fileName, 
+							aToken.data,
+							{	// file is already base64 encoded
+								suppressEncoder: true /*,
+								volumeSize: 950000,
+								archiveName: "mailAttachments.zip" */
+							}
+						);
+					},
+					OnFailure: function( aToken ) {
+						alert( "Failure on loading file" );
+					}
+				});
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function onMailSentObs( aToken ) {
+				log( "Mail sent: " + aToken.msg );
+			}
+			
+			function onMailCreatedObs( aToken ) {
+				mCurrentMailID = aToken.id;
+				log( "Mail created with ID: " + aToken.id );
+			}
+
+			function initPage() {
+				eLog = jws.$( "sdivChat" );
+
+				eTo = jws.$( "stxfTo" );
+				eCC = jws.$( "stxfCC" );
+				eBCC = jws.$( "stxfBCC" );
+				eSubject = jws.$( "stxfSubject" );
+				eBody = jws.$( "stxaBody" );
+
+				eUsername = jws.$( "stxfUsername" );
+				ePassword = jws.$( "spwfPassword" );
+				eUsername.value = jws.GUEST_USER_LOGINNAME;
+				ePassword.value = jws.GUEST_USER_PASSWORD;
+
+				// jws.browserSupportsWebSockets checks web if sockets are available
+				// either natively, by the Flash Bridge or by the Chrome Frame.
+				if( jws.browserSupportsWebSockets() ) {
+					lWSC = new jws.jWebSocketJSONClient();
+					lWSC.setMailCallbacks({
+						OnMailCreated: onMailCreatedObs,
+						OnMailSent: onMailSentObs
+					});
+					eUsername.focus();
+				} else {
+					jws.$( "sbtnLogon" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnLogoff" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
+
+					jws.$( "stxfTo" ).setAttribute( "disabled", "disabled" );
+					jws.$( "stxaSubject" ).setAttribute( "disabled", "disabled" );
+					jws.$( "stxaBody" ).setAttribute( "disabled", "disabled" );
+
+					jws.$( "stxfUsername" ).setAttribute( "disabled", "disabled" );
+					jws.$( "spwfPassword" ).setAttribute( "disabled", "disabled" );
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+			}
+
+			function exitPage() {
+				logoff();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<!--	remarked temporarily due to chrome 5 browser bug
+				<script type="text/javascript">
+					var lFrameElem = this.frameElement;
+					if( !lFrameElem ) {
+						location.replace( "../../index.htm?page=demos/hello_world/hello_world.htm" );
+						// location.href = "../../index.htm?page=demos/hello_world/hello_world.htm" ;
+					}
+				</script>
+		-->		
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Mail Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<p>This demo shows how to easily send mails via the jWebSocket Mail Service.
+			An appropriate mail server configuration on your jWebSocket server in the jWebSocket.xml file is required.
+			Please refer to the documentation at <a target="_blank" href="http://jwebsocket.org">http://jwebsocket.org</a>.</p>
+		<div id="sdivChat" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Username</td>
+					<td class="stdDlg" width="5"><input class="stxfDlg" id="stxfUsername" type="text" value="" style="width:150px"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnLogon" type="button" value="Login" onclick="logon();"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();"></td>
+					<td class="stdDlg" width=""><input class="sbtnDlg" id="sbtnCreate" type="button" value="Create Mail" onclick="createMail();"></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Password</td>
+					<td class="stdDlg" width="5"><input class="spwfDlg" id="spwfPassword" type="password" value="" style="width:150px"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnLogoff" type="button" value="Logoff" onclick="logoff();"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnSendMail" type="button" value="Send Mail" onclick="sendMail();"></td>
+					<td class="stdDlg" width=""><input class="sbtnDlg" id="sbtnDropMail" type="button" value="Drop Mail" onclick="dropMail();"></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">To</td>
+					<td class="stdDlg" width="" colspan="4"><input class="stxfDlg" id="stxfTo" type="text" value="username@domain.tld..." style="width:99%"></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">CC</td>
+					<td class="stdDlg" width="" colspan="4"><input class="stxfDlg" id="stxfCC" type="text" value="" style="width:99%"></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">BCC</td>
+					<td class="stdDlg" width="" colspan="4"><input class="stxfDlg" id="stxfBCC" type="text" value="" style="width:99%"></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Subject</td>
+					<td class="stdDlg" width="" colspan="4"><input class="stxfDlg" id="stxfSubject" type="text" value="jWebSocket Mail Demo" style="width:99%"></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Message</td>
+					<td class="stdDlg" width="" colspan="4">
+						<textarea class="stxaDlg" rows="3" cols="255" id="stxaBody" style="width:99%">
+Ladies and Gentlemen,
+here we proudly present our Mail-Plug-In with its huge set of features.
+It includes attachments as well automatic multi volume messages.
+Best Regards
+Your jWebSocket Team
+						</textarea>
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" colspan ="4"><input class="sbtnDlg" id="sinpUpload" type="file" multiple="multiple" style="width:100%"></td>
+					<td class="stdDlg">
+						<input class="sbtnDlg" id="sbtnUpload" type="button" value="Add Attachm." onclick="addAttachment();"
+							   title="Uploads a file to the server and optionally notifies clients about URL, but does not pass the file itself.">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

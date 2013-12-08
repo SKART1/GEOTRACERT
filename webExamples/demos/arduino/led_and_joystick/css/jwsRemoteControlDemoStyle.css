@@ -1,0 +1,195 @@
+*{
+    font-family: verdana, sans-serif;
+    font-size: 9pt;
+}
+
+#header{
+    background-image: url('../img/background.png');
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border: 1px solid #c8c8c8;	        
+    height: 46px;
+    width: 773px;
+}
+#header label{
+    font-family: arial ,sans-serif ;
+    font-size: 21px;
+    color: #FFFFFF;
+    float:left;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#page{        
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background-color: #eaf4dc;
+    height: 425px;
+    width: 773px;        
+    float:left;          
+}
+
+.container{ 
+    background-color: #e4e4e4;
+    border: 1px solid #e4e4e4;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    float: left;
+}
+
+#joystickContainer{
+    position: relative;
+    top:12px;
+    left: 12px;
+    width: 380px;
+    height: 350px;
+}
+
+label.title{
+    font-size: 14px;
+    font-style: normal;
+    font-family: arial ,sans-serif ; 
+    font-weight: bold;
+    color: #000000;
+}
+
+label.miniDescription{
+    font-size: 11px;
+    font-style: normal;
+    font-family: verdana ,sans-serif ;    
+    color: #969696;  
+}
+
+#joystickTitle{    
+    float: left;    
+    position: relative;
+    left: 100px;
+    top: 10px;
+}
+
+#joystickMiniDescription{
+    float: left;    
+    position: relative;
+    left: 10px;
+    top: 15px;
+}
+
+#joystickPosition{
+    float: left;    
+    position: relative;
+    left: 25px;
+    top: 25px;
+    width: 295px;
+    height: 293px;
+    background-image: url('../img/position.png'); 
+}
+
+#ledsContainer{
+    position: relative;
+    left: 25px;
+    top: 102px; 
+    width: 350px;
+    height: 130px;
+}
+
+#ledsTitle{    
+    float: left;    
+    position: relative;
+    left: 100px;
+    top: 10px;
+}
+
+#ledsMiniDescription{
+    float: left;    
+    position: relative;
+    left: 15px;
+    top: 15px;
+}
+
+#allLeds{
+    float: left;    
+    position: relative;
+    left: 25px;
+    top: 30px;  
+}
+
+#allLeds div{
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
+#descriptionContainer{
+    position: relative;
+    left: 25px;
+    top: 12px;  
+    width: 350px;
+    height: 130px;
+    float:left;
+}
+
+#descriptionContainer ul{
+    list-style: url('../img/bullet.png');
+}
+
+#descriptionContainer ul li{
+    margin-top: 5px;
+}
+
+#point{
+    width: 25px;
+    height: 25px;
+    background: url('../img/point.png') no-repeat;
+    left: 135px;
+    top: 135px;
+    float: left;
+    position: relative;
+}
+
+#ledblue.off{     
+    background-image: url('../img/blue_off.png');
+    float: left;
+    margin-left: 0px;
+}
+
+#ledblue.on{     
+    background-image: url('../img/blue.png');
+    float: left;
+    margin-left: 0px;
+}
+
+#ledred.off{     
+    background-image: url('../img/red_off.png');
+    float: left;
+    margin-left: 33px;
+}
+
+#ledred.on{     
+    background-image: url('../img/red.png');
+    float: left;
+    margin-left: 33px;
+}
+
+#ledgreen.off{     
+    background-image: url('../img/green_off.png');
+    float: left;
+    margin-left: 36px;
+}
+
+#ledgreen.on{     
+    background-image: url('../img/green.png');
+    float: left;
+    margin-left: 36px;
+}
+
+#ledyellow.off{     
+    background-image: url('../img/yellow_off.png');
+    float: left;
+    margin-left: 39px;
+}
+
+#ledyellow.on{     
+    background-image: url('../img/yellow.png');
+    float: left;
+    margin-left: 39px;
+}

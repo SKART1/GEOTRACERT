@@ -1,0 +1,27 @@
+.logout{background:transparent url(images/logoutativo.png) 0 0 no-repeat !important;
+        padding: 0;
+        margin: 0;
+        border-color: transparent;
+}
+.login{background:transparent url(images/loginativo.png) 0 0 no-repeat !important;
+        padding: 0;
+        margin: 0;
+        border-color: transparent;
+}
+.register{background:transparent url(images/registerativo.png) 0 0 no-repeat !important;
+        padding: 0;
+        margin: 0;
+        border-color: transparent;
+}
+.text{
+    font-family: Verdana,sans-serif;
+    font-size: 11px;
+    font-style: normal;
+}
+.textuser{
+    font-family: Verdana,sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    color:white;
+   
+}

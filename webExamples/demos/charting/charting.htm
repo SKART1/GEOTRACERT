@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Charting Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Charting Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script src="../../res/js/jQuery/jQuery-1.5.min.js" type="text/javascript"></script>
+		<script src="../../res/js/jQuery/jQuery.flot.js" type="text/javascript"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null;
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lWSC = null;
+
+			function connect() {
+				// URL is ws[s]://[hostname|localhost][:port][/context][/servlet/][;args...]
+				// var lURL = "wss://localhost:9797/jWebSocket/jWebSocket"; // for Jetty SSL Servlet
+				var lURL = jws.getDefaultServerURL();
+
+				log( "Connecting to " + lURL + " ..." );
+				if( lWSC.isConnected()) {
+					log( "Already connected." );
+					return;
+				}
+
+				try {
+					lWSC.open( lURL, {
+
+						// use JSON sub protocol
+						subProtocol: jws.WS_SUBPROT_JSON,
+
+						// OnOpen callback
+						OnOpen: function( aEvent ) {
+							log( "jWebSocket connection established." );
+							jws.$("simgStatus").src = "../../images/connected.png";
+						},
+
+						// OnWelcome event
+						OnWelcome: function( aEvent )  {
+							log( "<font style='color:red'>jWebSocket Welcome received.</font>" );
+						},
+
+						// OnGoodBye event
+						OnGoodBye: function( aEvent )  {
+							log( "<font style='color:red'>jWebSocket GoodBye received.</font>" );
+						},
+
+						// OnMessage callback
+						OnMessage: function( aEvent ) {
+							log( "jWebSocket message received: '" + aEvent.data + "'" );
+
+							if( lWSC.isLoggedIn() ) {
+								jws.$("simgStatus").src = "../../images/authenticated.png";
+							} else {
+								jws.$("simgStatus").src = "../../images/connected.png";
+							}
+							jws.$("slblClientId").innerHTML =
+								"&nbsp;Client&#x2011;Id:&nbsp;"
+								+ lWSC.getId() + "&nbsp;"
+								+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" );
+
+						},
+
+						// OnClose callback
+						OnClose: function( aEvent ) {
+							log( "jWebSocket connection closed." );
+
+							jws.$("simgStatus").src = "../../images/disconnected.png";
+							jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+						}
+
+					});
+				} catch( ex ) {
+					log( "Exception: " + ex.message );
+				}
+			}
+
+			function disconnect() {
+				if( lWSC ) {
+					log( "Disconnecting..." );
+					try {
+						var lRes = lWSC.close({ timeout: 3000 });
+						if( lRes.code == 0 ) {
+							// it's send with timeout, so wait for server response
+							// log( "Disconnected." );
+						} else {
+							log( lRes.msg );
+						}
+					} catch( ex ) {
+						log( "Exception: " + ex.message );
+					}
+				}
+			}
+
+			function login() {
+				if( lWSC ) {
+					log( "Logging in..." );
+					try {
+						var lRes = lWSC.login( "guest", "aPassword" );
+						if( lRes.code == 0 ) {
+							log( "Asychronously waiting for response..." );
+						} else {
+							log( lRes.msg );
+						}
+					} catch( ex ) {
+						log( "Exception: " + ex.message );
+					}
+				}
+			}
+
+			function logout() {
+				if( lWSC ) {
+					log( "Logging out..." );
+					try {
+						var lRes = lWSC.logout();
+						if( lRes.code == 0 ) {
+							log( "Asychronously waiting for response..." );
+						} else {
+							log( lRes.msg );
+						}
+					} catch( ex ) {
+						log( "Exception: " + ex.message );
+					}
+				}
+			}
+
+			function echo() {
+				var lMsg = eMessage.value;
+				log( "Sending '" + lMsg + "', waiting for echo..." );
+				try {
+					var lRes = lWSC.echo( lMsg );
+					if( lRes.code == 0 ) {
+						log( "Message sent." );
+					} else {
+						log( lRes.msg );
+					}
+				} catch( ex ) {
+					log( "Exception: " + ex.message );
+				}
+			}
+
+			function initPage() {
+				eLog = jws.$( "sdivLog" );
+				eMessage = jws.$( "stxfMsg" );
+
+				if( window.WebSocket ) {
+					lWSC = new jws.jWebSocketJSONClient();
+				} else {
+					jws.$( "sbtnConnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnDisconnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
+					jws.$( "stxfMsg" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnSend" ).setAttribute( "disabled", "disabled" );
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+			}
+
+			function exitPage() {
+				disconnect();
+			}
+
+		</script>
+
+		<script id="source">
+			var d;
+			var n = 14;
+			$(function () {
+				d = [
+					[1, null],
+					[2, null],
+					[3, null],
+					[4, null],
+					[5, null],
+					[6, null],
+					[7, null],
+					[8, null],
+					[9, null],
+					[10, null],
+					[11, null],
+					[11, null],
+					[12, null],
+					[13, null]];
+
+				// $.plot($("#placeholder"), [d], { xaxis: { mode: null } });
+			});
+
+			setInterval(
+				function() {
+					d.splice(0,1);
+					//for(var i = 0, l = d.length; i < l; i++ ) {
+					//	d[i][1] = Math.random() * 300;
+					//}
+					var r = Math.random() * 300;
+					if( r < 50 ) { r = null; }
+					d.push([n++, r]);
+					$.plot($("#placeholder"), [d], {
+						xaxis: { 
+							mode: null
+						},
+						yaxis: {
+							min: 0,
+							max:300
+						},
+						series: {
+			                // stack: stack,
+			                lines: {
+								show: d
+								, color: "rgb(255, 0, 0)"
+								// , steps: steps
+							}
+							/*
+			                bars: {
+								show: d,
+								barWidth: 0.8
+							}
+							*/
+						}
+						, grid: {
+							backgroundColor: { colors: ["#fff", "#000"] }
+						}
+					});
+				},
+				500
+			);
+		</script>
+
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<!--	remarked temporarily due to chrome 5 browser bug
+		<script type="text/javascript">
+			var lFrameElem = this.frameElement;
+			if( !lFrameElem ) {
+				location.replace( "../../index.htm?page=demos/fundamentals/fundamentals.htm" );
+			}
+		</script>
+		-->
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Charting Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+
+		<p>This demo shows how to easily set up a minimum JSON communication via WebSockets between a jWebSocket client and a jWebSocket server.
+		If you are not sure whether your favorite browser supports WebSockets please refer 
+		to our <a target="_top" href="http://jwebsocket.org/jws_for_all.htm">jWebSocket Cross-Browser
+		Compatibility</a> page.</p>
+
+		<div id="placeholder" style="width:600px;height:300px;"></div>
+
+
+
+		<div id="sdivLog" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnConnect" type="button" value="Connect" onclick="connect();"
+							   >
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnDisconnect" type="button" value="Disconnect" onclick="disconnect();">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();"
+							   title="Clears the result and event log above.">
+					</td>
+					<td class="stdDlg" width="5">Message</td>
+					<td class="stdDlg" width="">
+						<input class="stxfDlg" id="stxfMsg" type="text" value="Please type your message here!" style="width:100%">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnSend" type="button" value="Echo" onclick="echo();">
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnLogin" type="button" value="Login" onclick="login();"
+							   title="Authenticates you against the jWebSocket Server.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnLogout" type="button" value="Logout" onclick="logout();"
+							   title="Logs you out and disconnects from the jWebSocket server.">
+					</td>
+					<td class="stdDlg" width="" colspan="3"></td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

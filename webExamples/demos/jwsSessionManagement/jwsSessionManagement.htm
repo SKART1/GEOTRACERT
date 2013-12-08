@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket Session Management Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		//  Author: Rolando Santamaria Maso
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+        <title>jWebSocket Session Management Demo</title>
+
+		<!-- JQUERY STYLES -->
+		<link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+
+        <!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsSessionManagement.css"/>
+		
+		<!-- JQUERY DEPENDENCIES -->
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/dialogs.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+		<!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+
+		<!--  PUBLIC WIDGETS   -->
+		<script type="text/javascript" src='../../res/js/widgets/wAuth.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/wLog.js'></script>
+
+		<!--  PRIVATE WIDGETS  -->
+		<script type="text/javascript" src='js/wSessionManagement.js'></script>
+
+		<!--  MAIN JAVASCRIPT FILE   -->
+		<script type="text/javascript" src='js/init.js'></script>
+
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>Session Management</h1>
+                <div id="demo_box_header_login">
+                    <div id="logoff_area">
+                        <div id="user_info">
+                            <div id="user_info_name"></div> <div>&nbsp;|&nbsp;</div>
+                            <div id="logoff_button" class="button">Logout</div>
+                        </div>
+                    </div>
+                    <div id="login_area">
+                        <div id="login_form">
+                            <label class="first">Username</label>
+                            <label class="second">Password</label>
+                            <input type="text" id="user_text" value="root"/>
+                            <input type="password" id="user_password" value="root"/>
+                        </div>
+                        <div id="login_button" class="button">Login</div>
+                    </div>
+                </div>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div><div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>
+
+                <!--       DESCRIPTION       -->
+                <div class="box">
+                    <p>This little "Session Management" demo, demonstrates how the 
+						clients can manage their server-side session storage and also 
+						retrieve public session entries from other clients. 
+						Please use the browser's show frame source function to 
+						see the entire source code of this page.</p>
+                </div>
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+                    <!--    FUNCTIONAL_BOX   -->
+					<div id="functional_box" class="box">
+                        <div id="functional_box_header">
+                            <a class="pressed" name="put" ><span>Put</span></a>
+                            <a name="get"><span>Get</span></a>
+                            <a name="has"><span>Has</span></a>
+                            <a name="remove"><span>Remove</span></a>
+                            <a name="keys"><span>Keys</span></a>
+                            <a name="get_all"><span>Get All</span></a>
+                            <a name="get_many"><span>Get Many</span></a>
+                        </div>
+                        <div id="functional_box_content">
+                            <div id="put_area" class="tab_element">
+                                <div class="text">
+                                    Put key/value entry in the server-side 
+									client session storage. 
+                                </div>
+								<div class="form box">
+									<label>Key:</label>
+									<input type="text" id="put_key" />
+									<label>Value:</label>
+									<input type="text" id="put_value" />
+									<div class="public_cb">
+										<label class="is_public">Public:</label>
+										<input type="checkbox" id="put_public" />
+									</div>
+
+									<div class="bt_container box">
+										<div id="put_btn" class="button"
+											 title="Put key/value entry in 
+											 the server-side client session storage.">
+											Put
+										</div>
+									</div>
+								</div>
+                            </div>
+
+							<div id="get_area" class="tab_element">
+                                <div class="text">
+                                    Gets a server-side client session storage 
+									entry given the entry key.
+                                </div>
+								<div class="form box">
+									<label>Client:</label>
+									<input type="text" id="get_client" />
+									<label>Key:</label>
+									<input type="text" id="get_key" />
+									<div class="public_cb">
+										<label class="is_public">Public:</label>
+										<input type="checkbox" id="get_public" />
+									</div>
+									<div class="bt_container">	
+										<div id="get_btn" class="button"
+											 title="Gets a server-side client 
+											 session storage entry given the entry key.">
+											Get
+										</div>
+									</div>
+                                </div>
+                            </div>
+
+							<div id="has_area" class="tab_element">
+                                <div class="text">
+									Indicates if the client server-side session 
+									storage contains a custom entry given the entry key.
+                                </div>
+								<div class="form box">
+									<label>Client:</label>
+									<input type="text" id="has_client" />
+									<label>Key:</label>
+									<input type="text" id="has_key" />
+									<div class="public_cb">
+										<label class="is_public">Public:</label>
+										<input type="checkbox" id="has_public" />
+									</div>
+									<div class="bt_container">
+										<div id="has_btn" class="button"
+											 title="Indicates if the client 
+											 server-side session storage 
+											 contains a custom entry given the entry key.">
+											Has
+										</div>
+									</div>
+                                </div>
+                            </div>
+
+							<div id="remove_area" class="tab_element">
+                                <div class="text">
+                                    Removes a server-side client session storage 
+									entry given the entry key.
+                                </div>
+								<div class="form box">
+									<label>Key:</label>
+									<input type="text" id="remove_key" />
+									<div class="public_cb">
+										<label class="is_public">Public:</label>
+										<input type="checkbox" id="remove_public" />
+									</div>
+									<div class="bt_container">
+										<div id="remove_btn" class="button"
+											 title="Removes a server-side client 
+											 session storage entry given the entry key.">
+											Remove</div>
+									</div>
+                                </div>
+                            </div>
+
+							<div id="keys_area" class="tab_element">
+                                <div class="text">
+                                    Retrieves the list of entry keys stored in 
+									the server-side session storage of a given 
+									client. A client can only get the public 
+									entries from others.
+                                </div>
+								<div class="form box">
+									<label>Client:</label>
+									<input type="text" id="keys_client" />
+									<div class="public_cb">
+										<label class="is_public">Public:</label>
+										<input type="checkbox" id="keys_public" />
+									</div>
+									<div class="bt_container">
+										<div id="keys_btn" class="button"
+											 title="Retrieves the list of entry
+											 keys stored in the server-side session
+											 storage of a given client. A client
+											 can only get the public entries from others.">
+											Keys
+										</div>
+									</div>
+                                </div>
+                            </div>
+
+							<div id="get_all_area" class="tab_element">
+                                <div class="text">
+                                    Retrieves all the entries stored in the 
+									server-side session storage of a given client. 
+									A client can only get the public entries from others.
+                                </div>
+								<div class="form box">
+									<label>Client:</label>
+									<input type="text" id="getall_client" />
+									<div class="public_cb">
+										<label class="is_public">Public:</label>
+										<input type="checkbox" id="getall_public" />
+									</div>
+									<div class="bt_container">
+										<div id="getall_btn" class="button"
+											 title="Retrieves all the entries 
+											 stored in the server-side session 
+											 storage of a given client. A client 
+											 can only get the public entries from others.">
+											Get All
+										</div>
+									</div>
+                                </div>
+                            </div>
+
+							<div id="get_many_area" class="tab_element">
+                                <div class="text">
+                                    Retrieves a list of public entries stored in 
+									the server-side session storage of many clients. 
+                                </div>
+								<div class="form box">
+									<label>Clients:</label>
+									<input title="Use comma to separate the client
+										   identifiers. Example: '4999201, 6555655'" 
+										   type="text" id="getmany_client" />
+									<label>Keys:</label>
+									<input title="Use comma to separate the keys. 
+										   Example: 'name, sex'" type="text" id="getmany_key" />
+									<div id="getmany_btn" class="button"
+										 title="Retrieves a list of public 
+										 entries stored in the server-side 
+										 session storage of many clients. ">
+										Get Many</div>
+								</div>
+							</div>
+							<div id="key_list">
+								<div class="client_name">
+									<b class="box">List of keys for client Id:</b>
+									<div class="id">-</div>
+								</div>
+								<div class="keys_list_area">
+									<div class="keys_list">
+										<div class="keys_title"><b>Private keys:</b></div>
+										<ul class="private">
+											<li class="no_keys">There are no keys for this client</li>
+										</ul>
+									</div>
+								</div>
+								<div class="keys_list_area">
+									<div class="keys_list">
+										<div class="keys_title"><b>Public keys:</b></div>
+										<ul class="public">
+											<li class="no_keys">There are no public keys</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<!--       LOG BOX           -->
+					<div id="log_box" class="box">
+						<div id="log_box_header">
+							<div id="show_hide_log" class="hide">Hide Log</div>
+							<div id="clear_log">Clear Log</div>
+						</div>
+						<div id="log_box_content" class="log_box_visible"></div>
+					</div>
+
+					<!--       DOWNLOAD_BUTTON   -->
+					<div id="demo_box_footer">
+						<div id="jws_download_button" class="button download">
+							<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+							   target="blank">Download jWebSocket</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>

@@ -11,6 +11,8 @@ package com.github.skart123.geotracert.geotracertserver;
 
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import org.jwebsocket.config.JWebSocketConfig;
 import org.jwebsocket.config.JWebSocketServerConstants;
 import org.jwebsocket.factory.JWebSocketFactory;
@@ -36,7 +38,9 @@ public class App extends Application
    static final File parentDir = new File(new File("").getAbsolutePath());
    static final String pathToIndexBase2=parentDir.getAbsolutePath();
    static String pathToIndexBaseCorrect2;
-
+   
+   
+ 
      /**
      * Creates a root Restlet that will receive all incoming calls.
      */
@@ -90,33 +94,22 @@ public class App extends Application
         component.start();
         
         
-        //SOCKETS!!!!
-        // We MUST show this to Licence Agreement
-        System.setProperty(JWebSocketServerConstants.JWEBSOCKET_HOME, pathToIndexBase2);
-        System.out.println(System.getProperty(JWebSocketServerConstants.JWEBSOCKET_HOME));
-        
-        //JWebSocketFactory.
-        //        p
-       //         rintCopyrightToConsole();
-                
-        // check if home, config or bootstrap path are passed by command line
-      //  JWebSocketConfig.initForConsoleApp(args);
-
+        //SOCKETS!!!!       
         try {
-            // start the jWebSocket Server
-            JWebSocketFactory.start();
-
+            String temp=pathToIndexBase2+File.separator+File.separator+"socketConfig"+File.separator+File.separator+"jWebSocket.xml";
+            System.out.println("MyDebug");
+            System.out.println(temp);
+            JWebSocketFactory.start(temp);           
+            
+         
             TokenServer lServer = (TokenServer)JWebSocketFactory.getServer("ts0");
-            //TokenServer lServer = JWebSocketFactory.getTokenServer();
+            
             if( lServer != null ) {
               // and add the sample listener to the server's listener chain
               lServer.addListener(new JWebSocketTokenListenerSample());
-            }
-
-
-            // run server until shut down request
-            //JWebSocketFactory.run();          
-       } 
+            } 
+           
+        } 
         catch (Exception lEx) {
                 System.out.println(
                                 lEx.getClass().getSimpleName()
@@ -124,7 +117,7 @@ public class App extends Application
                                 + lEx.getMessage());
         } 
         finally {
-                JWebSocketFactory.stop();
+               // JWebSocketFactory.stop();
         }       
     }
     
@@ -136,6 +129,7 @@ public class App extends Application
         // Defines only one route
         router.attach("/hello",HelloWorldResource.class);    
         return router;
-    }   
+    }  
+    
 }
 

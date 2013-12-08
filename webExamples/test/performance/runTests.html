@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src="../../res/js/jwsChannelPlugIn.js"></script>
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+		<script type="text/javascript" src='js/Util.js'></script>
+		<script type="text/javascript" src='js/Tests.js'></script>
+	</head>
+	<body>
+		<h1>jWebSocket Performance Test Runner</h1>
+		<table>
+			<tr>
+				<td>
+					<h3>Select test transport type:</h3>
+					&nbsp;Transport:<select id="transport">
+						<option value="broadcast">Broadcast</option>
+						<option value="channelBroadcast">Channel Broadcast</option>
+						<option value="jmsBroadcast">JMS Wrapper Broadcast</option>
+					</select>
+					<h3>Set message length:</h3>
+					&nbsp;Length: <input type="text" id="length" value="9000" />
+					<h3>Set loops number:</h3>
+					&nbsp;Loops: <input type="text" value="100" id="loops" />
+					<h3>Set repetitions number:</h3>
+					&nbsp;Repeats: <input type="text" value="3" id="repeats" />
+					<p>
+						<input type="button" id="start" value="Start test" />
+
+				</td>
+				<td style="width: 400px; vertical-align: top">
+					<div id="log">
+
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
+	</body>
+</html>

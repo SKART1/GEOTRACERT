@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket JDBC Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Reporting Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script src="../../res/js/jwsDemoPlugIn.js" type="text/javascript"></script>
+		<script src="../../res/js/jwsJDBCPlugIn.js" type="text/javascript"></script>
+
+		<script type="text/javascript" language="JavaScript">
+			
+			var eQuery = null;
+			
+			function querySQL() {
+				log( "Running native SQL query..." );
+				if( lWSC.isConnected() ) {
+					lWSC.jdbcQuerySQL( eQuery.value, {
+						OnResponse: function( aToken ) {
+							// log("Reports " + JSON.stringify( aToken ) );
+						}
+					});
+				} else {
+					log( "Not connected." );
+				}
+			}
+			
+			function updateSQL( aToken ) {
+				log( "Not yet implemented." );
+			}
+			
+			function getPrimaryKeys( aToken ) {
+				log( "Getting primary keys..." );
+				if( lWSC.isConnected() ) {
+					lWSC.jdbcGetPrimaryKeys( "sq_pk_system_log", {
+						count: 2,
+						OnResponse: function( aToken ) {
+							// log("Reports " + JSON.stringify( aToken ) );
+						}
+					});
+				} else {
+					log( "Not connected." );
+				}
+			}
+			
+			function handleJDBCRowSet( aToken ) {
+			}
+			
+			function handleJDBCResult( aToken ) {
+			}
+			
+			function initPage() {
+				eQuery = jws.$( "stxfSQL" );
+				
+				lWSC.setJDBCCallbacks({
+					OnJDBCRowSet: handleJDBCRowSet,
+					OnJDBCResult: handleJDBCResult
+				});
+			}
+
+			function exitPage() {
+				// processExitPage();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<script type="text/javascript">
+			jws.DemoPlugIn.buildDemoPage({
+				title: "Reporting",
+				header: "jWebSocket JDBC Demo",
+				description: "This demo shows how to access JDBC databases via jWebSocket."
+			});
+			processInitPage();
+		</script>
+
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" >
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="stxfDlg" id="stxfSQL" type="text" value="select * from system_log" style="width:99%"
+							   title="The SQL query for select or update, insert, delete commands.">
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td>
+						<input class="sbtnDlg" id="sbtnQuerySQL" type="button" value="Query SQL" onclick="querySQL();"
+							   title="Queries the database with a native SQL query.">
+						<input class="sbtnDlg" id="sbtnUpdateSQL" type="button" value="Update SQL" onclick="updateSQL();"
+							   title="Updates the database with a native SQL query.">
+						<input class="sbtnDlg" id="sbtnGetPKs" type="button" value="Get PKs" onclick="getPrimaryKeys();"
+							   title="Retrieves a number of primary keys.">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

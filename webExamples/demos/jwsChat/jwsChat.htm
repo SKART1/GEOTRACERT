@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket Chat Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+        <title>jWebSocket Chat Demo</title>
+
+		<!-- JQUERY STYLES -->
+		<link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+
+		<!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsChat.css"/>
+
+		<!-- JQUERY DEPENDENCIES -->
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+        <script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/dialogs.js'></script>
+
+        <!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+        <script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+
+        <!--  PUBLIC WIDGETS   -->
+        <script type="text/javascript" src='../../res/js/widgets/wAuth.js'></script>
+        <script type="text/javascript" src='../../res/js/widgets/wLog.js'></script>
+
+        <script type="text/javascript" src='js/wChat.js'></script>
+
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+        <!--  MAIN JAVASCRIPT FILE   -->
+        <script type="text/javascript" src='js/init.js'></script>
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocket Chat Demo</h1>
+                <div id="demo_box_header_login">
+					<div id="logoff_area">
+                        <div id="user_info">
+                            <div id="user_info_name"></div> <div>&nbsp;|&nbsp;</div>
+                            <div id="logoff_button" class="button">Logout</div>
+                        </div>
+                    </div>
+                    <div id="login_area">
+                        <div id="login_form">
+                            <label class="first">Username</label>
+                            <label class="second">Password</label>
+                            <input type="text" id="user_text" value="guest"/>
+                            <input type="password" id="user_password" value="guest"/>
+                        </div>
+                        <div id="login_button" class="button">Login</div>
+                    </div>
+                </div>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div><div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+					<div id="main_content">
+						<!--		\\HERE GOES THE CONTENT OF EACH SPECIFIC DEMO\\				-->
+						<div id="message_box" class="box">
+							<div id="chat_box_header" class="box_header">User ?</div>
+							<div id="chat_box_history">
+								<div class="private"></div>
+								<div class="public"></div>
+							</div>
+							<textarea id="message_box_text">Type your message...</textarea>
+							<div id="select_emoticon_window">
+								<div id="select_emoticon_window_title">
+									<div id="close_emoticon_window">x</div>
+									<div>Select an emoticon!</div>
+								</div>
+								<div id="icons">
+									<div id="tongue" class="emoticon_btn"></div>
+									<div id="embarrassed" class="emoticon_btn"></div>
+									<div id="sick" class="emoticon_btn"></div>
+									<div id="wink" class="emoticon_btn"></div>
+									<div id="kiss" class="emoticon_btn"></div>
+									<div id="rose" class="emoticon_btn"></div>
+									<div id="crying" class="emoticon_btn"></div>
+									<div id="confused" class="emoticon_btn"></div>
+									<div id="heart" class="emoticon_btn"></div>
+									<div id="heart-broken" class="emoticon_btn"></div>
+									<div id="smile" class="emoticon_btn"></div>
+									<div id="sad" class="emoticon_btn"></div>
+									<div id="surprise" class="emoticon_btn"></div>
+									<div id="smile-big" class="emoticon_btn"></div>
+									<div id="opinion-agree" class="emoticon_btn"></div>
+									<div id="opinion-disagree" class="emoticon_btn"></div>
+									<div id="jWebSocketLogo" class="emoticon_btn"></div>
+								</div>
+								<div id="emoticons-url">Emoticons: © 2010-2013 
+									<a href="http://www.iconki.com/emotions-icons.asp">
+										Iconki.com</a></div>
+							</div>
+							<div id="select_emoticon_btn">
+								<div class="emoticon" id="selected_emoticon"></div>
+								<div class="click_to_slide" id="show_more_emoticons"></div>
+							</div>
+
+							<div id="message_box_broadcast_btn" class="message_box_btn">
+								<div class="button">Send</div>
+							</div>
+							<div id="message_box_clear_btn" class="message_box_btn">
+								<div class="button">Clear</div>
+							</div>
+						</div>
+
+						<div id="user_box" class="box">
+							<div id="users_box_header" class="box_header">Currently in the chat</div>
+							<div id="chat_switcher_button_area">
+								<div>
+									<div id="btn_private_chat" class="active">
+										<div id="new_message_notification" 
+											 title="New private messages pending...">0</div>
+										Private chat 
+									</div>
+									<div id="separator">|</div>
+									<div id="btn_public_chat"> Public chat</div>
+								</div>
+							</div>
+							<div id="users_box_body_header"></div>
+							<!--  Private users list  -->
+							<div id="users_box_body" class="user_box_body">
+								<!--								<div class="online" id="_01.38134.1"><div class="client_id">guest@01.38134.10ffdfg0</div><div class="remove_private_client">x</div></div>-->
+								<!-- <div class="offline" id="_01.38134.1">guest@01.38134.1</div>-->
+								<div class="no_users_online box">There are not connected users</div>
+							</div>
+
+							<!--  Public users list  -->
+							<div id="public_users_box_body" class="user_box_body">
+								<div class="no_users_online">There are not connected users</div>
+							</div>
+						</div>
+
+						<!--       DESCRIPTION       -->
+						<div id="description_box" class="box">
+							<p class="box">
+								This demo shows how to easily set up a simple jWebSocket based chat system.<br></br> 
+								If you are not sure wether your favorite browser supports WebSockets please 
+								refer to our jWebSocket <a target="_top" href="http://jwebsocket.org/documentation/jwebsocket-cross-browser-compatibility">
+									Cross-Browser Compatibility</a> page.
+							</p>
+						</div>
+						<!-- <div id="notification_area" class="box">
+								<div class="box_header">
+									Notification area
+								</div>
+							 </div>-->
+
+						<div id="new_box" class="box">
+							<p>To run chat on a single system, you can simulate other 
+								guests by opening one or more new chat windows.</p>
+							<div id="new_box_chat_btn" class="button" 
+								 title="New Chat Window...">New Chat Window</div>
+						</div>
+						<!--       LOG BOX           -->
+						<div id="log_box" class="box">
+							<div id="log_box_header">
+								<div id="show_hide_log" class="hide">Hide Log</div>
+								<div id="clear_log">Clear Log</div>
+							</div>
+							<div id="log_box_content" class="log_box_visible"></div>
+						</div>
+
+						<!--       DOWNLOAD_BUTTON   -->
+						<div id="demo_box_footer">
+							<div id="jws_download_button" class="button download">
+								<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+								   target="blank">Download jWebSocket</a>
+							</div>
+						</div>
+						<!--	END	\\HERE GOES THE CONTENT OF EACH SPECIFIC DEMO\\			-->
+					</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

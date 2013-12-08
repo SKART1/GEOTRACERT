@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket FileSystem Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket FileSystem Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script src="../../res/js/jwsDemoPlugIn.js" type="text/javascript"></script>
+		<!-- this one imports the client side file system plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsFilesystemPlugIn.js"></script>
+
+		<script type="text/javascript" language="JavaScript">
+			
+			var eData = null;
+			var mFileName = "test.txt";
+			var mAlias = "publicDir";
+			
+			function loadFile() {
+				log( "Loading a file from the server via WebSockets..." );
+				// call the getTime method of the client side plug-in
+				var lRes = lWSC.fileLoad(
+					mFileName,
+					mAlias,
+					{	scope: jws.SCOPE_PUBLIC
+					}
+				);
+				// log error only, on success don't confuse the user
+				if( lRes.code != 0 ) {
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+			function saveFile() {
+				log( "Saving a file from the server via WebSockets..." );
+				// call the getTime method of the client side plug-in
+				var lRes = lWSC.fileSave(
+					mFileName,
+					eData.value,
+					{	scope: jws.SCOPE_PUBLIC
+					}
+				);
+				// log error only, on success don't confuse the user
+				if( lRes.code != 0 ) {
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+			
+			function appendFile() {
+				log( "Appending a file from the server via WebSockets..." );
+				// call the getTime method of the client side plug-in
+				var lRes = lWSC.fileAppend(
+					mFileName,
+					eData.value,
+					{	scope: jws.SCOPE_PUBLIC
+					}
+				);
+				// log error only, on success don't confuse the user
+				if( lRes.code != 0 ) {
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+			
+			function deleteFile() {
+				log( "Deleting a file from the server via WebSockets..." );
+				// call the getTime method of the client side plug-in
+				var lRes = lWSC.fileDelete(
+					mFileName,
+					true, // force delete
+					{	scope: jws.SCOPE_PUBLIC
+					}
+				);
+				// log error only, on success don't confuse the user
+				if( lRes.code != 0 ) {
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+		
+			function getFilelist() {
+				log( "Retrieving file list from the server via WebSockets..." );
+				// call the getFilelist method of the client side plug-in
+				var lRes = lWSC.fileGetFilelist(
+					"publicDir", [ "*.*" ],
+					{	recursive: true
+					}
+				);
+				// log error only, on success don't confuse the user
+				if( lRes.code != 0 ) {
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+			function onFileLoadedObs( aToken ) {
+				log( "Loaded file: " + aToken.filename + ", content: " + aToken.data );
+				eData.value = aToken.data;
+			}
+
+			function onFileDeletedObs( aToken ) {
+				log( "Deleted file: " + aToken.filename );
+				eData.value = aToken.data;
+			}
+
+			function onFileErrorObs( aToken ) {
+				error( "Error loading file: " + aToken.msg );
+			}
+
+			function onFileSavedObs( aToken ) {
+				var lFilename = aToken.filename;
+				log( "File " + lFilename + " has been stored on server.");
+			}
+
+			function initPage() {
+				eData = jws.$( "stxfData" );
+				
+				lWSC.setFileSystemCallbacks({
+					OnFileLoaded: onFileLoadedObs,
+					OnFileSaved: onFileSavedObs,
+					OnFileDeleted: onFileDeletedObs,
+					OnFileError: onFileErrorObs
+				});
+			}
+
+			function exitPage() {
+				// processExitPage();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<script type="text/javascript">
+			jws.DemoPlugIn.buildDemoPage({
+				title: "FileSystem",
+				header: "jWebSocket FileSystem Demo",
+				description: "This demo shows how to remote file systems via jWebSocket."
+			});
+			processInitPage();
+		</script>
+
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnSaveFile" type="button" value="Save File" onclick="saveFile();"
+							   title="Saves the message below into a shared file on the jWebSocket server.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnAppendFile" type="button" value="Append File" onclick="appendFile();"
+							   title="Appends the message below to a shared file on the jWebSocket server.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnLoadFile" type="button" value="Load File" onclick="loadFile();"
+							   title="Loads a shared file on the jWebSocket server and displays it below.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnDeleteFile" type="button" value="Delete File" onclick="deleteFile();"
+							   title="Deletes a shared file on the jWebSocket server.">
+					</td>
+					<td class="stdDlg" width="">
+						<input class="sbtnDlg" id="sbtnGetFilelist" type="button" value="Filelist" onclick="getFilelist();"
+							   title="Retreives the filelist from the server.">
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Data</td>
+					<td class="stdDlg" width="" colspan="4">
+						<input class="stxfDlg" id="stxfData" type="text" value="Your Data" style="width:99%"
+							   title="Data to be saved in a file or appended to a file.">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>
