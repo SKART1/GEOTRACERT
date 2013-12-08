@@ -94,11 +94,13 @@ public class App extends Application
         // We MUST show this to Licence Agreement
         System.setProperty(JWebSocketServerConstants.JWEBSOCKET_HOME, pathToIndexBase2);
         System.out.println(System.getProperty(JWebSocketServerConstants.JWEBSOCKET_HOME));
-                
-        JWebSocketFactory.printCopyrightToConsole();
+        
+        //JWebSocketFactory.
+        //        p
+       //         rintCopyrightToConsole();
                 
         // check if home, config or bootstrap path are passed by command line
-        JWebSocketConfig.initForConsoleApp(args);
+      //  JWebSocketConfig.initForConsoleApp(args);
 
         try {
             // start the jWebSocket Server
@@ -113,7 +115,7 @@ public class App extends Application
 
 
             // run server until shut down request
-            JWebSocketFactory.run();          
+            //JWebSocketFactory.run();          
        } 
         catch (Exception lEx) {
                 System.out.println(
