@@ -20,6 +20,8 @@ import org.jwebsocket.server.TokenServer;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
+import org.restlet.data.CharacterSet;
+import org.restlet.data.Encoding;
 import org.restlet.data.Protocol;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Redirector;
@@ -54,7 +56,7 @@ public class App extends Application
        
         Component component = new Component();
        
-       
+     
         
         /*System.out.println("App.class.getProtectionDomain().getCodeSource().getLocation().getPath()"); 
         System.out.println(pathToIndexBaseCorrect1);
@@ -66,17 +68,21 @@ public class App extends Application
         component.getClients().add(Protocol.FILE );  
         
         // Create an application         
-        Application application = new Application() {  
-            @Override  
+        Application application = new Application() {             
+            @Override             
             public Restlet createInboundRoot() {  
                 //Конструктор ресурса                 
                 Directory temp = new Directory(getContext(), pathToIndexBaseCorrect1);
+               
                 return temp;         
             }  
         }; 
+        //application
+        //For correct rusian letters representation
+        application.getMetadataService().setDefaultCharacterSet(CharacterSet.UTF_8);
         
         
-        
+       
         // Attach the application to the component 
         //main page: index.html
         component.getDefaultHost().attach("/index.html",application); 
