@@ -1,0 +1,368 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>jWebSocket-Parent</artifactId>
+		<groupId>org.jwebsocket</groupId>
+		<version>1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jwebsocket</groupId>
+	<artifactId>jWebSocketServer</artifactId>
+	<name>jWebSocketServer</name>
+	<description>jWebSocket Server Project</description>
+	<packaging>jar</packaging>
+
+	<!-- Shared version number properties -->
+	<properties>
+		<org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+	</properties>
+
+	<build>
+		<sourceDirectory>../shared/J2SE/jWebSocketServer</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<executions>
+					<!-- create embedded version unpackaged -->
+					<execution>
+						<id>Standard</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<finalName>jWebSocketServer-${project.version}</finalName>
+							<outputDirectory>../../../rte/jWebSocket-${project.version}/libs
+							</outputDirectory>
+							<archive>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<mainClass>org.jwebsocket.console.JWebSocketServer</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>org.jwebsocket.console.JWebSocketServer</mainClass>
+					<arguments>
+						<argument>-config</argument>
+						<argument>${project.build.directory}/src/main/resources/jWebSocket.xml</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<reportOutputDirectory>${project.build.directory}/../../jWebSocketClient/web/javadocs/${project.name}</reportOutputDirectory>
+					<stylesheetfile>${project.build.directory}/../../jWebSocketClient/web/javadocs/stylesheet.css
+					</stylesheetfile>
+				</configuration>
+			</plugin>
+
+			<!-- start create assemblies -->
+			<!-- description: http://binkley.blogspot.com/2006/12/making-one-jar-with-maven.html -->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<id>Bundle</id>
+						<configuration>
+							<classifier>Bundle</classifier>
+							<finalName>jWebSocketServer-Bundle</finalName>
+							<outputDirectory>../../../rte/jWebSocket-${project.version}/libs
+							</outputDirectory>
+							<archive>
+								<manifest>
+									<mainClass>org.jwebsocket.console.JWebSocketServer</mainClass>
+								</manifest>
+							</archive>
+							<descriptors>
+								<descriptor>src/assembly/one-jar.xml</descriptor>
+							</descriptors>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
+
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<!-- to compile groovy code in this project 
+			Refer to: http://docs.codehaus.org/display/GMAVEN/Executing+Groovy+Code
+			-->
+			<!--
+			<plugin>
+				<groupId>org.codehaus.groovy.maven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateStubs</goal>
+							<goal>compile</goal>
+							<goal>generateTestStubs</goal>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+                            <tasks>
+
+							</tasks>
+							<scriptpath>
+								<element>C:/svn/jWebsocket/trunk/shared/J2SE/jWebSocketServer/org/jwebsocket</element>
+							</scriptpath>
+							<source>C:/svn/jWebsocket/trunk/shared/J2SE/jWebSocketServer/org/jwebsocket/eventmodel/api/IEventModelFilter.groovy</source>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			-->
+
+		</plugins>
+	</build>
+
+	<!-- define all the dependencies here -->
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.netty</groupId>
+			<artifactId>netty</artifactId>
+			<version>3.2.3.Final</version>
+			<!-- <version>3.2.0.BETA1</version> -->
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-websocket</artifactId>
+			<version>8.0.0.M2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlets</artifactId>
+			<version>8.0.0.M2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>8.0.0.M2</version>
+		</dependency>
+		<!-- required for the jWebSocket JDBC Plugin -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<!-- Required for Base64 for binary transfer wrapped in text packets -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<!-- Required for the jWebSocket Mail Plugin -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<!-- required for the jWebSocket Twitter Plugin -->
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>2.1.8</version>
+		</dependency>
+		<!-- required for the jWebSocket XMPP Plugin -->
+		<dependency>
+			<groupId>jivesoftware</groupId>
+			<artifactId>smackx</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jwebsocket</groupId>
+			<artifactId>jWebSocketCommon</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jwebsocket</groupId>
+			<artifactId>jWebSocketServerAPI</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- to compile groovy code in this project 
+		Refer to: http://docs.codehaus.org/display/GMAVEN/Home
+		-->
+		<!--
+		<dependency>
+			<groupId>org.codehaus.groovy.maven</groupId>
+			<artifactId>gmaven-mojo</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy.maven.runtime</groupId>
+			<artifactId>gmaven-runtime-1.6</artifactId>
+			<version>1.0</version>
+		</dependency>
+		-->
+
+		<!-- to import MS SQL Server JDBC Driver w/o maven support
+			(do not remove this comment)
+		<dependency>
+			<groupId>mssqlserver</groupId>
+			<artifactId>sqljdbc</artifactId>
+			<version>4.0</version>
+		</dependency>
+		-->
+
+
+		<!-- Spring framework
+		    Core utilities used by other modules.
+		    Define this if you use Spring Utility APIs (org.springframework.core.*/org.springframework.util.*)
+		-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+		<!--
+		    Application Context (depends on spring-core, spring-expression, spring-aop, spring-beans)
+		    This is the central artifact for Spring's Dependency Injection Container and is generally always defined
+		-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- memcached dependency -->
+		<!--
+		<dependency>
+			<groupId>com.googlecode.xmemcached</groupId>
+			<artifactId>xmemcached</artifactId>
+			<version>1.2.6.2</version>
+		</dependency>
+-->
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>memcached</artifactId>
+			<version>2.4rc1</version>
+		</dependency>
+
+
+		<!-- ehcache dependency -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<!-- define repositories -->
+	<repositories>
+		<!-- to use local repository .jars
+			(do not remove this comment)
+		<repository>
+			<id>Local-Repository</id>
+			<url>file://${basedir}/lib</url>
+		</repository>
+		-->
+
+		<repository>
+			<id>repository.jboss.org</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<!-- Repositories for the Spring Framework -->
+		<repository>
+			<id>SpringRepo</id>
+			<name>Spring Maven Repository</name>
+			<!-- <url>https://s3browse.springsource.com/browse/maven.springframework.org/milestone</url> -->
+			<url>https://s3browse.springsource.com/browse/maven.springframework.org/milestone/org/springframework/</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>EBR Spring Release Repository</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>EBR External Release Repository</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+
+		<repository>
+			<id>spy</id>
+			<name>Spy Repository</name>
+			<layout>default</layout>
+			<url>http://code.google.com/p/spymemcached/wiki/Maven</url>
+<!--
+			<url>http://code.google.com/p/spymemcached/</url>
+			<url>http://bleu.west.spy.net/~dustin/m2repo/</url>
+-->
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>twitter4j.org</id>
+			<name>twitter4j.org Repository</name>
+			<url>http://twitter4j.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<!--
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			-->
+		</repository>
+
+	</repositories>
+</project>

@@ -45,12 +45,19 @@
             <url>http://repo2.maven.org/maven2</url>
         </repository>
         
+        <!-- Temp jWebSocket local repo-->
+        <repository>
+            <id>jWebSocket-local-repo</id>
+            <name>jWebSocket Repository</name>
+            <url>file:///${basedir}//..//jWebSocketTempLocalRepository</url>           
+        </repository>  
+        
         <!-- use jWebSocket repository as final fallback -->
         <repository>
             <id>jWebSocket-repo</id>
             <name>jWebSocket Repository</name>
-            <url>http://jwebsocket.googlecode.com/svn/repo</url>
-        </repository>  
+            <url>http://jwebsocket.googlecode.com/svn/repo </url>         
+        </repository> 
     </repositories> 
     
     
