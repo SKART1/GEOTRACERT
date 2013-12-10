@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -15,7 +16,9 @@
     <name>GEOTRACERTServer</name>
     <url>http://maven.apache.org</url>
 
-                    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!--                               REPOSITORIES                              -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->                    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -27,7 +30,40 @@
             <name>Public online Restlet repository</name>  
             <url>http://maven.restlet.org</url>  
         </repository>  
-    </repositories>  
+		
+        <!-- maven repository 1 -->
+        <repository>
+            <id>maven-central-repo1</id>
+            <name>Maven Central Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        
+        <!-- maven repository 2 -->
+        <repository>
+            <id>maven-central-repo2</id>
+            <name>Maven Central Repository</name>
+            <url>http://repo2.maven.org/maven2</url>
+        </repository>
+        
+        <!-- Temp jWebSocket local repo-->
+        <repository>
+            <id>jWebSocket-local-repo</id>
+            <name>jWebSocket Repository</name>
+            <url>file:///${basedir}//..//jWebSocketTempLocalRepository</url>           
+        </repository>  
+        
+        <!-- use jWebSocket repository as final fallback -->
+        <repository>
+            <id>jWebSocket-repo</id>
+            <name>jWebSocket Repository</name>
+            <url>http://jwebsocket.googlecode.com/svn/repo </url>         
+        </repository> 
+    </repositories> 
+    
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!--                               DEPENDENCIED                              -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->        
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -40,10 +76,32 @@
             <artifactId>org.restlet</artifactId>
             <version>2.1.4</version>
             <type>jar</type>
+        </dependency>    
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!--                              JWebSocket Server Dependency               -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->       
+        <dependency>
+            <groupId>org.jwebsocket</groupId>
+            <artifactId>jWebSocketServer</artifactId>
+            <version>1.0</version> 
+            <type>jar</type>           
         </dependency>
+        
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!--                              JWebSocket Server Samples Dependency       -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->      
+        <dependency>
+            <groupId>org.jwebsocket</groupId>
+            <artifactId>jWebSocketSamples</artifactId>
+            <version>1.0</version>  
+            <type>jar</type>          
+        </dependency>    
     </dependencies>
-  
-  
+    
+    
+    
+    
+    
     <build>
         <plugins>
             
@@ -73,7 +131,36 @@
                 </executions> 
             </plugin> 
             
-                              
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--                               PLUGIN Для копирования файлов             -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <!-- Копируем config сокетов -->
+                            <!-- Куда копируем -->
+                            <outputDirectory>${basedir}/target/socketConfig</outputDirectory> 
+                            <resources>  
+                                <!-- Откуда -->        
+                                <resource>
+                                    <directory>${basedir}/socketConfig</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>               
+                        </configuration>            
+                    </execution>
+                </executions>
+            </plugin>                   
 			
         </plugins>
     </build>

@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket Charting Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+        <title>jWebSocket Charting</title>
+
+        <!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsCharts.css"/>
+
+        <!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+        <script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+
+        <!--  EXTJS DEPENDENCIES  -->
+        <link rel="stylesheet" type="text/css" href="../../lib/ExtJS/css/ext-all.css"/>
+        <script type="text/javascript" src="../../lib/ExtJS/ext-all.js"></script>
+        <script type="text/javascript" src="../../lib/ExtJS/jwsExtJSPlugin.js"></script>
+
+        <!--  MAIN FILE (CHARTS)  -->
+        <script type="text/javascript" src="js/charting.js"></script>
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocket Charting</h1>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div><div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container">
+                    <div id="main_content" style="float: left; width: 100% !important;">
+                        <!--		\\HERE GOES THE CONTENT OF EACH SPECIFIC DEMO\\				-->
+						<!-- <div id="demo_description">
+							 <p>
+								 Charting Demo allows real-time graph server behavior. To see the behavior of the server to select the data source and type of graphic in which to display the required information.
+							 </p>
+						 </div>-->
+                        <div id="combo"></div>
+                        <div id="content"></div>
+
+                        <!--	END	\\HERE GOES THE CONTENT OF EACH SPECIFIC DEMO\\			-->
+                    </div>
+                </div>
+                <!--       DOWNLOAD_BUTTON   -->
+                <div id="demo_box_footer">
+                    <div id="jws_download_button" class="button onmouseup" 
+						 onmouseover="this.className = 'button onmouseover'"
+                         onmousedown="this.className = 'button onmousedown'" 
+                         onmouseup="this.className = 'button onmouseup'" 
+                         onmouseout="this.className = 'button onmouseout'" 
+                         onclick="this.className = 'button onmouseover'">
+                        <div class="btn_left"></div>
+                        <div class="btn_center">
+							<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+							   target="blank">Download jWebSocket</a></div>
+                        <div class="r_download"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

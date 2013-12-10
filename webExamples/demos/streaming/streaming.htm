@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Streaming Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org), Germany (NRW), Herzogenrath
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Streaming Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- load the jWebSocket JavaScript client library -->
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<!-- this one imports the client side streaming plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsStreamingPlugIn.js"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null,
+					eKeepAlive = null;
+
+			function log(aString) {
+				eLog.innerHTML +=
+						aString + "<br>";
+				if (eLog.scrollHeight > eLog.clientHeight) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+
+			var lWSC = null;
+
+			function connect() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				var lURL = jws.getAutoServerURL();
+
+				log("Connecting to " + lURL + " ...");
+				try {
+					var lRes = lWSC.logon(lURL, jws.GUEST_USER_LOGINNAME, jws.GUEST_USER_PASSWORD, {
+						// OnOpen callback
+						OnOpen: function(aEvent) {
+							log("<font style='color:#888'>jWebSocket connection established.</font>");
+							jws.$("simgStatus").src = "../../images/connected.png";
+						},
+						// OnMessage callback
+						OnMessage: function(aEvent) {
+							log("<font style='color:#888'>jWebSocket message received: '" + aEvent.data + "'</font>");
+							if (lWSC.isLoggedIn()) {
+								jws.$("simgStatus").src = "../../images/authenticated.png";
+							} else {
+								jws.$("simgStatus").src = "../../images/connected.png";
+							}
+							jws.$("slblClientId").innerHTML =
+									"&nbsp;Client&#x2011;Id:&nbsp;"
+									+ lWSC.getId() + "&nbsp;"
+									+ (jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)");
+						},
+						// OnClose callback
+						OnClose: function(aEvent) {
+							log("<font style='color:#888'>jWebSocket connection closed.</font>");
+							jws.$("simgStatus").src = "../../images/disconnected.png";
+							jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+						}
+
+					});
+				} catch (ex) {
+					log("Exception: " + ex.message);
+				}
+			}
+
+			function disconnect() {
+				if (lWSC) {
+					lWSC.stopKeepAlive();
+					log("Disconnecting...");
+					var lRes = lWSC.close();
+					log(lWSC.resultToString(lRes));
+				}
+			}
+
+			function registerStream() {
+				var lStream = eStream.value; // "timeStream";
+				log("Registering at stream '" + lStream + "'...");
+				var lRes = lWSC.streaming.registerStream(lStream);
+				log(lWSC.resultToString(lRes));
+			}
+
+			function unregisterStream() {
+				var lStream = eStream.value; // "timeStream";
+				log("Unregistering from stream '" + lStream + "'...");
+				var lRes = lWSC.streaming.unregisterStream(lStream);
+				log(lWSC.resultToString(lRes));
+			}
+
+			function toggleKeepAlive() {
+				if (eKeepAlive.checked) {
+					lWSC.startKeepAlive({interval: 30000});
+				} else {
+					lWSC.stopKeepAlive();
+				}
+			}
+
+			function initPage() {
+				eLog = jws.$("sdivChat");
+				eMessage = jws.$("stxfMsg");
+				eKeepAlive = jws.$("schkKeepAlive");
+				eStream = jws.$("sselStream");
+
+				if (window.WebSocket) {
+					lWSC = new jws.jWebSocketJSONClient();
+				} else {
+					jws.$("sbtnConnect").setAttribute("disabled", "disabled");
+					jws.$("sbtnDisconnect").setAttribute("disabled", "disabled");
+					jws.$("sbtnClear").setAttribute("disabled", "disabled");
+					jws.$("sbtnReg").setAttribute("disabled", "disabled");
+					jws.$("sbtnUnreg").setAttribute("disabled", "disabled");
+					jws.$("schkKeepAlive").setAttribute("disabled", "disabled");
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert(lMsg);
+					log(lMsg);
+				}
+			}
+
+			function exitPage() {
+				lWSC.stopKeepAlive();
+				disconnect();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<!--	remarked temporarily due to chrome 5 browser bug
+				<script type="text/javascript">
+					var lFrameElem = this.frameElement;
+					if( !lFrameElem ) {
+						location.replace( "../../index.htm?page=demos/streaming/streaming.htm" );
+					}
+				</script>
+		-->		
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Streaming Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<p>This demo shows how to easily register at a jWebSocket data feed (stream).
+			This example is based on the <code>org.jwebsocket.streaming</code> package which simply
+			sends a tokens in a certain interval to the client. If you are not sure
+			whether your favorite browser supports WebSockets please refer to our
+			<a target="_top" href="http://jwebsocket.org/jws_for_all.htm">jWebSocket Cross-Browser Compatibility</a>
+			page.</p>
+		<div id="sdivChat" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnConnect" type="button" value="Connect" onclick="connect();"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnDisconnect" type="button" value="Disconnect" onclick="disconnect();"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();"></td>
+					<td class="stdDlg" align="right" width="">
+						<input id="schkKeepAlive" type="checkbox" value="off" onclick="toggleKeepAlive();">&nbsp;Keep-Alive&nbsp;
+						<select id="sselStream">
+							<option selected="selected" value="monitorStream">Monitor Stream</option>
+							<option value="timeStream">Time Stream</option>
+							<!-- <option value="statisticStream">Statistic Stream</option> -->
+							<option value="stressStream">Stress Stream</option>
+						</select>
+						<input class="sbtnDlg" id="sbtnReg" type="button" value="Register" onclick="registerStream();"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnUnreg" type="button" value="Unregister" onclick="unregisterStream();"></td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

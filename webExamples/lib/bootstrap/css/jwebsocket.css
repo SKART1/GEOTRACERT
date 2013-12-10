@@ -1,0 +1,68 @@
+.navbar-inner {
+	padding-left: 20px;
+	padding-right: 20px;
+	background-color: #2c2c2c;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzg2YWRkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyNTg1YzEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background-image: -moz-linear-gradient(top,  rgba(134,173,216,1) 0%, rgba(37,133,193,1) 100%); /* FF3.6+ */
+	background-image: -ms-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* IE10+ */
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(134,173,216,1)), color-stop(100%,rgba(37,133,193,1))); /* Chrome,Safari4+ */
+	background-image: -webkit-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Chrome10+,Safari5.1+ */
+	background-image: -o-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Opera 11.10+ */
+	background-image: linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* W3C */
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86add8', endColorstr='#2585c1',GradientType=0 ); /* IE6-8 */
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+.navbar .nav .active > a,
+.navbar .nav .active > a:hover,
+.navbar .nav > li > a:hover,
+.navbar .nav > li > a:hover, .navbar .dropdown-menu a:hover {
+	color: #ffffff;
+	text-decoration: none;
+	background-color: #015680 !important;
+}
+.container-fluid {
+	padding: 10px 20px 10px 20px;
+	min-height: 40px;
+}
+.navbar .navbar-text, .navbar .nav > li > a,
+.navbar .nav > li > a, .navbar .dropdown-menu a {
+	color: white !important;
+}
+.navbar .navbar-text a {
+	color: #eee5e5;
+	font-weight: bold;
+}
+.btn-navbar {
+	display: none;
+	float: right;
+	padding: 7px 10px;
+	margin-left: 5px;
+	margin-right: 5px;
+	background-color: #015680;
+	background-image: -moz-linear-gradient(top,  rgba(134,173,216,1) 0%, rgba(37,133,193,1) 100%); /* FF3.6+ */
+	background-image: -ms-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* IE10+ */
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(134,173,216,1)), color-stop(100%,rgba(37,133,193,1))); /* Chrome,Safari4+ */
+	background-image: -webkit-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Chrome10+,Safari5.1+ */
+	background-image: -o-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Opera 11.10+ */
+	background-image: linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* W3C */
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#004570', endColorstr='#015680', GradientType=0);
+	border-color: #004570 #015680;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 1, 0, 0.1);
+	filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.075);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.075);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.075);
+}
+.btn-navbar:hover, .btn-navbar:active, .btn-navbar.active, .btn-navbar.disabled, .btn-navbar[disabled] {
+	background-color: #4190c8;
+}
+p {
+	margin-top: 0px !important;
+}

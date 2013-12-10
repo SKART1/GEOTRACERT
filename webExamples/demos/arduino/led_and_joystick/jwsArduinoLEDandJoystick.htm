@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>Remote Control Demo</title>
+        <link href="css/jwsRemoteControlDemoStyle.css" type="text/css" rel="stylesheet" />
+        <link href="js/jquery/jquery_ui/css/jquery-ui.css" type="text/css" rel="stylesheet" />
+
+		<script src="../../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script src="../../../res/js/jwsEventsPlugIn.js" type="text/javascript"></script>
+		<script src="../../../res/js/jwsCache.js" type="text/javascript"></script>
+
+        <script type="text/javascript" src="../../../lib/jQuery/jquery-1.6.2.min.js"></script>  
+        <script type="text/javascript" src="../../../lib/jQuery/jquery-ui/jquery-ui-1.8.13.js"></script>  
+        <script type="text/javascript" src="js/jwsRemoteControlDemoElements.js"></script> 		
+        <script type="text/javascript" src="js/jwsRemoteControlDemoStart.js"></script>
+        <script type="text/javascript" src="js/jwsRemoteControlDemoController.js"></script>
+    </head>
+    <body>
+
+        <div id="page" > 
+            <div id="header"><label>Arduino Remote Control and Monitoring</label></div>
+
+            <div id="joystickContainer" class="container"  >
+                <label id ="joystickTitle" class="title">Remote Monitoring</label>
+                <label id="joystickMiniDescription" class="miniDescription">Use your joystick to display its movements in the browser. </label>
+                <div id="joystickPosition"><div id ="point"></div></div> 
+            </div>
+
+            <div id="descriptionContainer">
+                <p>
+                    This demo showcases the capability of jWebSocket in  conjunction with Arduino. Any kind of hardware can be  requested or controlled via internet for a multitude of different  purposes, for example: 
+                </p>
+                <ul>
+                    <li>house control (remote control of heating systems,  air-conditions, lighting, electric devices like garage doors),</li>
+                    <li>security (alarm systems, car lockings, cameras),</li>
+                    <li>automated production (robotics, monitoring). </li>                    
+                </ul>
+
+
+            </div>
+
+            <div id="ledsContainer" class="container"> 
+                <label id ="ledsTitle" class="title">Remote Control</label>
+                <label id="ledsMiniDescription" class="miniDescription">Click on the lights to turn on or off your external LEDs.</label>
+
+                <div id="allLeds" >
+                    <div id="ledblue"   class="off"></div> 
+                    <div id="ledred"    class="off"></div> 
+                    <div id="ledgreen"  class="off"> </div> 
+                    <div id="ledyellow" class="off"> </div> 
+                </div>
+
+            </div>
+
+        </div>
+    </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<meta http-equiv="Content-Language" content="en"/>
+
+        <title>jWebSocket Video & Audio Streaming Demo (Canvas)</title>
+
+        <!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+        <script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+        <script type="text/javascript" src="../../lib/jQuery/jquery.js"></script>
+    </head>
+    <body style="font-family: Verdana; font-size: smaller">
+		<h1>Presenter and Viewer</h1>
+		<div>
+			<video id="live" width="0" style="visibility: hidden" height="0" autoplay></video>
+			<canvas width="320" id="canvas" height="240" style="display: inline;"></canvas>
+			<canvas width="320" id="canvas2" height="240" style="display: inline;"></canvas>
+		</div>
+
+		<script type="text/javascript">
+			var video = $("#live").get()[0];
+			var canvas = $("#canvas");
+			var canvas2 = $("#canvas2");
+			var ctx = canvas.get()[0].getContext('2d');
+			var ctx2 = canvas2.get()[0].getContext('2d');
+ 
+ 
+			navigator.webkitGetUserMedia({video: true, audio: true},
+			function(stream) {	
+				video.src = webkitURL.createObjectURL(stream);
+			},
+			function(err) {
+				console.log("Unable to get video stream!")
+			}
+		);
+		</script>
+
+		<script type="text/javascript">
+			$( document ).ready( function( ) {
+				var lConn = new jws.jWebSocketJSONClient();
+				lConn.open(jws.getDefaultServerURL(), {
+					OnOpen: function(){
+						timer = setInterval(
+						function () {
+							ctx.drawImage(video, 0, 0, 320, 240);
+							lConn.sendText(lConn.getId(), canvas.get()[0].toDataURL('image/webp', 1.0));
+						}, 70);
+						
+						lConn.addPlugIn({
+							processToken: function(aToken){
+								if ("send" == aToken["type"]){
+									if (aToken['data']){
+										var img = new Image();
+										img.src = aToken.data;
+										ctx2.drawImage(img, 0, 0, 320, 240);
+									}
+								}
+							}
+						})
+					},
+					
+					OnClose: function(){
+						console.log("Cannot establish connection with the server!");
+					}
+				})
+			});
+		</script>
+
+
+    </body>
+</html>

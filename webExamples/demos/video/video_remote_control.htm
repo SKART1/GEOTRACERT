@@ -1,0 +1,469 @@
+<html>
+	<head>
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Video Remote Control Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		//  Authors: Unni Vemanchery Mana, Alexander Schulze
+		
+		//  This demo is used to show the capabilities of jWebSocket in Video Remote Control.
+		//  This example works similar to parent child relationship in which parent window
+		//  ie first window that is loaded in browser takes control of the Video streaming.The
+		//  other window(s) who opened after the main one will be its children. 
+		//  slider see: http://jqueryui.com/demos/slider/
+		-->
+
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script> 
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<script type="text/javascript" src="jquery-ui.min.js"></script>
+		<link href="jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<script type="text/javascript" >
+			
+			var mVideo;
+			var eLog;
+			var lWSC;
+			var mSliderProgress;
+			var mSliderVolume;
+			
+			var duration = 0;
+			var deltaTime = 0;
+			var eElapsed = null;
+			
+			var PLAYING = 1, PAUSED = 2, STOPPED = 0;
+			var mState = STOPPED;
+			// interval to update the progressbar
+			var hProgressIntv = null;
+			// interval to send progress synchronization tokens
+			var hSyncIntv = null;
+			var SYNC_INTV = 3000;
+
+			// broadcasts the new slider position
+			function sendPosition( aPosition ) {
+				lWSC.broadcastToken({
+					subNS: "org.jwebsocket.demos.vidremctrl",
+					subType: "position",
+					position: aPosition
+				});
+			}
+  
+			// broadcasts the playVideo action
+			function sendPlay( aPosition ) {
+				lWSC.broadcastToken({
+					subNS: "org.jwebsocket.demos.vidremctrl",
+					subType: "play",
+					position: aPosition
+				});
+			}
+  
+			// broadcasts the pauseVideo action
+			function sendPause( aPosition ) {
+				lWSC.broadcastToken({
+					subNS: "org.jwebsocket.demos.vidremctrl",
+					subType: "pause",
+					position: aPosition
+				});
+			}
+  
+			// broadcasts the stopVideo action
+			function sendStop( aPosition ) {
+				lWSC.broadcastToken({
+					subNS: "org.jwebsocket.demos.vidremctrl",
+					subType: "stop",
+					position: aPosition
+				});
+			}
+  
+			// the start video method
+			function playVideo() {
+				if( !mVideo ) {
+					alert( "Video has not been initialized.." );
+					return false;
+				}
+				
+				if( mState != PLAYING ) {
+					resetVideo(); 
+				}
+				
+				// Retrieves the length of the current playing video
+				// in seconds
+				// calculating video duration and time increment in delta
+				if( mVideo.readyState > 0 && mState == STOPPED ) {
+					// starts video timer;
+					startSyncIntv(); 
+				} 
+				
+				// starts progress interval
+				startProgressIntv();
+				mVideo.play();
+				mState = PLAYING;
+				// set button label to "pause"
+				ePause.value = "Pause";
+				// log( "Video started." );
+				return true;
+			}
+			
+			// the event handler for the play button
+			// if playVideo succeeeds it broadcasts the play event
+			function processPlayVideoClick() {
+				if( playVideo() ) {
+					sendPlay( mVideo.currentTime );
+				}	
+			}
+
+			function resetVideo() {
+				showPosition();
+				showElapsed();
+			}
+  
+			// This method is used to pauseVideo the
+			// current video play
+			function pauseVideo() {
+				if( mVideo && mState != PAUSED ) {
+					stopProgressIntv();
+					mVideo.pause();
+					mState = PAUSED;
+					// set button label to "resume"
+					ePause.value = "Resume";
+					// log( "Video paused." );   
+					return true;
+				}	
+				return false;
+			}
+			
+			// the event handler for the pause button
+			// if pauseVideo succeeeds it broadcasts the pause event
+			function processPauseVideoClick() {
+				if( mState == PAUSED ) {
+					if( playVideo() ) {
+						sendPlay( mVideo.currentTime );
+					}
+				} else if( mState == PLAYING ) {
+					if( pauseVideo() ) {
+						sendPause( mVideo.currentTime );
+					}
+				}
+			}
+
+			// This method takes care of call back
+			// and moves the slider automatically with the 
+			// value broadcasted by its peer. Note that the method
+			// is checking to avoid the current slider not to move
+			function setPosition( aPosition ) {
+				pauseVideo();
+				mVideo.currentTime = aPosition;
+				showPosition();
+				// log( "setting position to " + aPosition );
+				showElapsed();
+			}	
+			
+			function processPosition() {
+				var lPosition = ( mVideo.duration * ( getProgress() / 100 ) ).toFixed( 3 );
+				setPosition( lPosition );
+				sendPosition( lPosition );
+			}
+			
+			// This method is used to stopVideo the 
+			// current video play as abort is 
+			// not a method and cannot be used. 
+			function stopVideo() {
+				// set button label to "pause"
+				ePause.value = "Pause";
+				if( mVideo ) {
+					stopProgressIntv();
+					stopSyncIntv();
+					mVideo.pause();
+					mVideo.currentTime = 0;
+					mState = STOPPED;
+					resetVideo();
+					showElapsed();
+					return true;
+				}
+				return false;
+			}
+
+			function processStopVideoClick() {
+				if( stopVideo() ) {
+					sendStop(  mVideo.currentTime );
+				}
+			}
+
+
+			function showPosition() {
+				$( "#sliderProgress" ).slider( "value", mVideo.currentTime / mVideo.duration * 100 );
+			}
+
+			// This method adjusts video current time to min and sec
+			// so that it will be in sync with video current time
+			function showElapsed() {
+				var lCT = mVideo.currentTime;
+				var mHour = parseInt( lCT / 3600 );
+				lCT = lCT % 3600;
+				var mMin = parseInt( lCT / 60 );
+				var mSec = parseInt( lCT % 60 );
+				eElapsed.firstChild.nodeValue = 
+					jws.tools.zerofill( mHour, 2 )
+					+ ":" + jws.tools.zerofill( mMin, 2 )
+					+ ":" + jws.tools.zerofill( mSec, 2 );
+			}
+
+			// This method is used to track the timer for the video
+			// progress event.The timer ticks for every one second 
+			function startSyncIntv() {
+				stopSyncIntv();
+				hSyncIntv = window.setInterval(
+				function() {
+					if( mVideo.ended ) {
+						resetVideo();
+						showPosition();
+						stopSyncIntv();
+						stopProgressIntv();
+						// log( "Video stopped." );   
+					}
+					showElapsed(); 				
+				}, 
+				SYNC_INTV
+			);
+			}
+
+			function stopSyncIntv() {
+				if( hSyncIntv != null ) {
+					window.clearInterval( hSyncIntv ); 
+				}
+				hSyncIntv = null;
+			}
+
+			function getProgress() {
+				return $( "#sliderProgress" ).slider( "value" );
+			}	
+
+
+			// start progress interval for update
+			function startProgressIntv() {
+				if( hProgressIntv ) {
+					stopProgressIntv();
+				}
+				hProgressIntv = window.setInterval(
+				function() {
+					showPosition();
+				}, 
+				1000
+			);
+			}
+
+			// stop progress interval
+			function stopProgressIntv() {
+				if( hProgressIntv ) {
+					window.clearInterval( hProgressIntv ); 
+					hProgressIntv = null;
+				}
+			}	
+
+			// This is the generic call back related to web socket
+			// This following code will execute based on the events
+			function logon() {
+				var lURL = jws.getDefaultServerURL();
+				lWSC.logon( lURL, "root", "root", {
+
+					// OnOpen callback
+					OnOpen: function( aEvent ) {
+					},
+
+					// OnMessage callback
+					OnMessage: function( aEvent, aToken ) {
+						log( JSON.stringify( aToken) );
+						if( "org.jwebsocket.demos.vidremctrl" == aToken.subNS ) {
+							if( "position" == aToken.subType ) {
+								setPosition( aToken.position );
+							} else if( "play" == aToken.subType ) {
+								setPosition( aToken.position );
+								playVideo();
+							} else if( "pause" == aToken.subType ) {
+								pauseVideo();
+								setPosition( aToken.position );
+							} else if( "stop" == aToken.subType ) {
+								stopVideo();
+							}
+						} 
+					},
+					
+					// OnClose callback
+					OnClose: function( aEvent ) {
+						lWSC.stopKeepAlive();
+					}
+
+				});
+			}
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			function initPage() {
+				if( jws.browserSupportsWebSockets()) {
+					lWSC = new jws.jWebSocketJSONClient();
+				}
+				
+				eLog = jws.$( "sdivLog" );
+				mVideo = jws.$( "vid" );
+				eElapsed = jws.$( "elapsed" );
+				ePlay = jws.$( "sbtnPlay" );
+				ePause = jws.$( "sbtnPause" );
+				eStop = jws.$( "sbtnStop" );
+				
+				resetVideo();
+				showElapsed();
+				
+				logon();
+			}
+
+			function exitPage() {
+				if( lWSC ) {
+					lWSC.close();
+				}	
+			}
+			
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">Video Remote Control Demo</td>
+				<!--				
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">{nbsp}Client{nbdash}Id:{nbsp}-</span></td>
+				-->
+			</tr>
+		</table>
+
+		<!-- HTML5 enabled mVideo attribute that plays mVideo. 
+		 In order to make a custom mVideo control, we need to
+		 remove 'control' attribute. height and width attribute
+		 specfied its dimensions.The mVideo type currently uses
+		 webm standdard, yet another mVideo format type initiated
+		 by google and ogv.  
+		-->
+		<div style="border:1px solid red">
+			<video id="vid" height="240" width="420" style="position: relative; left:0; top:0">
+
+				<source src="sintel-trailer.ogv" type='video/ogg; codecs="theora, vorbis"'> 
+
+				<!--
+			<source src="pr6.webm"> -->
+			</video>
+		</div>
+
+		<style>
+			#demo-frame > div.demo { padding: 10px !important; }
+		</style>
+		
+		<script>
+			$(function() {
+				mSliderProgress = $( "#sliderProgress" ).slider({
+					max: 100,
+					start: function(event, ui) {
+						pauseVideo();
+					},
+					slide: function(event, ui) {
+						processPosition();
+					},
+					stop: function(event, ui) {
+						// processPosition();
+						// playVideo();
+					}
+				});
+				mSliderVolume = $( "#sliderVolume" ).slider({
+					max: 100,
+					slide: function(event, ui) { 
+					}
+				});
+			});
+		</script>
+
+		<table width="500">
+			<tr>
+				<td width="5">
+					Position:
+				</td>
+				<td>
+					<div class="demo">
+						<div id="sliderProgress"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td width="5">Volume:
+				</td>
+				<td>
+					<div class="demo">
+						<div id="sliderVolume"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td width="5">Elapsed:
+				</td>
+				<td>
+					<div id="elapsed">&nbsp;
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<!-- Control buttons --> 
+		<table>
+			<tr>
+				<td>
+					<input type="button" id="sbtnPlay" value="Play"  onclick="processPlayVideoClick();" class="sbtnDlg"> 
+				</td>
+				<td>
+					<input type="button" id="sbtnPause" value="Pause" onclick="processPauseVideoClick();" class="sbtnDlg">
+				</td>
+				<td>
+					<input type="button" id="sbtnStop" value="Stop"  onclick="processStopVideoClick();"  class="sbtnDlg">
+				</td>
+				<td>
+					<input type="button" id="sbtnClear" value="Clear Log"  onclick="clearLog();"  class="sbtnDlg">
+				</td>
+			</tr>
+		</table>
+
+		<!-- jWebSocket standard log --> 
+		<div id="sdivLog" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+
+	</body>
+</html>
+
+

@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket Shared Canvas Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
+
+        <title>jWebSocket Shared Canvas</title>
+
+		<!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsCanvas.css"/>
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocket Shared Canvas</h1>
+            </div>
+            <div id="container">
+
+                <!--       DESCRIPTION       -->
+                <div class="box" id="demo_box_description">
+					<p>
+                        This demo shows how to commonly exchange with others on a 
+                        shared canvas. Updates applied to a certain canvas are automatically 
+                        distributed to all other clients connected to the jWebSocket network. 
+                        Simply select a color and paint or insert an image of your choice.
+                    </p>
+                    <p>
+                        Please consider that not all browsers support the HTML5 canvas  
+                        element yet. jWebSocket checks the features of your current browser 
+                        and lets the Shared Canvas demo appear inactively in case of no canvas support.    
+                        If you are not sure wether your favorite browser supports WebSockets in general 
+                        please refer to our jWebSocket 
+						<a href="http://jwebsocket.org/documentation/jwebsocket-cross-browser-compatibility">
+								Cross-Browser Compatibility</a> page.
+                    </p>
+                </div>
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+					<div id="main_content">
+						<!-- ************************ CANVAS AREA ****************************** -->
+						<div id="iframe">
+							<iframe id="target1" src="iframe.htm" scrolling="no"></iframe>
+							<iframe id="target2" src="iframe.htm" scrolling="no"></iframe>
+						</div>
+					</div>
+                </div>
+
+                <!--       DOWNLOAD_BUTTON   -->
+                <div id="demo_box_footer">
+                    <div id="jws_download_button" class="button onmouseup" 
+						 onmouseover="this.className='button onmouseover'" 
+                         onmousedown="this.className='button onmousedown'" 
+                         onmouseup="this.className='button onmouseup'" 
+                         onmouseout="this.className='button onmouseout'" 
+                         onclick="this.className='button onmouseover'">
+                        <div class="btn_left"></div>
+                        <div class="btn_center">
+							<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+							   target="blank">Download jWebSocket</a>
+						</div>
+                        <div class="r_download"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

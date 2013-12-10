@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -7,6 +8,9 @@
     <version>1.0-SNAPSHOT</version>
     <name>GEOTRACERT</name>
     <url>com.github.321SKART123.GEOTRACERT</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <modules>
         <module>GEOTRACERTClient</module>
         <module>GEOTRACERTServer</module>
@@ -24,7 +28,7 @@
     <build>
         <plugins>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-            <!--                               PLUGIN Äëÿ êîïèðîâàíèÿ ôàéëîâ             -->
+            <!--                               PLUGIN Ð”Ð»Ñ ÐºÐ¾Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ñ„Ð°Ð¹Ð»Ð¾Ð²             -->
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -39,15 +43,16 @@
                         </goals>
                         <configuration>
                             <encoding>UTF-8</encoding>
-                            <!-- Êóäà êîïèðóåì -->
+                            <!-- ÐšÐ¾Ð¿Ð¸Ñ€ÑƒÐµÐ¼ Ñ„Ð°Ð¹Ð»Ñ‹ ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð° Ð² Ð¿Ð°Ð¿ÐºÑƒ webFolder ÑÐµÑ€Ð²ÐµÑ€Ð° -->
+                            <!-- ÐšÑƒÐ´Ð° ÐºÐ¾Ð¿Ð¸Ñ€ÑƒÐµÐ¼ -->
                             <outputDirectory>${basedir}/GEOTRACERTServer/target/clientFolder</outputDirectory> 
                             <resources>  
-                                <!-- Îòêóäà -->        
+                                <!-- ÐžÑ‚ÐºÑƒÐ´Ð° -->        
                                 <resource>
-                                    <directory>GEOTRACERTClient/webFolder</directory>
+                                    <directory>${basedir}/GEOTRACERTClient/webFolder</directory>
                                     <filtering>false</filtering>
                                 </resource>
-                            </resources>              
+                            </resources>  
                         </configuration>            
                     </execution>
                 </executions>
@@ -67,9 +72,9 @@
                             <goal>generate-html</goal>                            
                         </goals> 
                         <configuration>
-                            <!-- Ãäå íàõîäÿòñÿ xml ôàéëû äëÿ html -->
+                            <!-- Ð“Ð´Ðµ Ð½Ð°Ñ…Ð¾Ð´ÑÑ‚ÑÑ xml Ñ„Ð°Ð¹Ð»Ñ‹ Ð´Ð»Ñ html -->
                             <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
-                            <!-- Êóäà âûêèäûâàòü ãîòîâûé -->
+                            <!-- ÐšÑƒÐ´Ð° Ð²Ñ‹ÐºÐ¸Ð´Ñ‹Ð²Ð°Ñ‚ÑŒ Ð³Ð¾Ñ‚Ð¾Ð²Ñ‹Ð¹ -->
                             <targetDirectory>${basedir}/SRS/result/html/</targetDirectory>                           
                         </configuration>                          
                         <phase>install</phase>
@@ -81,9 +86,9 @@
                             <goal>generate-pdf</goal>   
                         </goals> 
                         <configuration>
-                            <!-- Ãäå íàõîäÿòñÿ xml ôàéëû äëÿ pdf -->
+                            <!-- Ð“Ð´Ðµ Ð½Ð°Ñ…Ð¾Ð´ÑÑ‚ÑÑ xml Ñ„Ð°Ð¹Ð»Ñ‹ Ð´Ð»Ñ pdf -->
                             <sourceDirectory>${basedir}/SRS/source/docbkx</sourceDirectory>   
-                            <!-- Êóäà âûêèäûâàòü ãîòîâûé -->                         
+                            <!-- ÐšÑƒÐ´Ð° Ð²Ñ‹ÐºÐ¸Ð´Ñ‹Ð²Ð°Ñ‚ÑŒ Ð³Ð¾Ñ‚Ð¾Ð²Ñ‹Ð¹ -->                         
                             <targetDirectory>${basedir}/SRS/result/pdf</targetDirectory>                           
                         </configuration>                         
                         <phase>install</phase>                 

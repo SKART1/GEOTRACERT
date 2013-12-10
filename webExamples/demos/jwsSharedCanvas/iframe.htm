@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Shared Canvas Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+
+		<title>jWebSocket Chat Demo</title>
+
+		<meta http-equiv="Content-Language" content="en"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
+
+		<link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+		<link rel="stylesheet" type="text/css" href="css/jwsIframe.css"/>
+
+		<!-- JQUERY DEPENDENCIES -->
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+		<!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src="../../res/js/jwsChannelPlugIn.js"></script>
+		<script type="text/javascript" src="../../res/js/widgets/wAuth.js"></script>
+
+		<script type="text/javascript" src="js/jwsCanvasPlugIn.js"></script>
+
+		<!--  PRIVATE WIDGETS  -->
+		<script type="text/javascript" src='js/wSwitcher.js'></script>
+		<script type="text/javascript" src='js/wImage.js'></script>
+		<script type="text/javascript" src='js/wPaint.js'></script>
+
+		<!--  MAIN JAVASCRIPT FILE   -->
+		<script type="text/javascript" src='js/init.js'></script>
+	</head>
+	<body>
+		<div id="clients">
+			<div class="header">
+				<div id="tabs_shared_color">
+					<div id="tab_paint" class="enabled"></div>
+					<div id="tab_insert_img" class="disabled"></div>
+				</div>
+				<div id="demo_box_statusbar">
+					<div id="client_status" class='offline'>disconnected</div><div class="line"></div>
+				</div>
+			</div>
+			<div id="paint_area">
+				<div class="desc_text">Choose a color to paint on the canvas.</div>
+				<div id="color_fields">
+					<div id="color_blue"></div>
+					<div id="color_green"></div>
+					<div id="color_red"></div>
+					<div id="color_yellow"></div>
+					<div id="color_orange"></div>
+					<div id="color_darkblue"></div>
+					<div id="color_purple"></div>
+					<div id="color_gray"></div>
+					<div id="color_black"></div>
+				</div>				
+				<canvas id="paint_canvas" width="320" height="170"></canvas>
+				<div class="buttons_container">
+					<div id="clear_paint" class="button">Clear</div>
+				</div>
+			</div>
+			<div id="image_area">
+				<div class="desc_text">Chose an image to place it on the canvas.</div>
+				<div id="palete_img" style="height: 30px;">
+					<div id="image01_small" class="small_img">      </div>
+					<div id="image02_small" class="small_img">      </div>
+					<div id="image03_small" class="small_img">      </div>
+					<div id="image04_small" class="small_img">      </div>
+					<div id="image05_small" class="small_img">      </div>
+					<div id="image06_small" class="small_img">      </div>
+					<div id="image07_small" class="small_img">      </div>
+					<div id="image08_small" class="small_img">      </div>
+					<div id="image09_small" class="small_img">      </div>
+				</div>
+				<canvas id="image_canvas" width="320" height="170"></canvas>
+				<div class="buttons_container">
+					<div id="clear_image" class="button" title="Clear all canvas and history">Clear</div>
+					<div id="undo" class="button" title="Undo in history"><div class="undo"></div></div>
+					<div id="redo" class="button" title="Redo in history"><div class="redo"></div></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

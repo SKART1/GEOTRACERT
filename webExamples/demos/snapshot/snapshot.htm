@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Snapshot Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Image Exchange and Mobile Snapshot Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- load the jWebSocket JavaScript client library -->
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<!-- this one imports the client side file system plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsFilesystemPlugIn.js"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null, eTarget = null;
+
+			function scrollLogToBottom() {
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lWSC = null;
+
+			function connect() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				var lURL = jws.getDefaultServerURL();
+
+				log( "Connecting to " + lURL + " ..." );
+				var lRes = lWSC.open( lURL, {
+
+					// OnOpen callback
+					OnOpen: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection established.</font>" );
+						jws.$("simgStatus").src = "../../images/connected.png";
+					},
+
+					// OnWelcome callback
+					OnWelcome: function( aEvent ) {
+						eTarget.value = aEvent.sourceId;
+					},
+
+					// OnMessage callback
+					OnMessage: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket message received: '" + aEvent.data + "'</font>" );
+						jws.$("simgStatus").src = "../../images/authenticated.png";
+						/*
+						if( lWSC.isLoggedIn() ) {
+							jws.$("simgStatus").src = "../../images/authenticated.png";
+						} else {
+							jws.$("simgStatus").src = "../../images/connected.png";
+						}
+						 */
+						jws.$("slblClientId").innerHTML =
+							"&nbsp;Client&#x2011;Id:&nbsp;"
+							+ lWSC.getId() + "&nbsp;"
+							+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" );
+					},
+
+					// OnClose callback
+					OnClose: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection closed.</font>" );
+						jws.$("simgStatus").src = "../../images/disconnected.png";
+						jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+					}
+
+				});
+
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function disconnect() {
+				if( lWSC ) {
+					log( "Disconnecting..." );
+					var lRes = lWSC.close({ timeout: 3000 });
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+			function checkImageSize( aEvent ) {
+				var TARGET_WIDTH = 320;
+				var lImg = null;
+				if( !aEvent ) {
+					aEvent = window.event;
+					if( aEvent ) {
+						lImg = aEvent.srcElement;
+					}
+				} else {
+					lImg = aEvent.target;
+				}
+				if( lImg ) {
+					var lAspect = lImg.offsetWidth / lImg.offsetHeight;
+					if( lImg.offsetWidth != TARGET_WIDTH ) {
+						lImg.style.width = TARGET_WIDTH + "px";
+						lImg.style.height = ( lImg.offsetWidth / lAspect ) + "px";
+					}
+				}
+				scrollLogToBottom();
+			}
+
+			function onFileSavedObs( aToken ) {
+				var lFilename = aToken.filename;
+				var lLC = lFilename.toLowerCase();
+				var lHTML;
+				if( lLC.indexOf( ".jpg" ) > 0
+					|| lLC.indexOf( ".jpeg" ) > 0
+					|| lLC.indexOf( ".png" ) > 0
+					|| lLC.indexOf( ".gif" ) > 0
+				) {
+					log( "Picture received: '" + lFilename + "':" );
+					// aToken.url = aToken.url.replace("foto.jpg", "flowers_1280x1024.jpg");
+					lHTML = "<img onload=\"checkImageSize()\" src=\"" + aToken.url + "\"/>";
+				} else {
+					lHTML = "received file: " + lFilename;
+				}
+				log( lHTML );
+			}
+
+			function onFileSentObs( aToken ) {
+				var lFilename = aToken.filename;
+				var lLC = lFilename.toLowerCase();
+				var lHTML;
+				if( lLC.indexOf( ".jpg" ) > 0
+					|| lLC.indexOf( ".jpeg" ) > 0
+					|| lLC.indexOf( ".png" ) > 0
+					|| lLC.indexOf( ".gif" ) > 0
+				) {
+					log( "Picture received: '" + lFilename + "':" );
+					lHTML = "<img onload=\"checkImageSize()\" src=\"" + aToken.data + "\"/>";
+				} else {
+					lHTML = "received file: " + lFilename;
+				}
+				log( lHTML );
+			}
+
+			function onLocalFileLoadedObs( aToken ) {
+				log( "Successfully read file <b>" + aToken.fileName + "</b> (" + aToken.fileSize + " bytes) from local file." );
+				// parse action option after a file has been successfully loaded
+
+				if( aToken.action ) {
+					var lRes;
+					// check upload action
+					if( aToken.action == "upload" ) {
+						lRes = lWSC.fileSave(
+							aToken.fileName,
+							aToken.data,
+							{	encoding: "base64",
+								// here we already have base64 encoded data
+								suppressEncoder: true,
+								fragmentSize: 16384,
+								scope: "public"
+							});
+						log( lWSC.resultToString( lRes ) );
+					} else if( aToken.action == "send" ) {
+						lRes = lWSC.fileSend(
+							// target was passed as optional argument
+							// and thus can be used here
+							aToken.args.target,
+							aToken.fileName,
+							aToken.data,
+							{	encoding: "base64"
+							}
+						);
+						log( lWSC.resultToString( lRes ) );
+					}
+				}
+			}
+
+			function onLocalFileErrorObs( aToken ) {
+				log( "Error " + aToken.code + " reading local file: " + aToken.msg );
+			}
+
+			function loadFile() {
+				log( "loading local file via HTML 5 file..." );
+				// OnLocalFileLoaded refers to onLocalFileLoadedObs
+				var lRes =
+					lWSC.fileLoadLocal( jws.$( "sinpUpload" ), {
+						// no action planned for this file other than to show it
+						// action: null
+						// no additional arguments required
+						// args: null
+					});
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function uploadFile() {
+				log( "uploading local file to the jWebSocket server..." );
+				// OnLocalFileLoaded refers to onLocalFileLoadedObs
+				var lRes =
+					lWSC.fileLoadLocal( jws.$( "sinpUpload" ), {
+						// add optional action option to notify
+						// listener to upload the file to the server
+						action: "upload"
+						// no additional arguments required
+						// args: null
+					});
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function sendFile() {
+				log( "Sending file to given target '" + eTarget.value + "'..." );
+				// OnLocalFileLoaded refers to onLocalFileLoadedObs
+				var lRes =
+					lWSC.fileLoadLocal( jws.$( "sinpUpload" ), {
+						// add optional action option to notify
+						// listener to upload the file to the server
+						action: "send",
+						// pass target as argument
+						args: {
+							target: eTarget.value
+						}
+					});
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function initPage() {
+				eLog = jws.$( "sdivLog" );
+				eTarget = jws.$( "stxfTarget" );
+
+				if( jws.browserSupportsWebSockets() ) {
+					lWSC = new jws.jWebSocketJSONClient();
+					lWSC.setFileSystemCallbacks({
+						OnFileSaved: onFileSavedObs,
+						OnFileSent: onFileSentObs,
+						OnLocalFileRead: onLocalFileLoadedObs,
+						OnLocalFileError: onLocalFileErrorObs
+					});
+				} else {
+					jws.$( "sbtnConnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnDisconnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+
+				// optionally auto-connect
+				// connect();
+
+				/*
+				var videoDevice = document.getElementById("video_device");
+				if (!videoDevice) {
+					console.log("unable to find device element");
+					return;
+				}
+
+				videoDevice.onchange = function (evt) {
+					var videoStream = this.data;
+					var video = document.getElementById("video");
+					video.src = videoStream.url;
+					video.play();
+				};
+				 */
+			}
+
+			function exitPage() {
+				disconnect();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<!--	remarked temporarily due to chrome 5 browser bug
+		<script type="text/javascript">
+			var lFrameElem = this.frameElement;
+			if( !lFrameElem ) {
+				location.replace( "../../index.htm?page=demos/rpc_rrpc/rpc_rrpc.htm" );
+			}
+		</script>
+		-->
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Image Exchange and Mobile Snapshot Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<p>This demo shows how to take a picture from a jWebSocket enabled Android or Java ME application and send it to a browser.
+		Please connect both this dialog and your Android or Java ME mobile device (also working with the corresponding emulators)
+		to the same server (e.g. ws://jwebsocket.org:8787) and run the Camera Demo on the mobile device and view the incoming images.
+		If you do not have an appropriate mobile device you can also use the WebSocket enabled file-upload function.</p>
+		<div id="sdivLog" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" colspan ="6"><input class="sbtnDlg" id="sinpUpload" type="file" multiple="multiple" style="width:100%"></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnConnect" type="button" value="Connect" onclick="connect();"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnDisconnect" type="button" value="Disconnect" onclick="disconnect();"></td>
+					<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();"></td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnLoad" type="button" value="Load" onclick="loadFile();"
+							   title="Loads one or more files via the HTML5 File API and displays it/them in the log.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnUpload" type="button" value="Upload" onclick="uploadFile();"
+							   title="Uploads a file to the server and optionally notifies clients about URL, but does not pass the file itself.">
+					</td>
+					<td class="stdDlg" width="60">
+						<input class="stxfDlg" id="stxfTarget" type="text" value="Target-Id"
+							   title="Type the client-id of the target for this file (target-id) here.">
+					</td>
+					<td class="stdDlg" width="">
+						<input class="sbtnDlg" id="sbtnUpload" type="button" value="Send" onclick="sendFile();"
+							   title="Directly sends a file from this client to another client, the file is not stored on the server.">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<!--
+		<h2>Device Test</h2>
+
+		<device type="media" id="video_device"></device>
+		<video width="320" height="240" id="video" controls></video>
+		  -->
+		<!--
+		<p>To start chatting, select a video camera:
+			<device style="border:1px solid green;" type="video_capture" onchange="update(this.data);">
+			</device>
+		</p>
+		<video style="border:1px solid red; width:320px; height:240px" autoplay></video>
+		<script>
+			function update(stream) {
+				document.getElementsByTagName('video')[0].src = stream.url;
+		}
+		</script>
+	-->
+	</body>
+</html>

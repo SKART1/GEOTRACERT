@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket SMS Gateway Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+
+        <title>SMS Gateway Demo</title>
+
+		<!-- JQUERY STYLES -->
+		<link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+
+		<!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsSMSGateway.css"/>
+
+		<!-- JQUERY DEPENDENCIES -->
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/dialogs.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+		<!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+
+		<!--  PUBLIC WIDGETS   -->
+		<script type="text/javascript" src='../../res/js/widgets/wAuth.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/wLog.js'></script>
+
+		<!--  MY WIDGETS   -->
+		<script type="text/javascript" src='js/jwsSMSGateway.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+		<!--  MAIN JAVASCRIPT FILE   -->
+		<script type="text/javascript" src='js/init.js'></script>
+	</head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocket SMS Gateway</h1>
+                <div id="demo_box_header_login">
+                    <div id="logoff_area">
+                        <div id="user_info">
+                            <div id="user_info_name"></div> <div>&nbsp;|&nbsp;</div>
+                            <div id="logoff_button" class="button" >Logout</div>
+                        </div>
+                    </div>
+                    <div id="login_area">
+                        <div id="login_form">
+                            <label class="first">Username</label>
+                            <label class="second">Password</label>
+                            <input type="text" id="user_text" value="root"/>
+                            <input type="password" id="user_password" value="root"/>
+                        </div>
+                        <div id="login_button" class="button">Login</div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div><div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>
+
+                <!--       DESCRIPTION       -->
+                <div class="box">
+                    <p>Here we show how to easily send SMS to smartphones using 
+						the jWebSocket SMS Gateway. Just type a number and a 
+						message. For security and anti-spam reasons please use 
+						the captcha service.</p>
+                </div>
+
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+                    <!--  HERE YOU SHOULD START WRITING                  -->
+
+                    <div id="jCaptchaDiv" class="contentDiv">
+                        <div id="imgCaptcha">
+                            <img id="img"></img>
+                        </div>
+                        <div id="update" class="update" 
+							 title="Update the captcha image with a new one!"></div>
+                        <input type="text" id="captchaText" class="texts" value="Type the words here..."/>
+                    </div>
+                    <div id="messageDiv" class="contentDiv box">
+						<table width="100%">
+							<tr>
+								<td width="30%">Phone number</td>
+								<td>
+									<input type="text" id="phoneNumberInput" 
+										   class="texts" value="+49 160 90915843"/>
+								</td>
+							</tr>
+							<tr>
+								<td>From</td>
+								<td><input type="text" id="fromInput" 
+										   class="texts" value="jWebSocket"/></td>
+							</tr>
+							<tr>
+								<td>Text message</td>
+								<td>
+									<textarea id="smsInput" NAME="sms" ROWS="6" COLS="30" class="texts">Hello from the jWebSocket real-time SMS service. Security with user-verification and monitoring.</textarea>
+								</td>
+							</tr>
+						</table>
+
+                        <div id="radioDiv">
+							<div id="character_counter">
+								<div class="text">characters left</div>
+								<div class="count">150</div>
+							</div>
+							<div id="sms_actions">
+								<p id="smsType">Select SMS type:</p>
+								<input type="radio" value="gold" name="messageRadio" 
+									   class="radio" id="gold"/><label>Gold</label>
+								<input type="radio"  value="direct" name="messageRadio" 
+									   class="radio" id="direct"/><label>Direct</label>
+								<input type="radio" value="basic" name="messageRadio" 
+									   checked="checked" class="radio" id="basic"/>
+								<label>Basic</label>
+							</div>
+                        </div>
+						<div id="send_button" class="button">Send</div>
+                    </div>
+					<!--       LOG BOX           -->
+                    <div id="log_box" class="box">
+                        <div id="log_box_header">
+                            <div id="show_hide_log" class="hide">Hide Log</div>
+                            <div id="clear_log">Clear Log</div>
+                        </div>
+                        <div id="log_box_content" class="log_box_visible"></div>
+                    </div> 
+					<!--       DOWNLOAD_BUTTON   -->
+					<div id="demo_box_footer">
+						<div id="jws_download_button" class="button download">
+							<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+							   target="blank">Download jWebSocket</a>
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

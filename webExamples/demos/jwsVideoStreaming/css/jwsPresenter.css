@@ -1,0 +1,53 @@
+#toolbar{
+	width: 150px;
+	height: 20px;
+	padding-top: 5px;
+	margin: auto;
+}
+
+/*---------------------------------------------------------------------------*/
+/* buttons */
+/*---------------------------------------------------------------------------*/
+#btn_first .btn_center, #btn_prev .btn_center, #btn_next .btn_center, #btn_last .btn_center{
+	padding: 3px 0 0 0 !important;
+	width: 12px;
+}
+
+.btn_center .first{
+	float: left;
+	width: 12px;
+	height: 18px;
+    background: url(images/btn_first_n.png) 1px no-repeat;
+}
+
+.btn_center .prev{
+	position: inherit !important;
+	float: left;
+	width: 12px;
+	height: 18px;
+    background: url(images/btn_prev_n.png) 1px no-repeat;
+}
+
+.btn_center .next{
+	position: inherit !important;
+	float: left;
+	width: 12px;
+	height: 18px;
+    background: url(images/btn_next_n.png) 1px no-repeat;
+}
+
+.btn_center .last{
+	float: left;
+	width: 12px;
+	height: 18px;
+    background: url(images/btn_last_n.png) 1px no-repeat;
+}
+
+#fullscreen_btn_presenter{
+	background: transparent url(images/fullscreen-presenter-btn.png) no-repeat;
+}
+/*#fullscreen:-webkit-full-screen #slide{ width: 70%; height: 80%; }*/
+#fullscreen:-moz-full-screen #slide_presenter { width: 70%; height: 80%; margin-left: 15%; }
+/*#fullscreen:-ms-full-screen #slide { width: 70%; height: 80%;  }*/
+/*#fullscreen:-o-full-screen #slide { width: 70%; height: 80%;  }
+#fullscreen:full-screen  #slide{ width: 70%; height: 80%;  }*/

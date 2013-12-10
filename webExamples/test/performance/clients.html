@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src="../../res/js/jwsChannelPlugIn.js"></script>
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+		<script type="text/javascript" src='js/Util.js'></script>
+		<script type="text/javascript" src='js/Clients.js'></script>
+	</head>
+	<body>
+		<h1>jWebSocket Performance Test Clients Manager</h1>
+		<table>
+			<tr>
+				<td>
+
+					<h3>Set the clients number:</h3>
+					&nbsp;Clients: <input type="text" value="3" id="clients" />
+					<h3>Select test transport type:</h3>
+					&nbsp;Transport:<select id="transport">
+						<option value="broadcast">Broadcast</option>
+						<option value="channelBroadcast">Channel Broadcast</option>
+						<option value="jmsBroadcast">JMS Wrapper Broadcast</option>
+					</select>
+					<p>
+						<input type="button" id="start" value="Open connections" />
+
+				</td>
+				<td>
+					<div id="log">
+
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
+	</body>
+</html>

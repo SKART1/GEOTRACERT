@@ -1,0 +1,341 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>jWebSocketServer 1.0 automated tests</title>
+
+		<!-- jasmine test framework related files -->
+		<link rel="stylesheet" type="text/css" href="../lib/jasmine-1.0.2/jasmine.css">
+		<script type="text/javascript" src="../lib/jasmine-1.0.2/jasmine.js"></script>
+		<script type="text/javascript" src="../lib/jasmine-1.0.2/jasmine-html.js"></script>
+
+		<!-- JQUERY DEPENDENCIES -->
+		<link rel="stylesheet" href="../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+        <script type="text/javascript" src='../lib/jQuery/jquery.js'></script>
+        <script type="text/javascript" src='../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../res/js/widgets/dialogs.js'></script>
+
+		<!-- jWebSocket style sheet -->
+		<link rel="stylesheet" type="text/css" href="../res/css/demos.css">
+		<link rel="stylesheet" type="text/css" href="css/tests.css">
+
+		<!-- use bundle to check if all plug-ins are embedded in the bundle -->
+		<!--  <script type="text/javascript" src="../res/js/jWebSocket_Bundle.js"></script> -->
+
+		<!-- also use minified version to check/validate obfuscator -->
+		<!-- <script type="text/javascript" src="../res/js/jWebSocket_Bundle_min.js"></script> -->
+
+		<!-- use separate files if you are updating individual files -->
+		<script type="text/javascript" src="../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src="../lib/cujojs-aop/aop-0.5.2.js"></script>
+		<script type="text/javascript" src="../lib/JSZip/jszip_min.js"></script>
+		<script type="text/javascript" src="../lib/JSZip/jszip-deflate_min.js"></script>
+		<script type="text/javascript" src="../lib/JSZip/jszip-inflate_min.js"></script>
+		<script type="text/javascript" src="../lib/JSZip/jszip-load_min.js"></script>
+		<script type="text/javascript" src="../res/js/jwsIOC.js"></script>
+		<script type="text/javascript" src="../res/js/jwsCache.js"></script>
+		<script type="text/javascript" src="../res/js/jwsAPIPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsChannelPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsCanvasPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsChatPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsClientGamingPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsEventsPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsFilesystemPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsItemStoragePlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsJDBCPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsJMSPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsLoggingPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsMailPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsRPCPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsSamplesPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsSharedObjectsPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsStreamingPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsTestPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsTwitterPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsXMPPPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsWorker.js"></script>
+
+		<!-- Including Enterprise jWebSocket plug-ins-->
+		<script type="text/javascript" src="../res/js/jwsFilesystemPlugInEE_min.js"></script>
+		<script type="text/javascript" src="../res/js/jwsItemStoragePlugInEE_min.js"></script>
+
+		<!-- shared test specs for opening and closing connections -->
+		<script type="text/javascript" src="js/jwsSharedTests.js"></script>
+		<!-- test specs for the system plug-in, system plug-in is integrated in jWebSocket.js -->
+		<script type="text/javascript" src="js/jwsSystemTests.js"></script>
+
+		<!-- tests for the filesystem plug-in -->
+		<script type="text/javascript" src="js/jwsFilesystemTests.js"></script>
+
+		<!-- tests for the enterprise filesystem plug-in -->
+		<script type="text/javascript" src="js/jwsFilesystemEETests.js"></script>
+
+		<!-- tests for the itemstorage plug-in -->
+		<script type="text/javascript" src="js/jwsItemStorageTests.js"></script>
+
+		<!-- tests for the enterprise itemstorage plug-in -->
+		<script type="text/javascript" src="js/jwsItemStorageEETests.js"></script>
+
+		<!-- tests for the logging plug-in -->
+		<script type="text/javascript" src="js/jwsLoggingTests.js"></script>
+
+		<!-- tests for the RPC plug-in -->
+		<script type="text/javascript" src="js/jwsRPCTests.js"></script>
+
+		<!-- tests for the JDBC plug-in -->
+		<script type="text/javascript" src="js/jwsJDBCTests.js"></script>
+
+		<!-- tests for the JMS plug-in -->
+		<script type="text/javascript" src="js/jwsJMSTests.js"></script>
+
+		<!-- tests for the Channel plug-in -->
+		<script type="text/javascript" src="js/jwsChannelTests.js"></script>
+
+		<!-- tests for the Streaming plug-in -->
+		<script type="text/javascript" src="js/jwsStreamingTests.js"></script>
+
+		<!-- tests for the Load tests -->
+		<script type="text/javascript" src="js/jwsLoadTests.js"></script>
+
+		<script type="text/javascript" src="js/jwsAutomatedAPITests.js"></script>
+
+		<!-- tests for the Dependency Injection Container -->
+		<script type="text/javascript" src="js/jwsIOC.js"></script>
+
+		<!-- tests for Benchmark suite -->
+		<script type="text/javascript" src="js/jwsBenchmarks.js"></script>
+
+		<!-- the central test suite code contains the various test suites -->
+		<script type="text/javascript" src="js/jwsTestSuites.js"></script>
+
+		<!-- include spec files here... -->
+		<script type="text/javascript" src="spec/Matchers.js"></script>
+
+		<!-- tests for events plugin -->
+		<script type="text/javascript" src="js/jwsEventsTests.js"></script>
+
+	</head>
+	<body>
+		<div id="demo_box">
+			<!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocketServer 1.0 automated tests</h1>
+                <div id="demo_box_header_login"></div>
+            </div>
+			<table>
+				<tr>
+					<td>
+						<h3>Select test modules to be executed</h3>
+						&nbsp;Test set:<select id="test_set">
+							<option value="ce">Community Edition</option>
+							<option value="system">System Core</option>
+							<option value="performance">Performance</option>
+							<option value="ee">Enterprise Edition</option>
+						</select>
+						&nbsp;System Speed:<select id="speed">
+							<option value="generic">Generic</option>
+							<option value="generic_debug">Generic [log_mode=debug]</option>
+							<option value="normal">Normal</option>
+							<option value="slow">Slow</option>
+							<option value="very_slow">Very slow</option>
+							<option value="fast">Fast</option>
+							<option value="ultra_fast">Ultra fast</option>
+							<option value="fastest">Fastest</option>
+						</select>
+						<p id="tests">
+							<label><input id="openConns" type="checkbox" disabled checked="checked"> Open connections for admin and guest</label>
+							<br>
+							<label><input id="streamingPlugIn" type="checkbox" checked="checked"> Streaming PlugIn</label>
+							<br>
+							<label><input id="channelsPlugIn" type="checkbox" checked="checked"> Channels PlugIn</label>
+							<br>
+							<label><input id="rpcPlugIn" type="checkbox" checked="checked"> RPC PlugIn</label>
+							<br>
+							<label><input id="automatedAPIPlugIn" type="checkbox" checked="checked"> Automated API PlugIn</label>
+							<br>
+							<label><input id="filesystemPlugIn" type="checkbox" checked="checked"> File System PlugIn</label>
+							<br>
+							<label><input id="filesystemPlugInEE" type="checkbox" checked="checked"> File System PlugIn (Enterprise)</label>
+							<br>
+							<label><input id="itemstoragePlugIn" type="checkbox" checked="checked"> Item Storage PlugIn</label>
+							<br>
+							<label><input id="itemstoragePlugInEE" type="checkbox" checked="checked"> Item Storage PlugIn (Enterprise)</label>
+							<br>
+							<label><input id="systemPlugIn" type="checkbox" checked="checked"> System PlugIn</label>
+							<br>
+							<label><input id="load" type="checkbox" checked="checked"> Load</label>
+							<br>
+							<label><input id="closeConns" type="checkbox" disabled checked="checked"> Close connections for admin and guest</label>
+							<br>
+							<label><input id="ioc" type="checkbox" checked="checked"> IOC Container</label>
+							<br>
+							<label><input id="events" type="checkbox" checked="checked"> Events Sample Application</label>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id="sbtnManualTest" class="button" 
+							 onmouseover="this.className='button onmouseover'" 
+							 onmousedown="this.className='button onmousedown'" 
+							 onmouseup="this.className='button onmouseup'" 
+							 onmouseout="this.className='button onmouseout'" 
+							 onclick="run({action:'runFullTestSuite'});
+								 this.className='button onmouseover';"
+							 title="Runs the manual (programmatic) test suite.">
+							<div class="btn_left"></div>
+							<div class="btn_center">Run selected tests!</div>
+							<div class="btn_right"></div>
+						</div>
+
+						<div id="sbtnBenchmarkTest" class="button onmouseup" 
+							 onmouseover="this.className='button onmouseover'" 
+							 onmousedown="this.className='button onmousedown'" 
+							 onmouseup="this.className='button onmouseup'" 
+							 onmouseout="this.className='button onmouseout'" 
+							 onclick="run({action:'runBenchmarkSuite'});this.className='button onmouseover';"
+							 title="Runs the benchmark suite.">
+							<div class="btn_left"></div>
+							<div class="btn_center">Run benchmark test!</div>
+							<div class="btn_right"></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript">
+			var lCheckboxes = $('#tests').find('input[type=checkbox]');
+			$.each(lCheckboxes,  function(aIndex, aItem){
+				if ($(aItem).prop('id').substr(-2) == 'EE'){
+					$(aItem).prop('checked', false);
+				}
+			});
+			
+			var lComboSpeed = $('#speed');
+			
+			var lCombo = $('#test_set');
+			lCombo.bind('change', function(aValue) {
+				$.each(lCheckboxes,  function(aIndex, aItem){
+					var lId = $(aItem).prop('id');
+					if ('openConns' == lId || 'closeConns' == lId){
+						return;
+					}
+					
+					if ('ce' == lCombo.val()){
+						if (lId.substr(-2) == 'EE'){
+							$(aItem).prop('checked', false);
+						} else {
+							$(aItem).prop('checked', true);	
+						}
+					} else if ('ee' == lCombo.val()){
+						if (lId.substr(-2) == 'EE'){
+							$(aItem).prop('checked', true);
+						} else {
+							$(aItem).prop('checked', false);	
+						}
+					} else if ('performance' == lCombo.val()){
+						if (lId == 'load'){
+							$(aItem).prop('checked', true);
+						} else {
+							$(aItem).prop('checked', false);	
+						}
+					} else if ('system' == lCombo.val()){
+						if (lId == 'systemPlugIn'){
+							$(aItem).prop('checked', true);
+						} else {
+							$(aItem).prop('checked', false);	
+						}
+					}
+					
+				});
+			});
+			
+			function getURL() {
+				var lHref = location.href;
+				var lIdx = lHref.indexOf( "?" );
+				if( lIdx > 0 ) {
+					lHref = lHref.substring( 0, lIdx );
+				}
+				return lHref;
+			}
+
+			function run( aCall ) {
+				if ( "runFullTestSuite" == aCall.action ){
+					aCall.set = $('#test_set').val();
+					aCall.speed = $('#speed').val();
+					aCall.args = {
+						openConns: true,
+						streamingPlugIn: (jws.$("streamingPlugIn").checked)? true : false,
+						channelsPlugIn: (jws.$("channelsPlugIn").checked)? true : false,
+						rpcPlugIn: (jws.$("rpcPlugIn").checked)? true : false,
+						automatedAPIPlugIn: (jws.$("automatedAPIPlugIn").checked)? true : false,
+						filesystemPlugIn: (jws.$("filesystemPlugIn").checked)? true : false,
+						filesystemPlugInEE: (jws.$("filesystemPlugInEE").checked)? true : false,
+						itemstoragePlugIn: (jws.$("itemstoragePlugIn").checked)? true : false,
+						itemstoragePlugInEE: (jws.$("itemstoragePlugInEE").checked)? true : false,
+						systemPlugIn: (jws.$("systemPlugIn").checked)? true : false,
+						load: (jws.$("load").checked)? true : false,
+						closeConns: true,
+						ioc: (jws.$("ioc").checked)? true : false,
+						events: (jws.$("events").checked)? true : false,
+						__speed: $('#speed').val()
+					};
+				}
+				location.href = getURL() + "?" + JSON.stringify(aCall);
+			}
+
+			var path = location.search.substr(1);
+			var request = null;
+			if (path){
+				request = JSON.parse(path.split("%22").join("\""));
+			}
+			
+			if (request['set']){
+				lCombo.val(request['set'])
+			}
+			if (request['speed']){
+				lComboSpeed.val(request['speed'])
+			}
+			if( request && request["action"] ) {
+				if ("runFullTestSuite" == request["action"] && !request["args"]){
+					request["args"] = {
+						openConns: true,
+						streamingPlugIn: true,
+						channelsPlugIn: true,
+						rpcPlugIn: true,
+						automatedAPIPlugIn: true,
+						filesystemPlugIn: true,
+						filesystemPlugInEE: true,
+						systemPlugIn: true,
+						load: true,
+						closeConns: true,
+						ioc: true,
+						events: true
+					};
+				}
+			
+				//Getting the function
+				request["action"] = eval(request["action"]);
+			
+				//Calling the tests
+				request["action"](request["args"]);
+				
+				// jws.console.setActive( true );
+				// jws.console.setLevel( jws.console.ALL );
+				jws.TestPlugIn.execTests();
+			
+				//Setting up checkboxes state
+				for (var lCheckbox in request["args"]){
+					jws.$(lCheckbox).checked = request["args"][lCheckbox];
+				}
+			}
+
+			if( jws.browserSupportsWebSockets() ) {
+
+			} else {
+				var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+				alert( lMsg );
+			}
+		</script>
+	</body>
+</html>

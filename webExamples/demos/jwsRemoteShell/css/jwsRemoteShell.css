@@ -1,0 +1,197 @@
+/*-------------- DEMO_DESCRIPTION ------------*/
+#demo_box_description{
+    margin-top: 10px;
+    padding: 5px 15px 5px 15px;
+    font-size: 10pt;
+}
+/*-------------- DEMO_DESCRIPTION ------------*/
+
+
+/*---------------- DEMO_SCENARIO -------------*/
+#demo_box_scenario{
+    float: left;
+    margin: 10px; 
+    padding: 5px;
+}
+
+#shell_login,
+#shell_color_settings{
+    background: #E4E4E4;
+    border: 1px solid #C8C8C8;
+    float: left;
+    padding-bottom: 10px;
+    margin-top: 17px;
+}
+
+#shell_login{
+    width: 175px;
+    margin-right: 10px;
+}
+
+#shell_color_settings{
+    width: 400px;
+}
+
+#demo_description{
+    width: 210px;
+    text-align: justify;
+}
+
+#shell_login_header,
+#color_setting_header{
+    margin: -1px -1px 0 -1px;
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    -webkit-border-radius: 6px 6px 0px 0px;
+    border-radius: 6px 6px 0px 0px;
+    background: #2584C1 url(../img/header.png) repeat-x;
+    height: 20px;
+    color: white;
+    font-family: "Verdana";
+    font-size: 11px;
+    padding: 7px 3px 0 10px;
+    font-weight: bold;
+
+    background: rgb(134,173,216); /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzg2YWRkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyNTg1YzEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  rgba(134,173,216,1) 0%, rgba(37,133,193,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(134,173,216,1)), color-stop(100%,rgba(37,133,193,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* IE10+ */
+    background: linear-gradient(top,  rgba(134,173,216,1) 0%,rgba(37,133,193,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86add8', endColorstr='#2585c1',GradientType=0 ); /* IE6-8 */
+}
+
+#shell_login input{
+    background: #FFFFFF;
+    color: #797878;
+    border: 1px solid #C8C8C8;
+    padding: 5px;
+    margin: 5px 5px 2px 5px;
+}
+
+/*---------------- DEMO_SCENARIO -------------*/
+
+
+.box{
+    float: left;
+}
+
+#log_box{
+    width: 708px;
+}
+
+#scenario_container{
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+#log_box{
+    margin-top: 20px;
+}
+
+.shell_login_btn,
+#shell_logout_btn{
+    float:left;
+    margin-left: 50px;
+    padding-top: 8px;
+}
+
+#shell_logout_btn{
+    margin-left: 40px;
+}
+
+#shell_login_form{
+    width: auto;
+}
+
+/*COLOR SETTINGS*/
+#shell_color_settings{
+    float: left;
+    width: 320px;
+}
+
+#backcolor_fields,
+#fontcolor_fields{
+    padding-left: 5px;
+    margin-top: 5px;
+    float: left;
+}
+
+
+#backcolor_fields div,
+#fontcolor_fields div{
+    float: left;
+    margin: 2px;
+    width: 15px;
+    height: 15px;
+    background-repeat: no-repeat;
+    border: 1px white solid;
+}
+
+#backcolor_fields div:first-child,
+#fontcolor_fields div:first-child {
+    width: 110px;
+    border: none;
+    text-align: right;
+}
+
+#backcolor_fields div:first-child:hover,
+#fontcolor_fields div:first-child:hover {
+    border: none;
+}
+
+#backcolor_fields div:hover,
+#fontcolor_fields div:hover{
+    border: 1px solid #c9cb4c;
+}
+
+.color_blue{
+    background-color: #0072bc;
+}
+
+.color_green{
+    background-color: #53b369;
+}
+
+.color_red{
+    background-color: #c64e4d;
+}
+
+.color_yellow{
+    background-color: #c9cb4c;
+}
+
+.color_orange{
+    background-color: #be8e44;
+}
+
+.color_darkblue{
+    background-color: #273c4d;
+}
+
+.color_purple{
+    background-color: #6864a1;
+}
+
+.color_grey{
+    background-color: #b4b4b4;
+}
+
+.color_black{
+    background-color: #000000;
+}
+
+/*Shell*/
+
+#console textarea{
+    background-color: #404040;
+    color: white;
+    width: 708px;
+    height: 300px;
+    margin-top: 17px;
+}

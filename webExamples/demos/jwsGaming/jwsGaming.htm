@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Gaming Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+		<title>jWebSocket Gaming Demo</title>
+
+		<!-- JQUERY STYLES -->
+		<link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+
+		<!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+		<link rel="stylesheet" type="text/css" href="css/jwsGaming.css"/>
+
+		<!-- JQUERY DEPENDENCIES -->
+		<script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+        <script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/dialogs.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+		<!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src="../../res/js/jwsChannelPlugIn.js"></script>
+
+		<!--  PUBLIC WIDGETS   -->
+		<script type="text/javascript" src='../../res/js/widgets/wAuth.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/wLog.js'></script>
+
+		<script type="text/javascript" src='js/wGaming.js'></script>
+
+		<!--  MAIN JAVASCRIPT FILE   -->
+		<script type="text/javascript" src='js/init.js'></script>
+
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocket Gaming Demo</h1>
+                <div id="demo_box_header_login">
+                    <div id="logoff_area">
+                        <div id="user_info">
+                            <div id="user_info_name"></div> <div>&nbsp;|&nbsp;</div>
+                            <div id="logoff_button" class="button">Logout</div>
+                        </div>
+                    </div>
+                    <div id="login_area">
+                        <div id="login_form">
+                            <label class="first">Username</label>
+                            <label class="second">Password</label>
+                            <input type="text" id="user_text" value="root"/>
+                            <input type="password" id="user_password" value="root"/>
+                        </div>
+                        <div id="login_button" class="button">Login</div>
+                    </div>
+                </div>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div>
+					<div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>
+
+                <!--       DESCRIPTION       -->
+                <div class="description_box">
+                    <p>This demo shows how to implement a pure client based game 
+                        without any server side plug-in. Events like key strokes 
+                        or mouse clicks on a client are distributed to all other 
+                        clients, for example to synchronize the location of a 
+                        certain player on a common playground.
+                        This demo uses the standard broadcast and event mechanism 
+                        only, which is already provided by jWebSocket's 
+                        SystemPlugIn.
+                        If you are not sure wether your favorite browser supports 
+                        WebSockets please refer to our jWebSocket 
+						<a href="http://jwebsocket.org/documentation/jwebsocket-cross-browser-compatibility">
+								Cross-Browser Compatibility</a> page. 
+					</p>
+                </div>
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+                    <!--    MESSAGE_BOX      -->
+                    <div id="message_box" class="box">
+                        <div id="message_box_header">Playground</div>
+						<div id="message_box_description">
+                            Login to start as a green player. If other players are 
+							online they are shown in red. Use the arrow keys to move 
+							your player and automatically broadcast your move to 
+							other users.
+                        </div>
+						<div id="amount_of_players">
+							<div id="total_green" class="box">0</div>
+							<div id="total_red" class="box">0</div>
+							<div class="box">
+								<input type="checkbox" id="debug" class="debug" value="ON">Debug</input>
+								<input type="checkbox" id="random" class="debug" value="ON">Random</input>
+							</div>
+						</div>
+                        <div id="players_area">
+							<!-- <div class="player green_player">
+								Player 01.38649.1
+							</div>
+							<div class="player red_player">
+								Player 01.38649.2
+							</div>-->
+                        </div>
+                    </div>
+                </div>
+
+				<!--       LOG BOX           -->
+				<div id="log_box" class="box">
+					<div id="log_box_header">
+						<div id="show_hide_log" class="hide">Hide Log</div>
+						<div id="clear_log">Clear Log</div>
+					</div>
+					<div id="log_box_content" class="log_box_visible"></div>
+				</div>
+
+				<!--       DOWNLOAD_BUTTON   -->
+				<div id="demo_box_footer">
+					<div id="jws_download_button" class="button download">
+						<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+						   target="blank">Download jWebSocket</a>
+					</div>
+				</div>
+            </div>
+        </div>
+
+    </body>
+</html>

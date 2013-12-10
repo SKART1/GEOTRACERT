@@ -1,0 +1,377 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket RPC Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket RPC Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- load the jWebSocket JavaScript client library -->
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<!-- this one imports the client side RPC/RRPC plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsRPCPlugIn.js"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null;
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			// allow the rrpc access to the method jws.RRPCServer.demo
+
+			var lWSC = null;
+
+			function connect() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				var lURL = jws.getDefaultServerURL();
+
+				log( "Connecting to " + lURL + " ..." );
+				var lRes = lWSC.logon( lURL, "guest", "guest", {
+
+					// OnOpen callback
+					OnOpen: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection established.</font>" );
+						jws.$("simgStatus").src = "../../images/connected.png";
+					},
+
+					// OnMessage callback
+					OnMessage: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket message received: '" + aEvent.data + "'</font>" );
+						jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;" + lWSC.getId();
+					},
+
+					// OnClose callback
+					OnClose: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection closed.</font>" );
+						jws.$("simgStatus").src = "../../images/disconnected.png";
+						jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+					}
+				});
+
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function disconnect() {
+				if( lWSC ) {
+					log( "Disconnecting..." );
+					var lRes = lWSC.close({timeout: 3000});
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+
+			function initPage() {
+				eLog = jws.$( "sdivChat" );
+				eArgs = jws.$( "stxfMsg" );
+				eTarget = jws.$( "stxfTarget" );
+				eSpawnThread = jws.$( "schkThreaded" );
+				rrpc = false ;
+				
+				if( jws.browserSupportsWebSockets() ) {
+					lWSC = new jws.jWebSocketJSONClient();
+					lWSC.addGrantedProcedure("org.jwebsocket.android.demo.RPCDemoActivity.rrpcTest1");
+					lWSC.addGrantedProcedure("org.jwebsocket.android.demo.RPCDemoActivity.rrpcTest2");
+					lWSC.addGrantedProcedure("org.jwebsocket.android.demo.RPCDemoActivity.rrpcTest3");
+					lWSC.removeGrantedProcedure("org.jwebsocket.android.demo.RPCDemoActivity.rrpcTest3");
+				} else {
+					jws.$( "sbtnConnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnDisconnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
+					jws.$( "stxfMsg" ).setAttribute( "disabled", "disabled" );
+					jws.$( "stxfTarget" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnGranted" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnProtected" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnRRPC" ).setAttribute( "disabled", "disabled" );
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+
+				// set initial dialog presets for convenience
+				getMd5();
+			}
+
+			function exitPage() {
+				disconnect();
+			}
+			org = {
+				jwebsocket: {
+					android: {
+						demo: {
+							RPCDemoActivity: {
+								rrpcTest1: function (arg1, arg2, arg3){
+									log("rrpcTest1 has been called by the server");
+									if (arg1) {
+										log("arg1: " + arg1);
+									}
+									if (arg2) {
+										log("arg2: " + arg2);
+									}
+								},
+								rrpcTest2: function (arg1, arg2){
+									log("rrpcTest2("+arg1+", "+arg2+") has been called by the server");
+								},
+								rrpcTest3: function (){
+									log("rrpcTest3 has been called by the server");
+								}
+							}
+						}
+					}
+				}
+			}
+
+			var selectRrpcType = function () {
+				var lClassName ;
+				if (rrpc) {
+					/*					if (document.getElementById('rrpcTypeBrowser').checked) {
+						lClassName = 'demo' ; //browser className
+					} else { */
+					lClassName = 'org.jwebsocket.android.demo.RPCDemoActivity' ; //android classname
+					/*}*/
+				} else {
+					lClassName = 'org.jwebsocket.rpc.sample.SampleRPCLibrary'; //server rpc classname
+				}
+				document.getElementById('className').value = lClassName;
+			}
+
+			var setValues = function (aMethodName, aArgs) {
+				selectRrpcType();
+				document.getElementById('methodName').value = aMethodName;
+				eArgs.value = aArgs ;
+			}
+
+			var getMd5 = function () {
+				eTarget.value="";
+				setValues('getMD5', "a string to md5-encode");
+				document.getElementById('descriptionRPC').innerHTML='return the md5 value of the server';
+			}
+
+			var rpcTest1 = function (){
+				setValues('rrpcTest1', "null");
+				document.getElementById('descriptionRPC').innerHTML='invoke (r)rpcTest1(), the most basic (r)rpc test.';
+			}
+
+			var rpcTest11 = function (){
+				setValues('rrpcTest1', "hello ' & é à");
+				document.getElementById('descriptionRPC').innerHTML='invoke (r)rpcTest1(\"hello ! \' & = é test\"), with a special string as parameter. Will only work with clients which suport method overload (not with js)';
+			}
+
+			var rpcTest12 = function (){
+				setValues('rrpcTest1', 123);
+				document.getElementById('descriptionRPC').innerHTML='invoke (r)rpcTest1(123), with a int as parameter. Will only work with clients which suport method overload (not with js)';
+			}
+
+			var rpcTest2 = function (){
+				setValues('rrpcTest2', "[[\"'aa\", \"b&\"], [[1,2],[3,4]]]");
+				document.getElementById('descriptionRPC').innerHTML='(r)rpcTest2(["\'aa", "b&"], [[1,2],[3,4]]), test imbricated list';
+			}
+
+			var rpcTest21 = function (){
+				setValues('rrpcTest2', "[[\"'aa\", \"b&\"], [[1,\"2\"],[3,4]]]");
+				document.getElementById('descriptionRPC').innerHTML='(r)rpcTest2(["\'aa", "b&"], [[1,"2"],[3,4]]), test imbricated list : should fail since array parameter are not only int. (try to invoke java method (r)rpcTest2(List &lsaquo;String&rsaquo; aList, List&lsaquo;List&lsaquo;Integer&rsaquo;&rsaquo; aList2))';
+			}
+			
+			var rpcTest3 = function (){
+				setValues('rrpcTest3', "null");
+				document.getElementById('descriptionRPC').innerHTML='try to invoke a non-granted method.';
+			}
+			
+			var callMethod = function () {
+				// send a reverse remote procedure call to another client
+				// if targetID is not a number, try a simple RPC:
+				var lMethodName = document.getElementById('methodName').value;
+				var lClassName = document.getElementById('className').value;
+				var lArguments;
+				try {
+					lArguments = eval(document.getElementById('stxfMsg').value);
+				} catch (e) {
+					lArguments = document.getElementById('stxfMsg').value ;
+				}
+				log( "Calling '" + lClassName + "." + lMethodName + "(" + lArguments + ")'..." );
+			
+				if (!rrpc) {
+					// perform the Remote Procedure Call...
+					var lRes = lWSC.rpc(
+					// pass class, method and argument for server java method:
+					lClassName,
+					lMethodName,
+					lArguments,
+					// pass option to spawn thread and response call back
+					{	spawnThread: eSpawnThread.checked,
+						// new easy-to-use response callback
+						OnResponse: function( aToken ) {
+							if( aToken.code != 0 ) {
+								log( "RPC Error: " + aToken.msg );
+							} else {
+								var lRes = aToken.result;
+								// if an object is returned convert it into a human readable format
+								if( typeof lRes == "object") {
+									lRes = JSON.stringify( lRes );
+								}
+								log( "Received RPC result: " + lRes );
+							}
+						}
+					}
+				);
+				} else {
+					log( "Reverse remote calling " + lMethodName + " with args '" + lArguments + "'..." );
+					aClassName = 'org.jwebsocket.android.demo.RPCDemoActivity';
+					var lRes = lWSC.rrpc(
+					eTarget.value,			// target
+					lClassName,				// classname
+					lMethodName,				// method
+					lArguments,				// arguments as an array
+					{						// options
+						spawnThread: eSpawnThread.checked,
+						// new easy-to-use response callback
+						OnResponse: function( aToken ) {
+							if( aToken.error ) {
+								log( "RRPC Error: " + aToken.error );
+							} else {
+								log( "Received RRPC result: " + aToken.result );
+							}
+						}
+					}
+				);
+					log(lWSC.resultToString( lRes ));
+				}
+			}
+
+			var clickOnRrpc = function () {
+				rrpc = eTarget.value != "";
+				//document.getElementById('rrpcTypeBrowser').disabled = rrpc ;
+				//document.getElementById('rrpcTypeAndroid').disabled = rrpc ;
+			}
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<!--	remarked temporarily due to chrome 5 browser bug
+		<script type="text/javascript">
+			var lFrameElem = this.frameElement;
+			if( !lFrameElem ) {
+				location.replace( "../../index.htm?page=demos/rpc_rrpc/rpc_rrpc.htm" );
+			}
+		</script>
+		-->
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Remote Procedure Calls (RPC) Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<p>This demo shows how to call a Java method on a jWebSocket server from
+		a browser client and return the result. This example is based on
+		the class <code>org.jwebsocket.plugins.RPCPlugIn</code>. The <code>getMD5</code> 
+		method simply returns the 32 digit MD5 sum of the passed string 
+		argument. If you are not sure whether your favorite browser supports 
+		WebSockets please refer to our <a target="_top" href="http://jwebsocket.org/jws_for_all.htm">
+		jWebSocket Cross-Browser Compatibility</a> page.</p>
+		<div id="sdivChat" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td valign="top" class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnConnect" type="button" value="Connect" onclick="connect();"
+							   title="Connects you as guest to the jWebSocket Server.">
+					</td>
+					<td valign="top" class="stdDlgTopTxt" width="5">Class</td>
+					<td valign="top" class="stdDlg" width="5">
+						<input class="stxfDlg" id="className" type="text" style="width:320px" value="org.jwebsocket.rpc.sample.SampleRPCLibrary"
+							   title="Name of the class in which the methode is implemented.">
+					</td>
+					<td valign="top" class="stdDlgTopTxt" width="5">Method</td>
+					<td valign="top" class="stdDlg" width="5">
+						<input class="stxfDlg" id="methodName" type="text" style="width:150px" value="getMD5"
+							   title="Name of the method you want to call via RPC.">
+					</td>
+					<td valign="top" class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnGranted" type="button" value="Call method" onclick="callMethod();"
+							   title="Invokes the method specified by class and method name via RPC.">
+					</td>
+					<!-- <input class="sbtnDlg" id="sbtnProtected" type="button" value="Call protect." onclick="rpcProtectedDemo();"> -->
+				</tr>
+				<tr class="strDlg">
+					<td valign="top" class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnDisconnect" type="button" value="Disconnect" onclick="disconnect();" title="Disconnects you from the jWebSocket Server"></td>
+					<td valign="top" class="stdDlgTopTxt" width="5">Arguments</td>
+					<td valign="top" class="stdDlg" width="" colspan="3">
+						<input class="stxfDlg" id="stxfMsg" type="text" value="My Remote Procedure Arguments" style="width:99%"
+							   title="Arguments to the given method.">
+					</td>
+					<td valign="top" class="stdDlg" width="">
+						<input class="schkThreaded" id="schkThreaded" type="checkbox" value="on" checked="checked" 
+							   title="Run remote procedure in separate thread on server.">&nbsp;spawn&nbsp;thread
+					</td>
+					<!-- <input class="sbtnDlg" id="sbtnRRPC" type="button" value="Call reverse" onclick="(r)rpcDemo();"> -->
+				</tr>
+				<tr class="strDlg">
+					<td valign="top" class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();" title="Clears the result and event log above.">
+					</td>
+					<td valign="top" class="stdDlgTopTxt" width="5">Target-Id</td>
+					<td valign="top" class="stdDlg" width="5">
+						<input class="stxfDlg" id="stxfTarget" type="text" value="" style="width:150px" onkeyup="clickOnRrpc(); selectRrpcType();"
+							   title="Client-Id of the target node on which the RPC should be performed.">&nbsp;(R)RPC Target Node
+					</td>
+					<td valign="top" class="stdDlgTopTxt" width="5">Presets</td>
+					<td valign="top" class="stdDlg" width="">
+						<select class="sselDlg" onchange="eval(this.value)" style="width:150px"
+								title="Select between various default presets fro convenience and test purposes.">
+							<option value="getMd5();">getMd5</option>
+							<option value="rpcTest1();">(r)rpcTest1</option>
+							<option value="rpcTest11();">(r)rpcTest1.1</option>
+							<option value="rpcTest12();">(r)rpcTest1.2</option>
+							<option value="rpcTest2();">(r)rpcTest2</option>
+							<option value="rpcTest21();">(r)rpcTest2.1</option>
+							<option value="rpcTest3();">(r)rpcTest3</option>
+						</select>
+					</td>
+					<td valign="top" class="stdDlgTopTxt" width="50%" id="descriptionRPC"></td>
+					<!--  Select rrpc target type : <input checked="true" type="radio" name="rrpcType" value="browser" id="rrpcTypeBrowser" onchange="selectRrpcType()" /> browser <input type="radio" name="rrpcType" value="android" id="rrpcTypeAndroid" onchange="selectRrpcType()" /> android -->
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

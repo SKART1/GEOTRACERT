@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket Videostreaming Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
+		<meta http-equiv="Content-Language" content="en"/>
+
+
+        <title>jWebSocket Video Streaming Demo</title>
+
+        <!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsVideoStreaming.css"/>
+
+        <!-- JQUERY DEPENDENCIES -->
+        <link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+        <script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+        <script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/dialogs.js'></script>
+
+		<!--  PUBLIC WIDGETS   -->
+		<script type="text/javascript" src='../../res/js/widgets/wLog.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+
+		<script type="text/javascript" src='js/init.js'></script>
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>jWebSocket Video & Audio Streaming Demo (Webm)</h1>
+            </div>
+            <div id="container">
+                <!--       DESCRIPTION       -->
+                <div class="box" id="demo_box_description">
+					This demo shows how to stream in Real Time using jWebSocket 
+					Framework the audio and video captured from the presenter's 
+					web camera to many connected viewers. Using a system channel
+					all the registered users into the channel will receive the video
+					stream information, in the log box under the scenario will be
+					shown all the incoming data and events from the channel. 
+					Don't forget to set <b>getUserMedia enabled in Firefox by 
+					setting the media.peerconnection.enabled option to true</b> in 
+					about:config.
+                </div>
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+					<div id="main_content">
+						<!-- ************************ CANVAS AREA ****************************** -->
+						<div id="iframe">
+							<iframe id="presenter" src="presenterIframe.htm" scrolling="no" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true"></iframe>
+							<iframe id="viewer" src="viewerIframe.htm" scrolling="no" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true"></iframe>
+						</div>
+						<!-- ************************ CANVAS AREA ****************************** -->
+					</div>
+					<!--       LOG BOX           -->
+					<div id="log_box" class="box">
+						<div id="log_box_header">
+							<div id="show_hide_log" class="hide">Hide Log</div>
+							<div id="clear_log">Clear Log</div>
+						</div>
+						<div id="log_box_content" class="log_box_visible"></div>
+					</div>
+
+					<!--       DOWNLOAD_BUTTON   -->
+					<div id="demo_box_footer">
+						<div id="jws_download_button" class="button download">
+							<a href="http://jwebsocket.org/downloads/jwebsocket-latest-versions" 
+							   target="blank">Download jWebSocket</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>

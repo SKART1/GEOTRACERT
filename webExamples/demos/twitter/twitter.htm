@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Twitter Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Twitter Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- load the jWebSocket JavaScript client library -->
+		<script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<!-- this one imports the client side twitter plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsTwitterPlugIn.js"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null;
+			var lTwitterAuthenticationURL = null;
+			var lTwitterAccessVerifier = null;
+			var eTwitterLoginLink = null;
+			var eTwitterKeywords = null;
+			var lTwitterOAuthWinId = "twAuth";
+			var hTwAuth = null;
+
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lWSC = null;
+			var gUsername = null;
+
+			function generateTwitterCallbackURL() {
+				var lCallbackURL = location.href;
+				var lIdx = lCallbackURL.lastIndexOf("/");
+				lCallbackURL = lCallbackURL.substring( 0, lIdx + 1 ) + "twauth.htm?isAuth=true";
+				return lCallbackURL;
+			}
+
+			function logon() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				var lURL = jws.getDefaultServerURL();
+
+				gUsername = eUsername.value;
+				var lPassword = ePassword.value;
+				// optionally reset password if desired for security reasons
+				// ePassword.value = "";
+
+				log( "Connecting to " + lURL + " and logging in as '" + gUsername + "'..." );
+				var lRes = lWSC.logon( lURL, gUsername, lPassword, {
+
+					// OnOpen callback
+					OnOpen: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection established.</font>" );
+						jws.$("simgStatus").src = "../../images/connected.png";
+
+						// immediately request an Access Token for Twitter Login
+						lWSC.twitterRequestAccessToken( generateTwitterCallbackURL() );
+					},
+					// OnMessage callback
+					OnMessage: function( aEvent, aToken ) {
+						// exclude stream messages, they are processed in a separate event
+						if( !("event" == aToken.type && "status" == aToken.name )) {
+							log( "<font style='color:#888'>jWebSocket '" + aToken.type + "' token received, full message: '" + aEvent.data + "</font>" );
+						}
+						if( lWSC.isLoggedIn() ) {
+							jws.$("simgStatus").src = "../../images/authenticated.png";
+						} else {
+							jws.$("simgStatus").src = "../../images/connected.png";
+						}
+						jws.$("slblClientId").innerHTML =
+							"&nbsp;Client&#x2011;Id:&nbsp;"
+							+ lWSC.getId() + "&nbsp;"
+							+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" );
+					},
+					// OnClose callback
+					OnClose: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection closed.</font>" );
+						jws.$("simgStatus").src = "../../images/disconnected.png";
+						jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+					}
+				});
+
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function logoff() {
+				if( lWSC ) {
+					log( "Logging off " + ( gUsername != null ? "'" + gUsername + "'" : "" ) + " and disconnecting..." );
+					// the timeout below  is optional, if you use it you'll get a good-bye message.
+					var lRes = lWSC.close({ timeout: 3000 });
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+			function getTimeline() {
+				log( "Retreiving timeline for user '" + eTwitterUsername.value + "'..." );
+				var lRes = lWSC.twitterTimeline(
+					eTwitterUsername.value
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function query() {
+				log( "Searching for tweets matching '" + eTwitterUsername.value + "'..." );
+				var lRes = lWSC.twitterQuery(
+					eTwitterUsername.value
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function twitterGetTrends() {
+				log( "Searching for trends..." );
+				var lRes = lWSC.twitterTrends(
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function twitterGetStatistics() {
+				log( "Searching for Twitter statistics..." );
+				var lRes = lWSC.twitterStatistics(
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function twitterGetPublicTimeline() {
+				log( "Retrieving public timeline..." );
+				var lRes = lWSC.twitterPublicTimeline(
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function twitterSetStream() {
+				log( "Setting Stream with keywords..." );
+				var lRes = lWSC.twitterSetStream(
+					"", // followers (for future use)
+					eTwitterKeywords.value
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+
+			function twitterLogout() {
+				var lRunLogOut = true;
+				if( lTwitterAccessVerifier == null ) {
+					lRunLogOut =
+						confirm(
+							"We could not determine if you are logged in at Twitter.\n"
+							+ "Do you want to open Twitter sign-out anyway?\n"
+						);
+				}
+
+				if( lRunLogOut ) {
+					log( "Logging out from Twitter..." );
+					hTwLogout = window.open(
+						"http://twitter.com/logout",
+						lTwitterOAuthWinId,
+						"status=1,resizable=1,dependent=1,scrollbars=0,width=820,height=480,left=100,top=200"
+					);
+				}
+			}
+
+			function mCalcRest() {
+				var lRest = 140 - eTwitterMessage.value.length;
+				sbtnTweet.value = "Tweet " + lRest;
+			}
+
+
+			function onMessageKeyDown() {
+				mCalcRest();
+			}
+
+			function tweet() {
+				log( "Sending tweet '" + eTwitterMessage.value + "'..." );
+				var lRes = lWSC.tweet(
+					eTwitterMessage.value
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function getUserData() {
+				log( "Retreiving data for user '" + eTwitterUsername.value + "'..." );
+				var lRes = lWSC.twitterUserData(
+					eTwitterUsername.value
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function onGotTwitterTimeline( aToken ) {
+				log( "Timeline: " + aToken.msg );
+			}
+
+			function onTwitterStatus( aToken ) {
+
+
+
+				log(
+					"<table width='100%' border='0' cellpadding='2' cellspacing='2'><tr>"
+					+ "<td valign='top' align='left' width='150' style='border: 1px solid; border-color: #fff #777 #777 #fff'>"
+					+   "<div style='position:relative; width:140px; overflow:hidden'>"
+					+	"<img width'48' height='48' src='" + aToken.userImgURL + "'><br>"
+					+   "<span>" + aToken.userName + "</span></div>"
+					+ "</td>"
+					+ "<td valign='top' align='left' style='border: 1px solid; border-color: #fff #777 #777 #fff'>"
+					+   "<p style='text-align:left'>" + aToken.status + "</p>"
+					+ "</td>"
+					+ "</tr></table>"
+				);
+			}
+
+			// this method is called as call back from the Twitter API
+			// once the Access token has been retreived
+			// set the link to correctly open Twitter authentication
+			// in a separate browser window.
+			function onTwitterAccessToken( aToken ) {
+				lTwitterAuthenticationURL = "twauth.htm?" + encodeURI(aToken.authenticationURL);
+				// eTwitterLoginLink.setAttribute( "href", lTwitterAuthenticationURL );
+				// eTwitterLoginLink.className = "sancDlg";
+				// a new AccessToken has been received,
+				// hence we should reset the verifier!
+				lTwitterAccessVerifier = null;
+			}
+
+			function twitterSetVerifier( aVerifier ) {
+				// OAuth Window detected a verifier from the Twitter API
+				// so save it here for future use.
+				lTwitterAccessVerifier = aVerifier;
+				lWSC.twitterSetVerifier( aVerifier );
+			}
+
+			// this method is called when the user clicks the login button.
+			// actually it's not a button but a link to prevent pop  up issues.
+			function twitterLogin() {
+				log( "Authenticating against Twitter...")
+				if( lWSC.isLoggedIn() ) {
+					// do we already have an Access Token ?
+					if( lTwitterAuthenticationURL != null ) {
+						// open the twitter login window
+						hTwAuth = window.open(
+							lTwitterAuthenticationURL,
+							lTwitterOAuthWinId,
+							"status=1,resizable=1,dependent=1,scrollbars=0,width=820,height=420,left=100,top=200"
+						);
+						// to be used only once
+						lTwitterAuthenticationURL = null;
+						// for sure we cannot be verified here yet
+						lTwitterAccessVerifier = null;
+						return false;
+					} else {
+						if( lTwitterAccessVerifier != null ) {
+							alert( 
+								"Apparently you are still logged at Twitter.\n"
+								+ "To re-authenticate you as a different user\n"
+								+ "a new Access Token will be requested.\n"
+								+ "Please wait a second any try again.\n"
+							);
+						} else {
+							alert(
+								"Apparently a previous attempt to login at\n"
+								+ "Twitter was aborted or not successful.\n"
+								+ "A new Access Token will be requested.\n"
+								+ "Please wait a second any try again.\n"
+							);
+						}
+						// request a new access token
+						lWSC.twitterRequestAccessToken( generateTwitterCallbackURL() );
+					}
+				} else {
+					log( "Please first login into jWebSocket.")
+				}
+			}
+
+			function initPage() {
+				eLog = jws.$( "sdivLog" );
+
+				eTwitterUsername = jws.$( "stxfTwitterUsername" );
+				eTwitterMessage = jws.$( "stxfTwitterMessage" );
+				eTwitterKeywords = jws.$( "stxfTwitterKeywords" );
+
+				eUsername = jws.$( "stxfUsername" );
+				ePassword = jws.$( "spwfPassword" );
+
+				eTwitterLoginLink = jws.$("sancTwitterOAuth");
+				// eTwitterLoginLink.href = lTwitterAuthenticationURL;
+				// eTwitterLoginLink.target = lTwitterOAuthWinId;
+				eTwitterLoginLink.onclick = twitterLogin;
+
+				// jws.browserSupportsWebSockets checks web if sockets are available
+				// either natively, by the Flash Bridge or by the Chrome Frame.
+				if( jws.browserSupportsWebSockets() ) {
+					lWSC = new jws.jWebSocketJSONClient();
+					lWSC.setTwitterCallbacks({
+						OnGotTwitterTimeline: onGotTwitterTimeline,
+						OnTwitterStatus: onTwitterStatus,
+						OnTwitterAccessToken: onTwitterAccessToken
+					});
+					eUsername.focus();
+					mCalcRest();
+				} else {
+					jws.$( "sbtnLogon" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnLogoff" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
+
+					jws.$( "stxfTwitterMessage" ).setAttribute( "disabled", "disabled" );
+					jws.$( "stxfTwitterUsername" ).setAttribute( "disabled", "disabled" );
+
+					jws.$( "stxfUsername" ).setAttribute( "disabled", "disabled" );
+					jws.$( "spwfPassword" ).setAttribute( "disabled", "disabled" );
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+
+			}
+
+			function exitPage() {
+				logoff();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+<!--	remarked temporarily due to chrome 5 browser bug
+		<script type="text/javascript">
+			var lFrameElem = this.frameElement;
+			if( !lFrameElem ) {
+				location.replace( "../../index.htm?page=demos/hello_world/hello_world.htm" );
+				// location.href = "../../index.htm?page=demos/hello_world/hello_world.htm" ;
+			}
+		</script>
+Testing our new #jWebSocket Twitter-Plugin, tweet via #WebSockets! http://jwebsocket.org
+-->
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Twitter Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<p>This demo shows how to easily use Twitter via the jWebSocket Twitter service.
+			Please consider that for streaming and tweet services a Twitter Consumer Key and Consumer Password is
+			required. To send Tweets also an Access Token is required. Please refer to the Twitter setup tutorials at
+			<a target="_blank" href="http://jwebsocket.org">http://jwebsocket.org</a>.</p>
+		<!-- <iframe id="sifrtwitterLogin" style="width:100%; height:200px"></iframe> -->
+
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Username</td>
+					<td class="stdDlg" width="5">
+						<input class="stxfDlg" id="stxfUsername" type="text" value="root" style="width:110px"
+							   title="jWebSocket username or 'Guest' for demo.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnLogon" type="button" value="Login" onclick="logon();"
+							   title="Authenticates you against the jWebSocket Server.">
+					</td>
+					<!-- use link instead of button here to prevent blocked pop-ups -->
+					<!-- <td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnLoginTwitter" type="button" value="Twitter Login" onclick="twitterLogin();"></td> -->
+					<td class="stdDlg" width="5">
+						<a class="sancDlg" id="sancTwitterOAuth" onclick="twitterLogin();"
+						   title="Authenticates you against Twitter using OAuth.">Twitter&nbsp;Login&nbsp;</a>
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnQuery" type="button" value="Query" onclick="query();"
+							   title="Searches for tweets matching the query.">
+					</td>
+					<td class="stdDlg" width="">
+						<input class="sbtnDlg" id="sbtnTrends" type="button" value="Trends" onclick="twitterGetTrends();"
+							   title="Returns the most trendy keywords from Twitter. You can use them to check for the Twitter stream.">
+					</td>
+					<td class="stdDlg" width="">
+						&nbsp;
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Password</td>
+					<td class="stdDlg" width="5">
+						<input class="spwfDlg" id="spwfPassword" type="password" value="root" style="width:110px"
+							   title="jWebSocket password or 'guest' for demo.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnLogoff" type="button" value="Logout" onclick="logoff();"
+							   title="Logs you out and disconnects from the jWebSocket server.">
+					</td>
+					<td class="stdDlg" width="5">
+						<a class="sancDlg" id="sancTwitterLogout" onclick="twitterLogout();"
+						   title="Logs you out from Twitter so that you can re-login e.g. with another account.">Twitter&nbsp;Logout</a>
+					</td>
+					<td class="stdDlg" width="">
+						<input class="sbtnDlg" id="sbtnPublTimel" type="button" value="Publ.Timel." onclick="twitterGetPublicTimeline();"
+							   title="Retrieves the public timeline.">
+					</td>
+					<td class="stdDlg" width="">
+						<input class="sbtnDlg" id="sbtnTrends" type="button" value="Stats" onclick="twitterGetStatistics();"
+							   title="Returns the current Twitter Stream usage statistics - for demo purposes only.">
+					</td>
+					<td class="stdDlg" width="">
+						&nbsp;
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Twitter&nbsp;Id</td>
+					<td class="stdDlg" width="5">
+						<input class="stxfDlg" id="stxfTwitterUsername" type="text" value="jwebsocket" style="width:110px"
+							   title="Twitter username used for getTimeline and getUserData, not for Twitter authentication done with OAuth.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();"
+							   title="Clears the result and event log below.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnGetUser" type="button" value="Get User" onclick="getUserData();"
+							   title="Retreives the user data for the given Twitter user.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnGetTimeline" type="button" value="getTimeline" onclick="getTimeline();"
+							   title="Retreives the timeline (message) for the given Twitter user.">
+					</td>
+					<td class="stdDlg" width="">
+						&nbsp;
+					</td>
+					<td class="stdDlg" width="">
+						&nbsp;
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Status</td>
+					<td class="stdDlg" width="" colspan="5">
+						<input class="stxfDlg" id="stxfTwitterMessage" type="text" maxlength="140" onkeydown="onMessageKeyDown();" value="Successfully running #jWebSocket Twitter Service! #WebSockets #WebSocket" style="width:99%"
+						title="The Twitter status message to send, the tweet.">
+					</td>
+					<td class="stdDlg" width=""><input class="sbtnDlg" id="sbtnTweet" type="button" value="Tweet" onclick="tweet();"
+													   title="Updates your twitter status, i.e. sends a new tweet to Twitter."></td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Keywords</td>
+					<td class="stdDlg" width="" colspan="5">
+						<input class="stxfDlg" id="stxfTwitterKeywords" type="text" value="#jWebSocket #WebSockets #WebSocket #Apple #Google" style="width:99%"
+						title="Keywords for Twitter stream (for demo max. 5 items accepted, min. length 4 digits, separate with spaces).">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnStream" type="button" value="Stream" onclick="twitterSetStream();"
+							   title="Searches for tweets matching the query.">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="sdivLog" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+
+	</body>
+</html>

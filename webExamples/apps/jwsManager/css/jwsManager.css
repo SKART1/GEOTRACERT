@@ -1,0 +1,122 @@
+/* 
+    Document   : style
+    Created on : 09-oct-2011, 10:07:15
+    Author     : Markos
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+#msg-div {
+	position:absolute;
+	top:10px;
+	width:400px;
+	z-index:20000;
+}
+.icon-add{
+    background-image: url(../../../res/img/add.png) !important;
+}
+.icon-remove{
+    background-image: url(../../../res/img/delete.png) !important;
+}
+.icon-enable{
+    background-image: url(../../../res/img/enable.png) !important;
+}
+.icon-reload, .icon-refresh{
+    background-image: url(../../../res/img/refresh.png) !important;
+}
+.icon-disable{
+    background-image: url(../../../res/img/disable.png) !important;
+}
+.icon-down{
+    background-image: url(../../../res/img/down.png) !important;
+}
+.icon-up{
+    background-image: url(../../../res/img/up.png) !important;
+}
+.icon-log{
+    background-image: url(../../../res/img/log.png) !important;
+}
+.icon-conf{
+    background-image: url(../../../res/img/administrator.png) !important;
+}
+.icon-save{
+    background-image: url(../../../res/img/save.png) !important;
+}
+.icon-accept{
+    background-image: url(../../../res/img/accept.png) !important;
+}
+.icon-cancel{
+    background-image: url(../../../res/img/block.png) !important;
+}
+.icon-clear{
+    background-image: url(../../../res/img/clear.png) !important;
+}
+.icon-next{
+    background-image: url(../../../res/img/next.png) !important;
+}
+.icon-back{
+    background-image: url(../../../res/img/back.png) !important;
+}
+.icon-search{
+    background-image: url(../../../res/img/search.png) !important;
+	background-repeat: no-repeat;
+}
+.icon-lock{
+    background-image: url(../../../res/img/lock.png) !important;
+	background-repeat: no-repeat;
+}
+.icon-unlock{
+    background-image: url(../../../res/img/unlock.png) !important;
+	background-repeat: no-repeat;
+}
+.label, .x-toolbar .x-btn button .x-btn-inner{
+	color: black;
+	font-size: 12px;
+}
+.bodyToolTip{
+	color: black;
+	font-size: 13px;
+	font-weight: bold;
+}
+.bodyToolTip span{
+	font-weight: normal;
+
+}
+.centerMessage{
+	position: absolute;
+	top:50%;
+	left:50%;
+	width:500px;
+	margin-left:-250px;
+	height:150px;
+	margin-top:-75px;
+}
+.disableTextField{
+	opacity: 0.7;
+}
+.icon-info{
+	background-image: url(../../../res/img/info.png) !important;
+	background-repeat: no-repeat;
+}
+.x-tool-about{
+	background-image: url(../../../res/img/tool_info.png) !important;
+	background-repeat: no-repeat;
+}
+.x-tool-over .x-tool-about{
+	background-image: url(../../../res/img/tool_info.png) !important;
+	background-position: -15px 0;
+	background-repeat: no-repeat;
+}
+.textAbout{
+	font-size: 13px;
+	font-family: Arial, Helvetica, sans-serif;
+}
