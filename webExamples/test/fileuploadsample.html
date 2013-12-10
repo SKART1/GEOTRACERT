@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src="../lib/jQuery/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="../res/js/jwsFilesystemPlugIn.js"></script>
+		<script type="text/javascript" src="../res/js/jwsFilesystemPlugInEE_min.js"></script>
+	</head>
+	<body>
+		<div id="log"></div>
+		<div><h1> Select file: </h1></div>
+		<div><input type="file" id="myFile" /></div>
+		<div><input type="button" id="uploadBase64" value="Upload file (base64)!"/></div>
+		<div><input type="button" id="uploadZipBase64" value="Upload file (zipBase64)!"/></div>
+		<script>
+			var lClient = new jws.jWebSocketJSONClient();
+			lClient.open("ws://localhost:8787/jWebSocket/jWebSocket", {
+				OnWelcome: function() {
+					
+					// disabling core event notifications
+					lClient.setConfiguration(jws.NS_SYSTEM, {
+						events: {
+							exclude: ",login,logout,connect,disconnect"
+						}
+					});
+					
+					lClient.systemLogoff();
+					lClient.systemLogon("root", "root");
+					$("#log").html("<font color=green>Connected!</font>");
+				}, 
+				OnClose : function() {
+					$("#log").html("<font color=red>Not connected!</font>");
+				}
+			});	
+			lClient.addPlugIn({
+				processToken: function (aToken){
+					console.log(JSON.stringify(aToken));
+				}
+			});
+			
+			CHUNK_SIZE = 10000;
+			
+			lClient.setEnterpriseFileSystemCallbacks({
+					OnFileSaved: function(aToken){
+						document.writeln("File " + aToken.filename + " has been uploaded successfully to the server.");
+						document.write("<br/>");
+						document.writeln("See $JWEBSOCKET_HOME/filesystem/" + jws.SCOPE_PRIVATE + "/" 
+							+ lClient.getUsername() + "/" + aToken.filename);
+					}
+				});
+			
+			$("#uploadBase64").click(function(){
+				var lFile = document.getElementById("myFile").files[0];
+				
+				lClient.fileUpload(lFile, {
+					chunkSize: CHUNK_SIZE,
+					OnProgress: function(){
+						document.writeln("uploaded " + this.bytesSent + " from " + this.bytesTotal + " ...");
+						document.write("<br/>");
+					}
+				});
+			});
+			
+			$("#uploadZipBase64").click(function(){
+				var lFile = document.getElementById("myFile").files[0];
+				
+				lClient.fileUpload(lFile, {
+					chunkSize: CHUNK_SIZE,
+					encode: true, 
+					encoding: "zipBase64",
+					OnProgress: function(){
+						document.writeln("uploaded " + this.bytesSent + " from " + this.bytesTotal + " ...");
+						document.write("<br/>");
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

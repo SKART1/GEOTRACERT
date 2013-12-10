@@ -1,0 +1,495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Channel Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Channels Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- load the jWebSocket JavaScript client library -->
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<!-- this one imports the client side streaming plug-in -->
+		<script type="text/javascript" src="../../res/js/jwsChannelPlugIn.js"></script>
+		<!-- this one imports the client side streaming plug-in -->
+		<!-- <script type="text/javascript" src="../../res/js/jWebSocket_bundle.js"></script> -->
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null,
+				eKeepAlive = null,
+				eMessage = null,
+				eChannelId = null,
+				eChannelName = null,
+				eAccessKey = null,
+				eSecretKey = null,
+				eIsPrivate = null,
+				eIsSystem = null,
+				eKeepAlive = null,
+				eChannelSel = null;
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lWSC = null;
+
+			function login() {
+				// URL is ws[s]://[hostname|localhost]:8787[/context][/servlet/][;args...]
+				// deprecated: JWS_SERVER_URL;
+				var lURL = jws.getDefaultServerURL();
+
+				log( "Login to " + lURL + " ..." );
+				try {
+					var lRes = lWSC.logon( lURL, jws.DEMO_ROOT_LOGINNAME, jws.DEMO_ROOT_PASSWORD, {
+
+						// OnOpen callback
+						OnOpen: function( aEvent ) {
+							log( "<font style='color:#888'>jWebSocket connection established.</font>" );
+							jws.$("simgStatus").src = "../../images/connected.png";
+						},
+
+						OnWelcome: function() {
+							getChannels();
+						},
+
+						// OnMessage callback
+						OnMessage: function( aEvent ) {
+							log( "<font style='color:#888'>jWebSocket message received: '" + aEvent.data + "'</font>" );
+							if( lWSC.isLoggedIn() ) {
+								jws.$("simgStatus").src = "../../images/authenticated.png";
+							} else {
+								jws.$("simgStatus").src = "../../images/connected.png";
+							}
+							jws.$("slblClientId").innerHTML =
+								"&nbsp;Client&#x2011;Id:&nbsp;"
+								+ lWSC.getId() + "&nbsp;"
+								+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" );
+						},
+
+						// OnClose callback
+						OnClose: function( aEvent ) {
+							log( "<font style='color:#888'>jWebSocket connection closed.</font>" );
+							jws.$("simgStatus").src = "../../images/disconnected.png";
+							jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+						}
+
+					});
+				} catch( ex ) {
+					log( "Exception: " + ex.message );
+				}
+			}
+
+			// log out the client from the jWebSocket server
+			function logout() {
+				if( lWSC ) {
+					lWSC.stopKeepAlive();
+					log( "Disconnecting..." );
+					var lRes = lWSC.close({ timeout: 3000 });
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+			// try to create a new channel on the server
+			// on success the OnChannelCreated event is fired
+			function createChannel() {
+				var lChannelId = eChannelId.value;
+				var lChannelName = eChannelName.value;
+				var lIsPrivate = eIsPrivate.checked;
+				var lIsSystem = eIsSystem.checked;
+				var lAccessKey = eAccessKey.value;
+				var lSecretKey = eSecretKey.value;
+				log( "Creating channel '" + lChannelId + "'..." );
+				var lRes = lWSC.channelCreate(
+					lChannelId, 
+					lChannelName,
+					{	isPrivate: lIsPrivate,
+						isSystem: lIsSystem,
+						accessKey: lAccessKey,
+						secretKey: lSecretKey
+					}
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to remove an existing channel on the server
+			// on success the OnChannelRemoved event is fired
+			function removeChannel() {
+				var lChannelId = eChannelId.value;
+				var lAccessKey = eAccessKey.value;
+				var lSecretKey = eSecretKey.value;
+				log( "Removing channel '" + lChannelId + "'..." );
+				var lRes = lWSC.channelRemove( 
+					lChannelId,
+					{	accessKey: lAccessKey,
+						secretKey: lSecretKey
+					}
+				);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to subscribe at a certain channel
+			function subscribeChannel() {
+				var lChannel = eChannelSel.value;
+				var lAccessKey = eAccessKey.value;
+				log( "Subscribing at channel '" + lChannel + "'..." );
+				var lRes = lWSC.channelSubscribe( lChannel, lAccessKey );
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to unsubscribe from a certain channel
+			function unsubscribeChannel() {
+				var lChannel = eChannelSel.value;
+				log( "Unsubscribing from channel '" + lChannel + "'..." );
+				var lRes = lWSC.channelUnsubscribe( lChannel );
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to authenticate against a channel to publish data
+			function auth() {
+				var lChannel = eChannelSel.value;
+				var lAccessKey = eAccessKey.value;
+				var lSecretKey = eSecretKey.value;
+				log( "Authenticating against channel '" + lChannel + "'..." );
+				// use access key and secret key for this channel to authenticate
+				// required to publish data only
+				var lRes = lWSC.channelAuth( lChannel, lAccessKey, lSecretKey );
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to publish data on a certain channel
+			function publish() {
+				var lChannel = eChannelSel.value;
+				log( "Publishing to channel '" + lChannel + "'..." );
+				var lRes = lWSC.channelPublish( lChannel, eMessage.value, {
+					field1: "data",
+					field2: [ "item1", "item2" ] 
+				});
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to obtain all available channels on the server
+			function getChannels() {
+				log( "Trying to obtain channels..." );
+				var lRes = lWSC.channelGetIds();
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to obtain all subscribers for a certain channel
+			function getSubscribers() {
+				var lChannel = eChannelSel.value;
+				var lAccessKey = eAccessKey.value;
+				log( "Trying to obtain subscribers for channel '" + lChannel + "'..." );
+				var lRes = lWSC.channelGetSubscribers(lChannel, lAccessKey);
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			// try to obtain all channels the client has subscribed to
+			function getSubscriptions() {
+				log( "Trying to obtain subscriptions for client..." );
+				var lRes = lWSC.channelGetSubscriptions();
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function toggleKeepAlive() {
+				if( eKeepAlive.checked ) {
+					lWSC.startKeepAlive({ interval: 3000 });
+				} else {
+					lWSC.stopKeepAlive();
+				}
+			}
+
+			// this method is called when a new channel has been created on the server
+			// add the new channel to the drop down box on the client as well
+			function onChannelCreatedObs( aEvent ) {
+				var lOption = document.createElement("option");
+				lOption.value = aEvent.channelId;
+				lOption.text = aEvent.channelName;
+				eChannelSel.appendChild(lOption);
+			}
+
+			// this method is called when a channel has been removed from the server
+			// remove the channel from the drop down box on the client as well
+			function onChannelRemovedObs( aEvent ) {
+				for( var lIdx = 0, lCnt = eChannelSel.options.length; lIdx < lCnt; lIdx++ ) {
+					var lOption = eChannelSel.options[ lIdx ];
+					if( lOption.value == aEvent.channelId ) {
+						eChannelSel.removeChild(lOption);
+						break;
+					}
+				}
+			}
+
+			// this method is called when a channel has been removed from the server
+			// remove the channel from the drop down box on the client as well
+			function onChannelsReceivedObs( aEvent ) {
+				// remove all existing channels in drop down box
+				while( eChannelSel.options.length > 0 ) {
+					var lOption = eChannelSel.options[ 0 ];
+					eChannelSel.removeChild(lOption);
+				}
+				// add all channels from event
+				for( var lIdx = 0, lCnt = aEvent.channels.length; lIdx < lCnt; lIdx++ ) {
+					var lOption = document.createElement("option");
+					lOption.value = aEvent.channels[ lIdx ].id;
+					lOption.text = aEvent.channels[ lIdx ].name;
+					eChannelSel.appendChild(lOption);
+				}
+			}
+
+			function initPage() {
+				eLog = jws.$( "sdivChat" );
+				eMessage = jws.$( "stxfMsg" );
+				eChannelId = jws.$( "stxfChannelId" );
+				eChannelName = jws.$( "stxfChannelId" );
+				eAccessKey = jws.$( "stxfAccessKey" );
+				eSecretKey = jws.$( "stxfSecretKey" );
+				eIsPrivate = jws.$( "schkPrivate" );
+				eIsSystem = jws.$( "schkSystem" );
+				eKeepAlive =  jws.$( "schkKeepAlive" );
+				eChannelSel = jws.$( "sselChannel" );
+
+				if( window.WebSocket ) {
+					lWSC = new jws.jWebSocketJSONClient();
+					lWSC.setChannelCallbacks({
+						OnChannelCreated: onChannelCreatedObs,
+						OnChannelRemoved: onChannelRemovedObs,
+						OnChannelsReceived: onChannelsReceivedObs
+					});
+				} else {
+					jws.$( "sbtnConnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnDisconnect" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnSubscribe" ).setAttribute( "disabled", "disabled" );
+					jws.$( "sbtnUnsubscribe" ).setAttribute( "disabled", "disabled" );
+					jws.$( "schkKeepAlive" ).setAttribute( "disabled", "disabled" );
+
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+			}
+
+			function exitPage() {
+				lWSC.stopKeepAlive();
+				logout();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<!--	remarked temporarily due to chrome 5 browser bug
+		<script type="text/javascript">
+			var lFrameElem = this.frameElement;
+			if( !lFrameElem ) {
+				location.replace( "../../index.htm?page=demos/streaming/streaming.htm" );
+			}
+		</script>
+		-->
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">jWebSocket Channels Demo</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<p>This demo shows how messages can be retrieved and broadcasted using a publish/subscribe mechanism based on multiple channels.</p>
+		<div id="sdivChat" class="sdivContainer"
+			 style="position:relative; height:300px; overflow:auto;">
+		</div>
+<!--
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">Username</td>
+					<td class="stdDlg" width="5">
+						<input class="stxfDlg" id="stxfUsername" type="text" value="Guest" style="width:100px"
+							   title="jWebSocket username or 'Guest' for demo.">
+					</td>
+					<td class="stdDlg" width="5">Password</td>
+					<td class="stdDlg" width="5">
+						<input class="spwfDlg" id="spwfPassword" type="password" value="guest" style="width:100px"
+							   title="jWebSocket password or 'guest' for demo.">
+					</td>
+					<td class="stdDlg" width="5">
+						URL
+					</td>
+					<td class="stdDlg" width="5">
+						<input id="stxfURL" type="text" value="ws://localhost:8787/jWebSocket/jWebSocket" style="width:300px">
+					</td>
+					<td class="stdDlg" width="5">
+						&nbsp;|&nbsp;&nbsp;KeepAlive
+					</td>
+					<td class="stdDlg" width="5">
+						<input id="schkKeepAlive" type="checkbox" value="off" onclick="toggleKeepAlive();">
+					</td>
+					<td class="stdDlg" width="5">
+						&nbsp;|&nbsp;&nbsp;Share&nbsp;http/ws&nbsp;ports
+					</td>
+					<td class="stdDlg" width="5">
+						<input id="schkKeepAlive" type="checkbox" value="off" onclick="toggleSharePorts();">
+					</td>
+					<td class="stdDlg" width="5">
+						&nbsp;|&nbsp;&nbsp;SSL
+					</td>
+					<td class="stdDlg" width="5">
+						<input id="schkKeepAlive" type="checkbox" value="off" onclick="toggleSSL();">
+					</td>
+					<td class="stdDlg" width="5">
+						&nbsp;|&nbsp;&nbsp;Debug
+					</td>
+					<td class="stdDlg" width="">
+						<input id="schkKeepAlive" type="checkbox" value="off" onclick="toggleDebug();">
+					</td>
+				</tr>
+			</table>
+		</div>
+-->
+		<div class="sdivContainer">
+			<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnConnect" type="button" value="Login" onclick="login();"
+							   title="Authenticates you against the jWebSocket Server (using 'guest' account).">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnSubscribe" type="button" value="Subscribe" onclick="subscribeChannel();"
+							   title="Subscribes this client to the selected channel.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnGetSubscribers" type="button" value="Subscribers" onclick="getSubscribers();"
+							   title="Returns all subscribers of the selected channel.">
+					</td>
+					<td width="5">
+						<select id="sselChannel" title="Channel to subscribe to or unsubscribe from.">
+							<!--
+							not required to set fix channels here,
+							the drop down box is filled by OnChannelsReceived event
+							<option selected="selected" value="publicA">Public A</option>
+							<option value="publicB">Public B</option>
+							<option value="privateA">Private A</option>
+							<option value="privateB">Private B</option>
+							<option value="systemA">System A</option>
+							<option value="systemB">System B</option>
+						   -->
+						</select>
+					</td>
+					<td width="70">
+						<input class="stxfDlg" id="stxfAccessKey" type="text" value="access" style="width:99%"
+							   title="Access Key to authorize publish operations.">
+					</td>
+					<td width="70">
+						<input class="stxfDlg" id="stxfChannelId" type="text" value="id" style="width:99%"
+							   title="Channel identifier to create or remove channels.">
+					</td>
+					<td class="stdDlg" width="5">
+						&nbsp;Private
+					</td>
+					<td class="stdDlg" width="5">
+						<input id="schkPrivate" type="checkbox" value="off"
+							   title="Specifies if the new channel is a private (or public) channel. ">
+					</td>
+					<td width="">
+						<input class="sbtnDlg" id="sbtnCreate" type="button" value="Create" onclick="createChannel();"
+							   title="Creates a new channel with the given name.">
+					</td>
+					<td width="5">
+						&nbsp;
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnDisconnect" type="button" value="Logout" onclick="logout();"
+							   title="Logs you out and disconnects from the jWebSocket server.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnUnsubscribe" type="button" value="Unsubscribe" onclick="unsubscribeChannel();"
+							   title="Unsubscribes this client from the selected channel.">
+					</td>
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnGetSubscriptions" type="button" value="Subscriptions" onclick="getSubscriptions();"
+							   title="Returns all subscriptions of the current client.">
+					</td>
+					<td width="5">
+						<input class="sbtnDlg" id="sbtnAuth" type="button" value="Auth" onclick="auth();"
+							   title="Authenticates the user against the selected channel to publish messages on it.">
+					</td>
+					<td width="70">
+						<input class="stxfDlg" id="stxfSecretKey" type="text" value="secret" style="width:99%"
+							   title="Access Secret to authorize publish operations.">
+					</td>
+					<td width="70">
+						<input class="stxfDlg" id="stxfChannelName" type="text" value="name" style="width:99%"
+							   title="Channel name to create new channels.">
+					</td>
+					<td class="stdDlg" width="5">
+						&nbsp;System
+					</td>
+					<td class="stdDlg" width="5">
+						<input id="schkSystem" type="checkbox" value="off"
+							   title="Specifies if the new channel is a system or user/application channel.">
+					</td>
+					<td width="">
+						<input class="sbtnDlg" id="sbtnRemove" type="button" value="Remove" onclick="removeChannel();"
+							   title="Removes the channel with the given name.">
+					</td>
+					<td width="5">
+						&nbsp;
+					</td>
+				</tr>
+				<tr class="strDlg">
+					<td class="stdDlg" width="5">
+						<input class="sbtnDlg" id="sbtnClear" type="button" value="Clear Log" onclick="clearLog();"
+							   title="Clears the result and event log above.">
+					</td>
+					<td width="5">
+						<input class="sbtnDlg" id="sbtnGetChannels" type="button" value="Get Channels" onclick="getChannels();"
+							   title="Returns a list of available channels on the server.">
+					</td>
+					<td width="" colspan="7">
+						<input class="stxfDlg" id="stxfMsg" type="text" value="Your Message" style="width:99%"
+							   title="Message to be broadcasted on the selected channel.">
+					</td>
+					<td width="5">
+						<input class="sbtnDlg" id="sbtnPublish" type="button" value="Publish" onclick="publish();"
+							   title="Broadcasts the message on the selected channel.">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</body>
+</html>

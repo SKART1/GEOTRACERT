@@ -11,13 +11,18 @@ package com.github.skart123.geotracert.geotracertserver;
 
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import org.jwebsocket.config.JWebSocketConfig;
+import org.jwebsocket.config.JWebSocketServerConstants;
+import org.jwebsocket.factory.JWebSocketFactory;
+import org.jwebsocket.server.TokenServer;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
+import org.restlet.data.CharacterSet;
+import org.restlet.data.Encoding;
 import org.restlet.data.Protocol;
-import org.restlet.data.Reference;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
@@ -35,7 +40,9 @@ public class App extends Application
    static final File parentDir = new File(new File("").getAbsolutePath());
    static final String pathToIndexBase2=parentDir.getAbsolutePath();
    static String pathToIndexBaseCorrect2;
-
+   
+   
+ 
      /**
      * Creates a root Restlet that will receive all incoming calls.
      */
@@ -49,7 +56,7 @@ public class App extends Application
        
         Component component = new Component();
        
-       
+     
         
         /*System.out.println("App.class.getProtectionDomain().getCodeSource().getLocation().getPath()"); 
         System.out.println(pathToIndexBaseCorrect1);
@@ -61,17 +68,21 @@ public class App extends Application
         component.getClients().add(Protocol.FILE );  
         
         // Create an application         
-        Application application = new Application() {  
-            @Override  
+        Application application = new Application() {             
+            @Override             
             public Restlet createInboundRoot() {  
                 //Конструктор ресурса                 
                 Directory temp = new Directory(getContext(), pathToIndexBaseCorrect1);
+               
                 return temp;         
             }  
         }; 
+        //application
+        //For correct rusian letters representation
+        application.getMetadataService().setDefaultCharacterSet(CharacterSet.UTF_8);
         
         
-        
+       
         // Attach the application to the component 
         //main page: index.html
         component.getDefaultHost().attach("/index.html",application); 
@@ -87,6 +98,33 @@ public class App extends Application
         
         // Start the component.
         component.start();
+        
+        
+        //SOCKETS!!!!       
+        try {
+            String temp=pathToIndexBase2+File.separator+File.separator+"socketConfig"+File.separator+File.separator+"jWebSocket.xml";
+            System.out.println("MyDebug");
+            System.out.println(temp);
+            JWebSocketFactory.start(temp);           
+            
+         
+            TokenServer lServer = (TokenServer)JWebSocketFactory.getServer("ts0");
+            
+            if( lServer != null ) {
+              // and add the sample listener to the server's listener chain
+              lServer.addListener(new JWebSocketTokenListenerSample());
+            } 
+           
+        } 
+        catch (Exception lEx) {
+                System.out.println(
+                                lEx.getClass().getSimpleName()
+                                + " on starting jWebSocket server: "
+                                + lEx.getMessage());
+        } 
+        finally {
+               // JWebSocketFactory.stop();
+        }       
     }
     
     @Override
@@ -97,6 +135,7 @@ public class App extends Application
         // Defines only one route
         router.attach("/hello",HelloWorldResource.class);    
         return router;
-    }   
+    }  
+    
 }
 

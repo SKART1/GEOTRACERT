@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jwebsocket</groupId>
+	<artifactId>jWebSocket-Parent</artifactId>
+	<packaging>pom</packaging>
+	<name>jWebSocket-Parent</name>
+	<version>1.0</version>
+	<description>Parent project for jWebSocket</description>
+	<modules>
+		<module>jWebSocketCommon</module>
+		<module>jWebSocketServerAPI</module>
+		<module>jWebSocketClientAPI</module>
+		<module>jWebSocketServer</module>
+		<module>jWebSocketJavaSEClient</module>
+		<module>jWebSocketSamples</module>
+		<module>jWebSocketSwingGUI</module>
+		<module>jWebSocketAppServer</module>
+		<module>jWebSocketAppSrvDemo</module>
+		<module>jWebSocketJetty</module>
+		<!-- <module>jWebSocketGlassFish</module> -->
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.9</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>netbeans</id>
+			<name>NetBeans Repository</name>
+			<url>http://bits.netbeans.org/maven2</url>
+		</repository>
+		<repository>
+			<id>repository.jboss.org</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>maven-central-repo</id>
+			<name>Maven Central Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>java-net-repo</id>
+			<name>Java.net Repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+	</repositories>
+	
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>googlecode</id>
+			<url>svn:https://jwebsocket.googlecode.com/svn/repo</url>
+		</repository>
+	</distributionManagement>
+
+	<!--
+		define common dependencies used across all the modules of jWebSocket
+	    server
+    -->
+	<dependencies>
+		<dependency>
+			<groupId>javolution</groupId>
+			<artifactId>javolution</artifactId>
+			<version>5.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+<!--
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.11</version>
+		</dependency>
+-->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-easymock</artifactId>
+			<version>1.4.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.4.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>3.0</version>
+		</dependency>
+	</dependencies>
+
+</project>

@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Twitter Callback Page (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Twitter OAuth Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- do not link jWebSocket.js here but use the one in the opener window
+			 to set on top of the same connection -->
+		<script type="text/javascript">
+			function initPage() {
+				// Twitter API returns OAuth verifier in (callback)URL argument
+				var lSearch = location.search;
+				var lURL = lSearch.substring(1);
+				// isAuth
+				var lIsAuth = lURL.indexOf( "isAuth=true" ) >= 0;
+				// console.log("going to: " + lURL);
+				if( lIsAuth) {
+					document.getElementById("shdrTitle").innerHTML =
+						"You are successfully authenticated at Twitter!";
+					document.getElementById("sparMessage").innerHTML =
+						"Window will close automatically in 3 seconds...";
+					var lOpener = window.opener;
+					if( lOpener ) {
+						// extract the OAuth verifier from the URL
+						var lIdx = lSearch.indexOf("oauth_verifier=");
+						var lVerifier = "-";
+						if( lIdx >= 0 ) {
+							lVerifier = lSearch.substr(lIdx + 15);
+						}
+						// just to check if the verifier has been isolated correctly
+						// alert( "verifier=" + lVerifier + " from " + location.search);
+
+						// send the Access Verifier to the jWebSocket server
+						// to let the server act on behalf of the user w/o
+						// knowing the user's credentias.
+						lOpener.twitterSetVerifier( lVerifier );
+					} else {
+						alert("No opener, this window has been opened in a non-intended way.");
+					}
+					// optionally auto-close this window after 3 seconds
+					setTimeout("window.close();", 3000);
+				} else {
+					location.href = lURL;
+				}
+			}
+
+			function exitPage() {
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<h1 id="shdrTitle">jWebSocket Twitter Authentication</h1>
+		<p id="sparMessage"></p>
+	</body>
+</html>

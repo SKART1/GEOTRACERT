@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Socket.IO Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Socket IO Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- <script src="http://cdn.socket.io/stable/socket.io.js"type="text/javascript"></script> -->
+		<script src="../../res/js/socket.io/socket.io.js" type="text/javascript"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var lWebSocketClient = null;
+
+			// see: https://github.com/ajaxorg/Socket.IO-node
+			// Java Server: http://code.google.com/p/socketio-java/
+
+			function initPage() {
+				console.log( "init starting..." );
+
+				var lSocket = new io.Socket( "localhost", {
+					port: 8787,
+					resource: "jWebSocket",
+					transports: [ "websocket", "flashsocket" ]
+				});
+
+				lSocket.connect();
+
+				lSocket.on( "connecting", function( aTransportType ) {
+					console.log( "connecting via " + aTransportType + "..." );
+				});
+
+				lSocket.on( "connect", function() {
+					console.log( "connected." );
+				});
+
+				lSocket.on( "disconnect", function() {
+					console.log( "disconnected." );
+				});
+
+				lSocket.on( "message", function( aData ) {
+					console.log( "Message: " + aData )
+				});
+
+				// socket.send("some data");
+				
+				console.log( "init finished." )
+			}
+
+			function exitPage() {
+				console.log( "exit." );
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<h1>jWebSocket Socket IO Demo</h1>
+		<p>Socket IO Low Level Demo, please open the log window to see the output...</p>
+	</body>
+</html>

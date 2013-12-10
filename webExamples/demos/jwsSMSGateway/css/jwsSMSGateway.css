@@ -1,0 +1,187 @@
+/*-------------- DEMO_DESCRIPTION ------------*/
+#demo_box_description{
+    margin-top: 10px;
+    padding: 5px 15px 5px 15px;
+    font-size: 10pt;
+}
+/*-------------- DEMO_DESCRIPTION ------------*/
+
+/*---------------- DEMO_SCENARIO -------------*/
+#scenario_container input, #scenario_container textarea{
+	padding: 0 5px 0 5px;
+	color: #606060;
+}
+#generalDiv {
+    background: #EDF6E2;
+    width: 754px;
+    height: 700px;
+    -moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+h1#header{
+	font-family: Arial, Helvetica, sans-serif,21pts;
+	background-color: #367CBB;
+	color: #ffffff;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border: 1px solid #c8c8c8;
+	padding: 10px 10px 10px 10px;
+    width: 733px;
+}
+.contentDiv {
+    background-color: #E8E8E8;
+    -moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border: 1px solid #c8c8c8;
+    padding: 10px 10px 10px 10px;
+}
+#jCaptchaDiv {
+    width: 37%;
+    float: left;
+}
+#messageDiv {
+    width: 55%;
+    height: auto;
+    float: left;
+    margin: 0 0 0 10px;
+}
+p.pText {
+	font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    float: left;    
+    margin: 10px 0 0 10px;
+}
+
+.texts{
+    -webkit-box-shadow:none !important;
+}
+
+.update {
+    background: transparent url(images/Renew_icon.png) no-repeat;
+    width: 28px;
+    height: 25px;
+    cursor: pointer;
+    float: left;
+    margin: 30px 0 10px 0;
+}
+
+#imgCaptcha {
+    width: 220px;
+    background-color: #ffffff;
+    -moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+    float: left;
+    border: 1px solid #c8c8c8;
+}
+
+#img {
+    width: 215px !important;
+    height: 45px;
+	margin-left: 3px;
+	margin-top: 3px;
+    float: left;
+    border: none !important;
+}
+
+#wordType{
+    float: left;
+    padding: 3px !important;
+    margin: 3px !important;
+    width: 100%;
+}
+
+#img {
+    background-color: #ffffff;
+    float: left;
+    -moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+    border: 1px solid #c8c8c8;
+    height: 60px;
+    width: 200px;
+}
+#captchaText {
+    float: left;
+	width: 81%;
+	margin: 5px 5px 5px 2px;
+}
+
+#messageDiv{
+	font-size: 8pt;
+}
+
+#description {
+    width: 750px;
+    height: 20px; 
+    margin: 20px 0 20px 12px;
+}
+.inputText {
+    -moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+    border: 1px solid #c8c8c8;
+    height: 25px;
+}
+
+#smsInput{
+	height: 45px;
+}
+
+#messageDiv table input, #messageDiv table textarea{
+	width: 97%;
+}
+
+#smsType {
+    float: left;
+}
+
+.radio {
+    float: left;
+
+}
+
+label{
+	float: left;
+	font-size: 12px;
+	font-family: "Verdana";
+}
+
+#radioDiv {
+    float: right;
+	width: 100%;
+	/*padding-left: 94px;*/
+	margin-bottom: 5px;
+}
+
+#sms_actions{
+	margin: 5px 0 5px 0;
+	float: right;
+	width: 80%;
+}
+
+#basic,#gold, #direct, #sms_actions label, #smsType {
+    padding-top: 3px !ie7; 
+    margin-top: 0; 
+}
+
+#send_button{
+	float: right;
+}
+
+#character_counter{
+	font-size: 11px;
+	margin-top: 5px;
+	color: #606060;
+	float: right;
+}
+
+#character_counter div{
+	float: right;
+}
+
+#character_counter .count{
+	padding-right: 3px;
+	float: right;
+}
+
+.error{
+	color: #ff0000 !important;
+}

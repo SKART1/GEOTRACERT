@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Test (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Test Frame</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script src="../../res/js/jwsTestPlugIn.js" type="text/javascript"></script>
+		<script type="text/javascript" language="JavaScript">
+			var eLog = null;
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lJWSID = "jWebSocket Test Frame",
+			lWSC = null,
+			eStatus = null,
+			lIsConnected = false;
+
+			var IN = 0;
+			var OUT = 1;
+			var EVT = 2;
+			var SYS = "SYS";
+			var USR = null;
+
+			function doOpen() {
+				// adjust this URL to your jWebSocket server
+				var lURL = jws.JWS_SERVER_URL + "/;prot=json,timeout=360000";
+
+				// try to establish connection to jWebSocket server
+				lWSC.logon( lURL, "Guest", "guest", {
+
+					// OnOpen callback
+					OnOpen: function( aEvent ) {
+						// start keep alive if user selected that option
+						lWSC.startKeepAlive({ interval: 30000 });
+						eStatus.src = "../../images/authenticated.png";
+						lIsConnected = true;
+					},
+
+					// OnMessage callback
+					OnMessage: function( aEvent, aToken ) {
+						log( aEvent.data );
+					},
+
+					// OnClose callback
+					OnClose: function( aEvent ) {
+						eStatus.src = "../../images/disconnected.png";
+						lIsConnected = false;
+						lWSC.stopKeepAlive();
+					}
+					
+				});
+			}
+
+			function doClose() {
+				// disconnect automatically logs out!
+				lWSC.stopKeepAlive();
+				var lRes = lWSC.close({
+					// wait a maximum of 3 seconds for server good bye message
+					timeout: 3000
+				});
+			}
+
+			var lStartMillis = 0, lStopMillis = 0, lDataLen, lLoops = 0;
+
+			function processTestStarted(aToken) {
+				log( SYS, OUT, "Test started at " + aToken.timestamp );
+				lStartMillis = new Date().getTime();
+				setLogging( false );
+			}
+
+			function mAutoFormat( aNum, aUnit, aDec ) {
+				if( aNum > 1000000 ) {
+					aNum = ( aNum / 1000000 );
+					aUnit = "m" + aUnit;
+				} else if( aNum > 1000 ) {
+					aNum = (aNum / 1000 );
+					aUnit = "k" + aUnit;
+				}
+				return aNum.toFixed(aDec) + aUnit;
+			}
+
+			function processTestStopped(aToken) {
+				setLogging( true );
+				lStopMillis = new Date().getTime();
+				log( SYS, OUT, "Test stopped at " + aToken.timestamp );
+				var lSpeed = (lLoops * lDataLen) / ((lStopMillis - lStartMillis)/1000 );
+				log( SYS, OUT, "Client:"
+					+ " duration " + ( lStopMillis - lStartMillis ) + "ms"
+					+ ", packet: " + mAutoFormat( lDataLen, "b", 1 )
+					+ ", loops: " + lLoops + "x"
+					+ ", total:" + mAutoFormat( lLoops * lDataLen, "b", 1 )
+					+ ", speed: " + mAutoFormat( lSpeed, "b/s", 1 )
+			);
+			}
+
+			function testS2CPerformance( aCount, aMessage ) {
+				var lRes = lWSC.sendToken({
+					ns: "org.jwebsocket.plugins.test",
+					type: "testS2CPerformance",
+					count: aCount,
+					message: aMessage
+				});
+			}
+
+			function processStartTest() {
+
+			}
+
+			function initPage() {
+				// get some required HTML elements
+				eLog = jws.$( "sdivLog" );
+				eStatus = jws.$( "simgStatus" );
+
+				// check if WebSockets are supported by the browser
+				if( jws.browserSupportsWebSockets() ) {
+					// instaniate new TokenClient, either JSON, CSV or XML
+					lWSC = new jws.jWebSocketJSONClient();
+
+					lWSC.setTestCallbacks({
+						OnStartTest: processStartTest,
+						OnTestStarted: processTestStarted,
+						OnTestStopped: processTestStopped
+					});
+
+					doOpen();
+				} else {
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					log( SYS, IN, lMsg );
+				}
+			}
+			
+			function exitPage() {
+				// this allows the server to release the current session
+				// immediately w/o waiting on the timeout.
+				if( lWSC ) {
+					lWSC.close({
+						// force immediate client side disconnect
+						timeout: 0
+					});
+				}
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		>
+		<div>
+			<input class="sbtnDlg" id="sbtnClear" type="button" value="Clear" onclick="clearLog();">&nbsp;
+			<img id="simgStatus" alt="status"  src="../../images/disconnected.png"/>
+			<span id="spnAvg" >0ms</span> <!-- style="display:none" -->
+		</div>
+		<div id="sdivLog" class="sdivContainer"
+			 style="position:relative; height:180px; overflow:auto;">
+		</div>
+	</body>
+</html>

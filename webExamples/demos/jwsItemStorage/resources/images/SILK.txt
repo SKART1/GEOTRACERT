@@ -1,0 +1,6 @@
+The following icons are part of the Fam Fam SILK icons set:
+attr_add.png
+attr_edit.png
+attr_remove.gif
+
+Please see http://www.famfamfam.com/lab/icons/silk/ for more details.

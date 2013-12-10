@@ -1,0 +1,98 @@
+#demo_box{
+	width: 718px;
+}
+
+#scenario_container, #main_content{
+	width: 100%;
+	padding: 0px;
+}
+
+.icon-user {
+    background-image: url(images/user.png) !important;
+}
+
+.icon-add {
+    background-image: url(images/add.png) !important;
+}
+
+.icon-delete {
+    background-image: url(images/delete.png) !important;
+}
+
+.x-ie6 .icon-user {
+    background-image: url(images/user.gif) !important;
+}
+
+.x-ie6 .icon-add {
+    background-image: url(images/add.gif) !important;
+}
+
+.x-ie6 .icon-delete {
+    background-image: url(images/delete.gif) !important;
+}
+
+#contact{
+    width: 280px;
+    height: 200px;
+    padding: 5px;
+    background-color: #f8f8f8;
+}
+#header{
+    color: #075582;
+}
+#line{
+    width: 280px;
+    height: 5px;
+    border-bottom: 1px solid lightgrey;
+}
+#image{
+    float: left;
+    width: 64px;
+    height: 64px;
+    margin-top: 12px;
+    border: 1px solid lightgrey;
+    background: url(images/sencha-jws-avatar-64x64.png) no-repeat;
+}
+p{
+    color: dimgrey;
+    font-family: sans-serif;
+}
+p.text{
+    color: dimgray;
+    margin-top: 11px;
+    margin-left: 80px;
+    font-size: 11px;
+    font-family: sans-serif;
+
+}
+p.feeds{
+    clear: left;
+    color: dimgray;
+    margin-top: 20px;
+    font-family: sans-serif;
+}
+
+#main_content{
+	width: 100%;
+	height: 450px;
+	float: left;
+}
+
+#demo_box_header_login{
+	width: 200px !important;
+}
+
+#connect_area{
+	float: right;
+}
+
+#not_connected{
+	background: url(../../../res/img/info.png) no-repeat 0px 1px;
+	padding-left: 18px;
+	margin-top: 190px;
+	margin-left: 140px; 
+	float: left;
+	font-family: "Verdana";
+	font-size: 14px;
+	color:#afafaf;
+}

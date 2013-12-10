@@ -1,0 +1,53 @@
+
+<Gauge2 coordWidth="1000" coordHeight="1000" left="0" top="0" bottom="0" right="0">
+   
+    <!-- Label background -->
+    <Gauge2RectangularBorder centerX="665" centerY="380" width="230" height="80" stroke="#FBFBFB" strokeWidth="12" arcSize="30">
+        <Gauge2RectangularBorder.Filler>
+            <Gauge2LinearGradientFiller color1="#000000" color2="#000000" angle="0"/>
+        </Gauge2RectangularBorder.Filler>
+    </Gauge2RectangularBorder>
+    <Gauge2RectangularBorder centerX="665" centerY="480" width="230" height="80" stroke="#FBFBFB" strokeWidth="12" arcSize="30">
+        <Gauge2RectangularBorder.Filler>
+            <Gauge2LinearGradientFiller color1="#000000" color2="#000000" angle="0"/>
+        </Gauge2RectangularBorder.Filler>
+    </Gauge2RectangularBorder>
+
+	<!-- Label -->
+    <Gauge2Label id="label3" text="HDD Capacity" font="arial 46 bold" foreColor="#CD6766" y="370" x="385"/>
+    <Gauge2Label id="label1" text="0" font="40 bold" foreColor="#FBFBFB" x="665" y="378" anchorHorizontal="center" anchorVertical="center"/>
+    <Gauge2Label id="label4" text="Used Space" font="arial 46 bold" foreColor="#70BF7B" y="472" x="385"/>
+	<Gauge2Label id="label2" text="0" font="40 bold" foreColor="#FBFBFB" x="665" y="478" anchorHorizontal="center" anchorVertical="center"/>
+
+	<!-- Range -->
+	<Gauge2RadialRange centerX="500" centerY="500" width="1000" height="1000" startAngle="-90" endAngle="90">
+		<!-- Ticks -->
+		<Gauge2RadialTicks tickWidth="20" tickLength="60" color="#FBFBFB" tickCount="6" radius="410"/>
+
+		<!-- Scale -->
+		<Gauge2RadialScale id="maxValue" radius="350" startValue="0" endValue="100" labelCount="0">
+            
+            <!-- Needle -->
+            <Gauge2RadialNeedle id="needle" value="0" stroke="#FBFBFB" strokeWidth="10"
+                                innerRadius="290" innerWidth="70"
+                                outerRadius="360" outerWidth="1">
+                <Gauge2RadialNeedle.Filler>
+                    <Gauge2RadialGradientFiller color1="#70BF7B" color2="#70BF7B"/>
+                </Gauge2RadialNeedle.Filler>
+            </Gauge2RadialNeedle>
+
+		</Gauge2RadialScale>
+
+		<Gauge2RadialScale radius="350" startValue="0" endValue="100" labelCount="0">
+            <Gauge2RadialScaleSection sectionWidth="70" color="#FBFBFB" radius="410" startValue="-1" endValue="101"/>
+            <Gauge2RadialScaleSection sectionWidth="40" color="#70BF7B" radius="410" startValue="1" endValue="19"/>
+            <Gauge2RadialScaleSection sectionWidth="40" color="#70BF7B" radius="410" startValue="21" endValue="39"/>
+            <Gauge2RadialScaleSection sectionWidth="40" color="#70BF7B" radius="410" startValue="41" endValue="59"/>
+            <Gauge2RadialScaleSection sectionWidth="40" color="#C5A05A" radius="410" startValue="61" endValue="79"/>
+            <Gauge2RadialScaleSection sectionWidth="40" color="#CD6766" radius="410" startValue="81" endValue="99"/>
+		</Gauge2RadialScale>
+
+	</Gauge2RadialRange>
+
+</Gauge2>
+		

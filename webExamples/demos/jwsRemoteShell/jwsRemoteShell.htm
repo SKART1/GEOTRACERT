@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket Remote Shell Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+
+        <title>jWebSocket Remote Shell</title>
+
+        <!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsRemoteShell.css"/>
+
+        <!-- JQUERY DEPENDENCIES -->
+        <link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+        <script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+        <script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+
+        <!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+        <script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+
+        <!--  PUBLIC WIDGETS   -->
+        <script type="text/javascript" src='../../res/js/widgets/wAuth.js'></script>
+        <script type="text/javascript" src='../../res/js/widgets/wLog.js'></script>
+        <script type="text/javascript" src='../../lib/jQuery/jws-plugin-1.0.js'></script>
+		<script type="text/javascript" src='../../lib/jQuery/tooltip.js'></script>
+		<script type="text/javascript" src='../../res/js/widgets/dialogs.js'></script>
+
+        <!--  PRIVATE WIDGETS  -->
+        <script type="text/javascript" src='js/jwsRemoteShell.js'></script>
+
+        <!--  MAIN JAVASCRIPT FILE   -->
+        <script type="text/javascript" src='js/init.js'></script>
+    </head>
+    <body>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>Remote Shell Demo</h1>
+                <div id="demo_box_header_login">
+                    <div id="logoff_area">
+                        <div id="user_info">
+                            <div id="user_info_name"></div> <div>&nbsp;|&nbsp;</div>
+                            <div id="logoff_button" class="button onmouseup" onmouseover="this.className='button onmouseover'" 
+                                 onmousedown="this.className='button onmousedown'" 
+                                 onmouseup="this.className='button onmouseup'" 
+                                 onmouseout="this.className='button onmouseout'" 
+                                 onclick="this.className='button onmouseover'">
+                                <div class="l"></div>
+                                <div class="c">Logout</div>
+                                <div class="r"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="login_area">
+                        <div id="login_form">
+                            <label class="first">Username</label>
+                            <label class="second">Password</label>
+                            <input type="text" id="user_text" value="guest"/>
+                            <input type="password" id="user_password" value="guest"/>
+                        </div>
+                        <div id="login_button" class="button onmouseup" onmouseover="this.className='button onmouseover'" 
+                             onmousedown="this.className='button onmousedown'" 
+                             onmouseup="this.className='button onmouseup'" 
+                             onmouseout="this.className='button onmouseout'" 
+                             onclick="this.className='button onmouseover'">
+                            <div class="l"></div>
+                            <div class="c">Login</div>
+                            <div class="r"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div><div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>              
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+                    <!--       DESCRIPTION       -->
+                    <div id="demo_description" class="box">
+                        <p>This little "Hello World" demonstrates how to easily logon to the jWebSocket Server, broadcast a message and logoff again. Please use the browser's show frame source function to see the entire source code of this page.</p>
+                    </div>
+                    <!--    Shell_Login_BOX      -->
+                    <div id="shell_login" class="box">
+                        <div id="shell_login_header">Remote Shell Login</div>
+                        <div id="shell_login_form">
+                            <!--<label class="first">Hostname</label>
+                            <label class="second">Username</label>
+                            <label class="third">Password</label>-->
+                            <input type="text" id="host_name" placeholder="hostname" 
+								   title="Here goes the hostname or ip. 
+								   See the following examples: 
+								   localhost, 192.168.10.25" disabled="true"/>
+                            <input type="text" id="user_name" placeholder="username" 
+								   disabled="true"/>
+                            <input type="password" id="user_pass" placeholder="password"
+								   disabled="true"/>
+
+                            <div id="shell_login_btn" class="shell_login_btn">
+								<div class="button onmouseup" onmouseover="this.className='button onmouseover'" 
+									 onmousedown="this.className='button onmousedown'" 
+									 onmouseup="this.className='button onmouseup'" 
+									 onmouseout="this.className='button onmouseout'" 
+									 onclick="this.className='button onmouseover'">
+									<div class="l"></div>
+									<div class="c">Login</div>
+									<div class="r"></div>
+								</div>
+                            </div>
+                        </div>
+                        <div id="shell_logout_btn">
+                            <div class="button onmouseup" onmouseover="this.className='button onmouseover'" 
+                                 onmousedown="this.className='button onmousedown'" 
+                                 onmouseup="this.className='button onmouseup'" 
+                                 onmouseout="this.className='button onmouseout'" 
+                                 onclick="this.className='button onmouseover'">
+                                <div class="l"></div>
+                                <div class="c">Disconnect</div>
+                                <div class="r"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--    COLOR_SETTINGS_BOX   -->
+                    <div id="shell_color_settings" class="box">
+						<div id="color_setting_header">Color Settings</div>
+						<div id="fontcolor_fields">
+							<div id="fncolor_text"><b>Font</b></div>
+							<div id="fncolor_blue" class="color_blue"> </div>
+							<div id="fncolor_green" class="color_green"> </div>
+							<div id="fncolor_red" class="color_red"> </div>
+							<div id="fncolor_yellow" class="color_yellow"> </div>
+							<div id="fncolor_orange" class="color_orange"> </div>
+							<div id="fncolor_darkblue" class="color_darkblue"> </div>
+							<div id="fncolor_purple" class="color_purple"> </div>
+							<div id="fncolor_grey" class="color_grey"> </div>
+							<div id="fncolor_black" class="color_black"> </div>
+						</div>
+						<div id="backcolor_fields">
+							<div id="bkcolor_text"><b>Background</b></div>
+							<div id="bkcolor_blue" class="color_blue"> </div>
+							<div id="bkcolor_green" class="color_green"> </div>
+							<div id="bkcolor_red" class="color_red"> </div>
+							<div id="bkcolor_yellow" class="color_yellow"> </div>
+							<div id="bkcolor_orange" class="color_orange"> </div>
+							<div id="bkcolor_darkblue" class="color_darkblue"> </div>
+							<div id="bkcolor_purple" class="color_purple"> </div>
+							<div id="bkcolor_grey" class="color_grey"> </div>
+							<div id="bkcolor_black" class="color_black"> </div>
+						</div>
+                    </div>
+                    <!-- SHELL -->
+                    <div id="console">
+                        <textarea rows="20" cols="100"></textarea>
+                    </div>
+                    <!--       LOG BOX           -->
+                    <div id="log_box" class="box">
+                        <div id="log_box_header">
+                            <div id="show_hide_log" class="hide">Hide Log</div>
+                            <div id="clear_log">Clear Log</div>
+                        </div>
+                        <div id="log_box_content" class="log_box_visible"></div>
+                    </div>
+
+                </div>
+
+                <!--       DOWNLOAD_BUTTON   -->
+                <div id="demo_box_footer">
+                    <div id="jws_download_button" class="button onmouseup" onmouseover="this.className='button onmouseover'" 
+                         onmousedown="this.className='button onmousedown'" 
+                         onmouseup="this.className='button onmouseup'" 
+                         onmouseout="this.className='button onmouseout'" 
+                         onclick="this.className='button onmouseover'">
+                        <div class="l"></div>
+                        <div class="c">Download jWebSocket</div>
+                        <div class="r_download"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

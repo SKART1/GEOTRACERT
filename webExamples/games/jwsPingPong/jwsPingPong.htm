@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <!-- If Google's chrome frame installed, use it! -->
+        <!-- Comment needs to be BELOW this meta tag! -->
+        <!--
+		//	****************************************************************************
+		//	jWebSocket Ping-Pong Demo (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+        -->
+        <meta http-equiv="Content-Language" content="en"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+
+        <title>jWebSocket Ping Pong Game</title>
+
+        <!-- DEMO STYLES  -->
+        <link rel="stylesheet" type="text/css" href="../../res/css/demos.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jwsPingPong.css"/>
+
+        <!-- JQUERY DEPENDENCIES -->
+        <link rel="stylesheet" href="../../lib/jQuery/jquery-ui/blue-theme/jquery-ui.css" type="text/css"/>
+        <script type="text/javascript" src='../../lib/jQuery/jquery.js'></script>
+        <script type="text/javascript" src='../../lib/jQuery/jquery-ui/jquery-ui.js'></script>
+		<script type="text/javascript" src='js/dialogs.js'></script>
+
+        <!-- JWEBSOCKET JAVASCRIPT CLIENT LIBRARIES -->
+        <script type="text/javascript" src="../../res/js/jWebSocket.js"></script>
+		<script type="text/javascript" src='../../lib/jQuery/jws-plugin-1.0.js'></script>
+
+		<script type="text/javascript" src='js/wAuthentication.js'></script>
+        <script type="text/javascript" src='js/ball.js'></script>
+        <script type="text/javascript" src='js/chat.js'></script>
+        <script type="text/javascript" src='js/connected.js'></script>
+        <script type="text/javascript" src='js/menu.js'></script>
+        <script type="text/javascript" src='js/player.js'></script>
+        <script type="text/javascript" src='js/ranking.js'></script>
+        <script type="text/javascript" src='js/stage.js'></script>
+
+		<script type="text/javascript" src='js/init.js'></script>
+    </head>
+    <body>
+		<audio id="sound">
+            <source src="css/images/snd_hit.wav" type="audio/wav" />
+        </audio>
+        <div id="demo_box">
+            <!--       DEMO_HEADER       -->
+            <div id="demo_box_header">
+                <h1>Ping Pong Game</h1>
+                <div id="demo_box_header_login">
+					<div id="logoff_area">
+                        <div id="user_info">
+                            <div id="user_info_name"></div> <div>&nbsp;|&nbsp;</div>
+                            <div id="logoff_button" class="button">Logout</div>
+                        </div>
+                    </div>
+                    <div id="login_area">
+                        <div id="login_form">
+                            <label class="first">Username</label>
+                            <label class="second">Password</label>
+                            <input type="text" id="user_text" value="User" class="disabled"/>
+                            <input type="text" id="user_password" value="Password" class="disabled"/>
+						</div>
+                        <div id="login_button" class="button">Login</div>
+                        <div id="register_button" class="button">Register</div>
+                    </div>
+					<div id="register_area">
+                        <div id="register_form">
+                            <label class="register_first">Username</label>
+                            <label class="register_second">Password</label>
+                            <label class="register_second_repeat">Repeat Password</label>
+                            <input type="text" id="register_user_text" value="User" style="color: graytext"/>
+                            <input type="text" id="register_user_password" value="Password" style="color: graytext"/>
+                            <input type="text" id="register_user_password_repeat" value="Password" style="color: graytext"/>
+                        </div>
+						<div id="show_register_area_button" class="button">Register</div>
+                        <div id="register_login_button" class="button">Login</div>
+					</div>
+                </div>
+            </div>
+            <div id="container">
+                <!--       STATUSBAR         -->
+                <div id="demo_box_statusbar">
+                    <div id='status'>Status: </div>
+                    <div id="client_status" class='offline'>disconnected</div><div class="line"></div>
+                    <div id='client_id'>Client-ID: - </div><div class="line"></div>
+                    <div id='websocket_type'>WebSocket: - </div>
+                </div>
+
+                <!--       DESCRIPTION       -->
+                <div class="box">
+                    <p>Ping Pong is a multiplayer game based on jWebSocket inviting 
+						you to experience the potential of realtime online gaming. 
+						To start the game login with a username and a password of 
+						your choice and select one of the currently available players 
+						from the player list below.</p>
+                </div>
+
+
+                <!--       SCENARIO          -->
+                <div id="scenario_container" class="box">
+					<div id="main_content">
+						<!--		AQUI VA EL CONTENIDO DE LOS DEMOS DE CADA CUAL				-->
+						<div id="scenario_header">
+							<div id="scenario_header_left">Ranking</div>
+							<div id="scenario_menu">
+								<div id="new_game" class="button">New Game</div>
+								<div id="pause" class="button"><div class="pause" id="play_pause"></div></div>
+								<!--								<a id="pause">Pause</a>-->
+
+								<div id="sound_btn" class="button"><div class="audio_on" id="audio_on_off"></div></div>
+								<!--								<a id="sound">Sound</a> -->
+								<div id="help" class="button">?</div>
+								<div id="end_game" class="button">End Game</div>
+								<!--								<a id="end_game">End Game</a>							-->
+							</div>  
+							<div id="scenario_header_right">Online</div>
+						</div>
+						<div id="scenario_body">
+							<div id="ranking">
+								<b>Players</b>&nbsp;<b>Won-Lost</b>
+								<div class="ranking"></div>
+							</div>
+							<div id="board">
+								<div id="obj_area">
+									<div id="counter"></div>                               
+									<div id="send_pause"></div>
+									<div id="chat_text">
+										<div id="menu_bar">
+											<div id="minimize_chat_text">-</div>
+										</div>
+										<div id="messages_area">
+										</div>
+									</div>
+									<div id="game_over"></div>
+									<div id="ball"></div>
+									<div id="playerA_racket"></div>
+									<div id="playerB_racket"></div>
+									<div id="playerA">
+										<div id="playerA_name"></div>
+										<div id="playerA_points"></div>
+									</div>
+									<div id="playerB">
+										<div id="playerB_name"></div>
+										<div id="playerB_points"></div>
+									</div>
+								</div>
+							</div>
+							<div id="online">
+								<ul id="players_list"></ul>
+							</div>
+							<div id="legend">
+								<div class="available">Available</div>
+								<div class="playing">Playing</div>
+							</div>
+						</div>
+						<div id="scenario_chat">
+							<div class="chat_text">Player Chat</div>
+							<div><input id="chat" type="text" value="Type your message..." style="color: graytext"/></div>
+						</div>
+					</div>
+                </div>
+				<!--       DOWNLOAD_BUTTON   -->
+				<div id="demo_box_footer">
+					<div id="jws_download_button" class="button download">
+						<a href="http://jwebsocket.org/downloads/downloads.htm" 
+						   target="blank">Download jWebSocket</a>
+					</div>
+				</div>
+            </div>
+        </div>
+    </body>
+</html>

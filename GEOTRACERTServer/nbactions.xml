@@ -2,16 +2,36 @@
 <actions>
         <action>
             <actionName>run</actionName>
-            <packagings>
-                <packaging>jar</packaging>
-            </packagings>
             <goals>
                 <goal>process-classes</goal>
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath com.github.skart123.geotracert.geotracertserver.App</exec.args>
+                <exec.args>-classpath %classpath com.github.skart123.geotracert.geotracertserver.App -config E:\conf\conf2\conf\jWebSocket.xml</exec.args>
                 <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>debug</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath com.github.skart123.geotracert.geotracertserver.App -config E:\conf\conf2\conf\jWebSocket.xml</exec.args>
+                <exec.executable>java</exec.executable>
+                <jpda.listen>true</jpda.listen>
+            </properties>
+        </action>
+        <action>
+            <actionName>profile</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${profiler.args} -classpath %classpath com.github.skart123.geotracert.geotracertserver.App -config E:\conf\conf2\conf\jWebSocket.xml</exec.args>
+                <exec.executable>${profiler.java}</exec.executable>
             </properties>
         </action>
     </actions>

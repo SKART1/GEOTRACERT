@@ -1,0 +1,45 @@
+/*-------------- DEMO_DESCRIPTION ------------*/
+#demo_box_description{
+	margin: 0 0 5px 0;
+	padding: 10px 10px 0 10px;
+}
+
+#demo_box_description p{
+    margin: 0px;
+    padding-top: 5px;
+    padding-bottom: 0;
+}
+
+#demo_box_scenario{
+    margin: 0; 
+    padding: 0;
+}
+
+#scenario_container{
+    margin: 0;
+	padding: 9px;
+}
+
+#scenario_container .gaugesDivs {
+    background-color: #E8E8E8;
+    -moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border: 1px solid #c8c8c8;
+    height: 235px;
+    float: left;
+    margin-right: 14px;
+	width: 215px;
+}
+
+#scenario_container .gaugesDivs.last{
+	   margin-right: 0;
+}
+
+#scenario_container .gaugesDivs .resourcesTitles {
+	padding: 5px;
+	margin: 0;
+    font-size: 10pt;
+    font-weight: bold;
+	color: #797878;
+	text-align: center;
+}

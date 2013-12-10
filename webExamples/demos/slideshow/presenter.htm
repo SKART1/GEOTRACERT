@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<!-- If Google's chrome frame installed, use it! -->
+		<!-- Comment needs to be BELOW this meta tag! -->
+		<!--
+		//	****************************************************************************
+		//	jWebSocket Slideshow Demo, Presenter (Community Edition, CE)
+		//	****************************************************************************
+		//	Copyright 2010-2013 Innotrade GmbH (jWebSocket.org)
+		//  Alexander Schulze, Germany (NRW)
+		//
+		//	Licensed under the Apache License, Version 2.0 (the "License");
+		//	you may not use this file except in compliance with the License.
+		//	You may obtain a copy of the License at
+		//
+		//	http://www.apache.org/licenses/LICENSE-2.0
+		//
+		//	Unless required by applicable law or agreed to in writing, software
+		//	distributed under the License is distributed on an "AS IS" BASIS,
+		//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		//	See the License for the specific language governing permissions and
+		//	limitations under the License.
+		//	****************************************************************************
+		-->
+		<meta http-equiv="Content-Language" content="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>jWebSocket Slide Show Viewer</title>
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<!-- load the jWebSocket JavaScript client library -->
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script type="text/javascript" language="JavaScript">
+
+			var eLog = null;
+			var eCount = null;
+			var lOldSlide = 0;
+			var lCurSlide = 1;
+			var lMaxSlides = 22;
+			var lCientCount = 0;
+
+			function scrollLogToBottom() {
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function log( aString ) {
+				eLog.innerHTML +=
+					aString + "<br>";
+				scrollLogToBottom();
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			var lWSC = null;
+
+			function connect() {
+				var lURL = jws.getDefaultServerURL();
+
+				log( "Connecting to " + lURL + " ..." );
+				var lRes = lWSC.open( lURL, {
+
+					// OnOpen callback
+					OnOpen: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection established.</font>" );
+						jws.$("simgStatus").src = "../../images/connected.png";
+					},
+
+					// OnWelcome callback
+					OnWelcome: function( aEvent ) {
+						
+					},
+
+					// OnMessage callback
+					OnMessage: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket message received: '" + aEvent.data + "'</font>" );
+						jws.$("simgStatus").src = "../../images/authenticated.png";
+
+						jws.$("slblClientId").innerHTML =
+							"&nbsp;Client&#x2011;Id:&nbsp;"
+							+ lWSC.getId() + "&nbsp;"
+							+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" );
+					},
+
+					// OnMessage callback
+					OnToken: function( aToken ) {
+						// check if slide has to be updated
+						if( aToken.action == "slide") {
+							eSlide.src = "slides/Slide" + jws.tools.zerofill( aToken.slide, 4 ) + ".gif";
+						// check if new client connected and send the current for initialization
+						} else if( "event" == aToken.type
+							&& "connect" == aToken.name ) {
+							lCientCount = aToken.clientCount;
+							lWSC.sendToken({
+								ns: jws.NS_SYSTEM,
+								type: "send",
+								targetId: aToken.sourceId,
+								action: "slide",
+								slide: lCurSlide,
+								clientCount: lCientCount
+							});
+							eCount.innerHTML = lCientCount;
+						} else if( "event" == aToken.type
+							&& "disconnect" == aToken.name ) {
+							lCientCount = aToken.clientCount - 1;
+							eCount.innerHTML = lCientCount;
+							lWSC.sendToken({
+								ns: jws.NS_SYSTEM,
+								type: "send",
+								targetId: aToken.sourceId,
+								action: "slide",
+								slide: lCurSlide,
+								clientCount: lCientCount
+							});
+						}
+					},
+
+					// OnClose callback
+					OnClose: function( aEvent ) {
+						log( "<font style='color:#888'>jWebSocket connection closed.</font>" );
+						jws.$("simgStatus").src = "../../images/disconnected.png";
+						jws.$("slblClientId").innerHTML = "&nbsp;Client&#x2011;Id:&nbsp;-";
+					}
+
+				});
+
+				log( lWSC.resultToString( lRes ) );
+			}
+
+			function updateSlide() {
+				if( lOldSlide != lCurSlide ) {
+					lWSC.broadcastToken({
+						action: "slide",
+						slide: lCurSlide,
+						senderIncluded: true,
+						responseRequested: false,
+						clientCount: lCientCount
+					});
+				}
+			}
+
+			function first() {
+				lCurSlide = 1;
+				updateSlide();
+			}
+
+			function prev() {
+				if( lCurSlide > 1 ) {
+					lCurSlide--;
+					updateSlide();
+				}
+			}
+
+			function next() {
+				if( lCurSlide < lMaxSlides ) {
+					lCurSlide++;
+					updateSlide();
+				}
+			}
+
+			function last() {
+				lCurSlide = lMaxSlides;
+				updateSlide();
+			}
+
+			function processKeyDown( aEvent ) {
+				// console.log( aEvent.keyCode );
+				if( aEvent.keyCode == 36 ) {
+					first();
+				} else if( aEvent.keyCode == 37 ) {
+					prev();
+				} else if( aEvent.keyCode == 39 ) {
+					next();
+				} else if( aEvent.keyCode == 35 ) {
+					last();
+				}
+			}
+
+			function disconnect() {
+				if( lWSC ) {
+					log( "Disconnecting..." );
+					var lRes = lWSC.close({ timeout: 3000 });
+					log( lWSC.resultToString( lRes ) );
+				}
+			}
+
+			function initPage() {
+				eLog = jws.$( "sdivLog" );
+				eSlide = jws.$( "simgSlide" );
+				eCount = jws.$( "slblCount" );
+
+				if( jws.browserSupportsWebSockets() ) {
+					lWSC = new jws.jWebSocketJSONClient();
+				} else {
+					var lMsg = jws.MSG_WS_NOT_SUPPORTED;
+					alert( lMsg );
+					log( lMsg );
+				}
+
+				connect();
+				jws.events.addEventListener( document.body, "keydown", processKeyDown );
+			}
+
+			function exitPage() {
+				disconnect();
+			}
+
+		</script>
+	</head>
+
+	<body
+		onload="initPage();"
+		onunload="exitPage();"
+		style="background-color:#000"
+		>
+		<table class="tblHeader" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="tdHeader" width="">
+					jWebSocket Slideshow 
+					<input class="sbtnDlg" id="sbtnFirst" type="button" value="|<" onclick="first();"
+						   title="Shows the first slide." style="width:35px">
+					<input class="sbtnDlg" id="sbtnPrev" type="button" value="<" onclick="prev();"
+						   title="Shows the previous slide." style="width:35px">
+					<input class="sbtnDlg" id="sbtnNext" type="button" value=">" onclick="next();"
+						   title="Shows the next slide." style="width:35px">
+					<input class="sbtnDlg" id="sbtnLast" type="button" value=">|" onclick="last();"
+						   title="Shows the last slide." style="width:35px">
+					<span id="slblCount">-</span> online
+				</td>
+				<td class="tdHeader" width="1%"><img id="simgStatus" src="../../images/disconnected.png" align="right"/></td>
+				<td class="tdHeader" width="1%"><span id="slblClientId">&nbsp;Client&#x2011;Id:&nbsp;-</span></td>
+			</tr>
+		</table>
+		<!-- <p>Welcome to the jWebSocket Slideshow Presenter.</p> -->
+		<img id="simgSlide" src="slides/Slide0001.gif"/>
+		<div id="sdivLog" class="sdivContainer" style="display:none"
+			 style="position:relative; height:100px; overflow:auto;">
+		</div>
+	</body>
+</html>

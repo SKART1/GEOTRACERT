@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>HTML5 Webcam Test</title> 
+		<style type="text/css">
+			body {
+				max-width: 300px;
+				max-height: 300px;
+			}
+			#live_video1 {
+				top: 0px;
+				height: 100%;
+				width: 100%;
+				left: 0px;
+			}
+		</style>
+	</head>
+	<body>
+		<video id="live_video1" autoplay controls></video>
+		<!-- <video id="live_video2" autoplay controls></video> -->
+		<script type="text/javascript">
+			video1 = document.getElementById("live_video1");
+			navigator.webkitGetUserMedia(
+					{video: true, audio: true},
+				function(stream) {
+					video1.src = window.webkitURL.createObjectURL(stream);
+					stream.onaddtrack = function(aEvent) {
+						console.log("add track: " + JSON.stringify(aEvent));
+					};
+					lVTs = stream.getVideoTracks();
+					console.log("stream: " + JSON.stringify(stream));
+				}
+			);
+		</script>
+	</body>
+</html>

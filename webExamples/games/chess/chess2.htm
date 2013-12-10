@@ -1,0 +1,420 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Chess Game with jWebsocket </title>
+		<meta name="Generator" content="EditPlus">
+		<meta name="Author" content="">
+		<meta name="Keywords" content="">
+		<meta name="Description" content="">
+		<link rel="stylesheet" type="text/css" href="../../res/css/jwebsocket.css">
+		<script src="../../res/js/jWebSocket.js" type="text/javascript"></script>
+		<script src="js/chess.js" type="text/javascript"></script>
+
+		<script type="text/javascript" language="JavaScript">
+   
+			var lJWSID = "jWebSocket Chat",
+			lWSC = null,
+			eLog = null,
+			eUsername = null,
+			ePassword = null,
+			ePool = null,
+			eMessage = null,
+			eDebug = null,
+			eKeepAlive = null;
+
+			var IN = 0;
+			var OUT = 1;
+			var EVT = 2;
+			var SYS = "SYS";
+			var USR = null;
+
+			var isConnected = false;
+			var users = null;
+			var pieceSelection = false;
+
+			function start() {
+				initPage();
+				var elems = { 
+					loginbtn: document.getElementById("loginbtn"),
+					log: document.getElementById("log"),
+					canvas1: document.getElementById("can"),
+					whitelist: document.getElementById("whitelist"),
+					blacklist: document.getElementById("blacklist"),
+					lWSC: lWSC
+				};
+	
+				chess.initialize(elems);
+			}
+   
+			/*
+			 * This function retrives data from the client as an event call back.
+			 * There are  many events that jWebSocket triggered at various times.
+			 * This can be sending any data or information to the server.However, for
+			 * every such a request type, an equivalent action will be triggered and an
+			 * event.
+			 */
+			function updateMove() {
+				if(theToken) {
+					if(theToken == "START-W") {
+						//	    alert("..here...");
+						processHandshake();
+					}
+					else {
+						// alert("....here..");
+						chessBoard.updateMove(theToken);
+					}
+				}
+			}
+ 
+			function selectPiece(elem) {
+				var chesspiece = elem.value;
+				updatePieceSelection(chesspiece);
+			}
+  
+
+			function updatePieceSelection(chesspiece) {
+				if(isConnected) {
+					//var lRes = sendData(currToken.sourceId, chesspiece);
+					pieceSelection = true;
+					this.chesspiece = chesspiece;
+				} else {
+					alert("Please login and invite other player...");
+				}
+			}
+
+
+			function processHandshake() {
+	
+				var msg   = theToken.data.split("-");
+				var piece = (msg[1] == "W")?"white":"black";
+				var res   = confirm(theToken.sender + " wants to play chess with you as "+piece+". Are you ready?");
+				//alert(piece);
+				if( res ) {
+					if(piece == "white") {
+	    
+						document.getElementById("white").checked  = true;
+						document.getElementById("white").disabled = true;
+						document.getElementById("black").checked  = true;
+						this.chesspiece = "B";
+						sendData(theToken.sourceId, "OK-B");   
+					}
+					else {
+						document.getElementById("black").checked  = true;
+						document.getElementById("black").disabled = true;
+						document.getElementById("white").checked  = true;
+						this.chesspiece = "W";
+						sendData(theToken.sourceId, "OK-W"); 
+					}
+				}
+				else {
+					sendData(theToken.sourceId, "NO");
+				}
+			}
+
+			function initPage() {
+				users      = document.getElementById("userslist");
+				eLog       = jws.$( "sdivChat" );
+				eUsername  = jws.$( "stxfUsername" );
+				ePassword  = jws.$( "spwfPassword" );
+				ePool      = jws.$( "stxfPool" );
+				eReceiver  = jws.$( "stxfReceiver" );
+				eMessage   = jws.$( "stxaMsg" );
+				eDebug     = jws.$( "schkDebug" );
+				eKeepAlive = jws.$( "schkKeepAlive" ); 
+				initializeWebSocket();
+				eUsername.focus();
+				eUsername.select();
+			}
+  
+			function initializeWebSocket() {
+				if( jws.browserSupportsWebSockets()) {
+					lWSC = new jws.jWebSocketJSONClient();
+				}
+			}
+  
+			function checkKeepAlive( aOptions ) {
+				if( !aOptions ) {
+					aOptions = {};
+				}
+				aOptions.interval = 30000;
+				if( eKeepAlive.checked ) {
+					lWSC.startKeepAlive( aOptions );
+				} else {
+					lWSC.stopKeepAlive();
+				}
+			}
+  
+			function log(msg) {
+				logger.innerHTML += "\r\n" + msg;
+			}
+  
+			function log( aUsername, aEvent, aString ) {
+				var lFlag;
+				switch( aEvent ) {
+					case IN: lFlag = "<"; break;
+					case OUT: lFlag = ">"; break;
+					case EVT: lFlag = "*"; break;
+					default: lFlag = "?";
+				}
+				// set a default user name if not yet logged in
+				if( !aUsername ) {
+					aUsername = lWSC.getUsername();
+				}
+				if( !aUsername ) {
+					aUsername = "USR";
+				}
+				eLog.innerHTML +=
+					aUsername + " " +
+					lFlag + " " +
+					aString + "<br>";
+				if( eLog.scrollHeight > eLog.clientHeight ) {
+					eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
+				}
+			}
+
+			function clearLog() {
+				eLog.innerHTML = "";
+				eLog.scrollTop = 0;
+			}
+
+			function doFocus( aElement ) {
+				aElement.focus();
+				aElement.select();
+			}
+
+			function doOpen() {
+				var lURL = jws.getDefaultServerURL();
+				log( SYS, OUT, "Connecting to " + lJWSID + " at " + lURL + "..." );
+        
+				lWSC.logon( lURL, eUsername.value, ePassword.value, {
+					OnOpen: function( aEvent ) {
+						log( SYS, IN, "Connection to " + lJWSID + " established." );
+						checkKeepAlive({ immediate: false });
+						isConnected = true;
+					},
+
+					OnMessage: function( aEvent, aToken ) {
+						if( eDebug.checked ) {
+							log( SYS, EVT, "<font style='color:#888'>" +
+								( aToken ? aToken.type : "-" ) + ": " +
+								aEvent.data + "</font>");
+						}
+						currToken = aToken;
+						if( aToken ) {
+							log( SYS, IN, aToken.reqType);
+							if( aToken.type == "response" ) {
+								if( aToken.reqType == "login" ) {
+									if( aToken.code == 0 ) {
+										log( SYS, IN, "Welcome '" + aToken.username + "'" );
+										currSourceId = aToken.sourceId;
+										document.getElementById("h1").innerHTML = ""; 
+										document.getElementById("h1").innerHTML+="Chess Demo"+getNBSP(165)+" User Logged:"+aToken.username;
+										//lWSC.getAuthClients({
+										//	pool: null
+										//});
+									} else {
+										log( SYS, IN, "Error logging in '" + + "': " + aToken.msg );
+									}
+								} else if( aToken.reqType == "getClients" ) {
+									log( SYS, IN, "Clients (" + aToken.count + "): " + aToken.clients );
+								}
+							} else if( aToken.type == "event" ) { 
+								if(aToken.username != undefined && aToken.username != "")
+								{
+									updateUser( aToken.username, aToken.sourceId );   
+								}
+							} else if( aToken.type == "goodBye" ) {
+								log( SYS, IN, lJWSID + " says good bye (reason: " + aToken.reason + ")!" );
+							} else if( aToken.type == "broadcast" ) {
+								if( aToken.data ) {
+									log( aToken.sender, IN, aToken.data );
+									theToken = aToken.data;
+									updateMove();
+								}
+							} else if( aToken.type == "send" ) {
+								if( aToken.data ) {
+
+									if(aToken.data == "START-W" || aToken.data == "START-B" ) {
+										theToken = aToken;
+										processHandshake();
+									} else if(aToken.data == "OK-W" || aToken.data == "OK-B") {
+										// player is ready for the play and proceed further.
+										if(aToken.data == "OK-B")
+											document.getElementById("black").disabled = true;
+										else 
+											document.getElementById("white").disabled = true; 
+										isInvite = true;
+									} else if(aToken.data == "NO") {
+										// no action need to be done.
+									} else if(aToken.data == "W")  {
+										isInvite = true;
+									}
+								}
+							}
+						}
+					},
+
+					OnClose: function( aEvent ) {
+						lWSC.stopKeepAlive();
+						log( SYS, IN, "Disconnected from " + lJWSID + "." );
+					}
+				});
+			}
+
+			function doClose() {
+				lWSC.stopKeepAlive();
+				var lRes = lWSC.close({
+					timeout: 3000
+				});
+				log( SYS, OUT, "logout: " + lRes.msg );
+			}
+			
+			function broadcast() {
+				var lMsg = eMessage.value;
+				if( lMsg.length > 0 ) {
+					log( USR, OUT, lMsg );
+					var lRes = lWSC.broadcastText(
+					"",		
+					lMsg	
+				);
+					if( lRes.code != 0 ) {
+						log( SYS, OUT, "broadcast: " + lRes.msg );
+					}
+					eMessage.value = "";
+				}
+			}
+
+			function usrKeyDnLsnr( aEvent ) {
+				if( aEvent.keyCode == 13 ) {
+					//doOpen();
+				}
+			}
+
+			function msgKeyDnLsnr( aEvent ) {
+				if( !aEvent.shiftKey && aEvent.keyCode == 13 ) {
+					broadcast();
+				}
+			}
+
+			function elemFocusLsnr( aEvent ) {
+				jws.events.getTarget( aEvent ).select();
+			}
+ 
+			function getNBSP(ctr) {
+				var nbsp="";
+				for(var i = 1; i <= ctr; i++){
+					nbsp+="&nbsp;";
+				}
+				return nbsp;
+			}
+    
+			function sendData(id, data) {
+				return lWSC.sendText(id, data);
+			}
+  
+			function invite() {
+				if(isConnected && pieceSelection) {
+					var id    = users.value; 
+					var lRes  = sendData(id, "START-" + chesspiece);
+				}
+			}
+ 
+			function updateUser(user,id) {
+				if(users == null || users == 'undefined') alert("it is null ");
+				else
+					users.innerHTML+="<option value="+id+">"+user+"</option>";
+			}
+
+		</script>
+	</head>
+
+	<body onload ="start();">
+		<h1 id ="h1" class="transbox">Chess Demo</h1>
+		<table  border="1" cellpadding="0" cellspacing="1"  align="left" >
+			<tr>
+				<td><canvas id ="can" style="border: 1px solid;" height="450" width="475" onmousedown="mouse.handleMouseDown(event);" onmouseup="mouse.handleMouseup(event);"></canvas>
+        </td>
+		<td>&nbsp;</td>
+        <td>&nbsp;</td>
+
+		<td  align="left" valign="top" colspan="4">
+			<div class="transbox">
+				<table  class="stlbDlg" border="0"  cellpadding="0" cellspacing="0"  valign="top" >
+
+					<tr>
+						<td  align = "left" valign = "top"><input type="radio" name="piece" value="W" onclick="selectPiece(this);" id="white">Play Against user as white
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td  align = "left" valign = "top"><input type="radio" name="piece" value="B" onclick="selectPiece(this);" id="black">Play Against user as black
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td  align = "left" valign = "top">&nbsp;
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td  align = "left" valign = "top">
+							<select name="userslist" id="userslist" class="stlbDlg">
+								<option>---Player Logged in---</option>
+							</select>
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+
+
+				</table>
+			</div>
+		</td>
+	</tr>
+</table>
+		
+<div class="sdivContainer">
+	<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+		<tr class="strDlg">
+			<td class="stdDlg" width="5">Username</td>
+			<td class="stdDlg" width="5"><input class="stxfDlg" id="stxfUsername" type="text" value="guest" size="20"></td>
+			<td class="stdDlg" width="5">Password</td>
+			<td class="stdDlg" width="5"><input class="stxfDlg" id="spwfPassword" type="text" value="guest" size="20"></td>
+			<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnLogin" type="button" value="Login" onclick="doOpen();"></td>
+			<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnInvite" type="button" value="Invite" onclick="invite();"></td>
+			<td class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnLogout" type="button" value="Logout" onclick="doClose();"></td>
+			<td class="stdDlg" width="" align="right">
+				<input id="schkKeepAlive" type="checkbox" value="off" onclick="checkKeepAlive();">&nbsp;Keep-Alive&nbsp;
+				<input id="schkDebug" type="checkbox" value="on" checked="checked">&nbsp;Debug&nbsp;
+				<input class="sbtnDlg" id="sbtnClearLog" type="button" value="Clear Log" onclick="clearLog();">
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div id="sdivChat" class="sdivContainer"
+	 style="position:relative; height:300px; overflow:auto;">
+</div>
+<div class="sdivContainer">
+	<table class="stlbDlg" border="0" cellpadding="3" cellspacing="0" width="100%">
+		<tr class="strDlg">
+			<td valign="top" class="stdDlg" width="5">Message</td>
+			<td valign="top" class="stdDlg" width=""><textarea class="stxaDlg" id="stxaMsg" cols="255 "rows="2" style="width:100%">Please type your message here!</textarea></td>
+			<td valign="top" class="stdDlg" width="5"><input class="sbtnDlg" id="sbtnSend" type="button" value="Send" onclick="broadcast();" style="margin-left:6pt"></td>
+		</tr>
+	</table>
+</div>
+
+</body>
+</html>
