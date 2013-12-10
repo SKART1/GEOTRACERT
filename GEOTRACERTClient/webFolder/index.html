@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>GeoTracert via leaflet</title>
+	<title>GeoTracert service</title>
 	<!-- Добавляем файлы стилей CSS для библиотеки -->
 	<link rel="stylesheet" href="style/leaflet.css" />
 	<link rel="stylesheet" href="style/style.css" />
@@ -31,7 +31,7 @@ var polyline;
 		map = L.map('map').setView([60,20], 8);
 		var mypol = new Array();
 	
-        //определим слои карт
+                //определим слои карт
 		var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
 		var cldmd = new L.tileLayer('http://{s}.tile.cloudmade.com/56eded06210846ecbb758f29e7c28152/997/256/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
@@ -43,14 +43,21 @@ var polyline;
 		
 		map.addLayer(osm);
 
-		map.addControl(new L.Control.Layers({'OSM':osm, 'CloudMade':cldmd, 'Yandex':yndx, 'Google-дорожная карта':googleRoadMap},{}, {collapsed: false}));
+		map.addControl(new L.Control.Layers({'OSM':osm, 'CloudMade':cldmd, 'Yandex':yndx, 'Google-road map':googleRoadMap},{}, {collapsed: false}));
 		
 		document.getElementById('SearchButton').onclick = verify;
-		
-		document.getElementById('InputBox').onkeyup = function(){
-			this.value = this.value.replace(/[^\d\.]/g, '');
-                        return true;
-		}
+                
+                document.getElementById('InputBox').onkeypress = function() {
+                    if (window.event.keyCode == 13)
+                    {
+                        verify();
+                    }
+                }
+
+                //document.getElementById('InputBox').onkeypress = function(){
+		//	this.value = this.value.replace(/[^\d\.]/g, '');
+                //        return true;
+		//}
 		
 		function verify(){		//Валидация введённого значения
 
@@ -58,10 +65,10 @@ var polyline;
 			var textbox = document.getElementById('InputBox');
 			// Для поиска отправляется запрос.
 			if(textbox.value == ""){
-				alert('Введите данные в поле!');
+				alert('Enter IP!');
 			}
 			else if(!valid.test(textbox.value)){
-				alert('Неверно введен IP');
+				alert('Invalid IP!');
 			}
 			else {
 				var temp = myPointsToo;
@@ -120,10 +127,14 @@ var polyline;
                     <div id="map"> </div>
                 </div>
                 <div id="inright">
-                        <input type="text" id="InputBox" placeholder="Введите IP для поиска" size="21" value="" style="width: 75%;margin-right: 0.1%;padding-right: 0.1%;float: left;">
-                        <input type="submit" id="SearchButton" value="Пуск" style="width: 20%; margin-left:0.5%;    float: right;">
+                    <input type="text" id="InputBox" placeholder="Enter IP..." size="21" value="" onsubmit="verify();" style="width: 75%;margin-right: 0.1%;padding-right: 0.1%;float: left;">
+                        <input type="submit" id="SearchButton" value="Search" style="width: 20%; margin-left:0.5%;    float: right;">
                         <div id="list" align="left">
-                                <ol id="table"></ol>
+                            <ol id="table">
+                                <li><abbr title="for example 94.109.202.15">Enter IP in the field above.</abbr>.</li>
+                                <li>Press search button</li>
+                                <li>Wait for results!</li>
+                            </ol>
                         </div>
                 </div>
             </div>
