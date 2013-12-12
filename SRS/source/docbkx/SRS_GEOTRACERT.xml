@@ -95,21 +95,11 @@
 			</section>
 			<section>
 				<title>Аппаратные интерфейсы</title>
-				<para>Сервер и клиент - компьютеры общего назначения. Специфичные требований к аппаратуре отсутствуют.</para>
+				<para>Сервер и клиент - компьютеры общего назначения. Специфичные требования к аппаратуре отсутствуют.</para>
 			</section>
 			<section>
 				<title>Программные интерфейсы</title>
-				<informaltable frame='all'>
-					<tgroup cols='1'>
-						<tbody>
-							<row>
-								<entry>
-									<para>TODO: Определить использование прочих необходимых программных продуктов, а также интерфейсы с другими прикладными системами.</para>
-								</entry>
-							</row>
-						</tbody>
-					</tgroup>
-				</informaltable>
+				<para>Для запуска серверной части должна быть установлена платформа JRE. Для клиентской части требуется только современный веб-обозреватель.</para>
 			</section>
 			<section>
 				<title>Коммуникационные интерфейсы</title>
@@ -141,84 +131,8 @@
 			<title>Характеристики пользователей</title>
 			<para>Для успешного взаимодействия с сервисом требуются базовые знания принципов работы сети Internet. Для ввода данных требуются базовые навыки владения Internet-обозревателем.</para>
 		</section>
-		<section>
-			<title>Ограничения</title>
-			<informaltable frame='all'>
-				<tgroup cols='1'>
-					<tbody>
-						<row>
-							<entry>
-								<para>
-									TODO: Описать:
-									<itemizedlist>
-										<listitem>
-											<para>Правовые вопросы;</para>
-										</listitem>
-										<listitem>
-											<para>Аппаратные ограничения (например, требования к длительности сигналов);</para>
-										</listitem>
-										<listitem>
-											<para>Интерфейсы с другими приложениями;</para>
-										</listitem>
-										<listitem>
-											<para>Параллельные операции;</para>
-										</listitem>
-										<listitem>
-											<para>Функции аудита;</para>
-										</listitem>
-										<listitem>
-											<para>Функции управления;</para>
-										</listitem>
-										<listitem>
-											<para>Языковые ограничения высшего порядка;</para>
-										</listitem>
-										<listitem>
-											<para>Протоколы синхронизации сигналов;</para>
-										</listitem>
-										<listitem>
-											<para>Требования к надёжности;</para>
-										</listitem>
-										<listitem>
-											<para>Критичность приложения;</para>
-										</listitem>
-										<listitem>
-											<para>Требования к безопасности и секретности;</para>
-										</listitem>
-									</itemizedlist>
-								</para>
-							</entry>
-						</row>
-					</tbody>
-				</tgroup>
-			</informaltable>
-		</section>
-		<section>
-			<title>Предположения и зависимости</title>
-			<informaltable frame='all'>
-				<tgroup cols='1'>
-					<tbody>
-						<row>
-							<entry>
-								<para>TODO: Перечислить все факторы, которые влияют на требования, устанавливаемые SRS. Эти факторы не являются проектными ограничениями, а скорее относятся к их изменениям, которые могут повлиять на требования SRS.</para>
-							</entry>
-						</row>
-					</tbody>
-				</tgroup>
-			</informaltable>
-		</section>
-		<section>
-			<title>Распределение требований</title>
-			<informaltable frame='all'>
-				<tgroup cols='1'>
-					<tbody>
-						<row>
-							<entry>
-								<para>TODO: Перечислить требования, которые могут быть отложены до будущих версий системы.</para>
-							</entry>
-						</row>
-					</tbody>
-				</tgroup>
-			</informaltable>
-		</section>
+		
+		
 	</section>
+	
 </article>
