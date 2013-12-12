@@ -6,7 +6,7 @@
 
     Формат использования: 
         Location locData = new Location(); 
-        locData.getIpGeoBaseDataByIp("194.226.100.138"); // 
+        locData.getIpGeoBaseDataByIp("213.180.193.1"); // 
         locData.getLatitude(); // возвращается широта 
         locData.getLongitude(); // возвращается долгота
  */
@@ -91,9 +91,7 @@ public class Location {
      * @param ip Ip-адрес
      * @return тип Location. Результаты можно получить через get* и set*
      */
-    public Location getIpGeoBaseDataByIp(String ip) {
-        // Создаем экземпляр объекта типа Location, который потом заполним данными.
-        Location locationInfo = new Location();
+    public int getIpGeoBaseDataByIp(String ip) {
         try {
             /*
              * Получаем экземпляр объекта типа JAXBContext с помощью вызова
@@ -121,24 +119,27 @@ public class Location {
                     );
             // Сохранение полученных данных в переменных класса Locate
             if (ipGeoBaseLocation.getCountryName() != null) {
-                locationInfo.setCountryName(ipGeoBaseLocation.getCountryName());
+                this.setCountryName(ipGeoBaseLocation.getCountryName());
             }
             if (ipGeoBaseLocation.getIp() != null) {
-                locationInfo.setIp(ipGeoBaseLocation.getIp());
+                this.setIp(ipGeoBaseLocation.getIp());
             }
 
             if (ipGeoBaseLocation.getCity() != null) {
-                locationInfo.setCityName(ipGeoBaseLocation.getCity());
+                this.setCityName(ipGeoBaseLocation.getCity());
             }
 
-            locationInfo.setLatitude(ipGeoBaseLocation.getLatitude());
-            locationInfo.setLongitude(ipGeoBaseLocation.getLongitude());
-
-            return locationInfo;
+            //Было замечено, что при IP, не найденном в базе возвращается 
+            //нулевые координаты
+          
+                this.setLatitude(ipGeoBaseLocation.getLatitude());
+                this.setLongitude(ipGeoBaseLocation.getLongitude());
+           
+            return 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return locationInfo;
+        return -1;
     }
 
     /**

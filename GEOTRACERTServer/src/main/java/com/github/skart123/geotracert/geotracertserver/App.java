@@ -10,6 +10,7 @@ package com.github.skart123.geotracert.geotracertserver;
 
 
 
+import com.github.skart123.geotracert.geotracertserver.IpTocoordinates.Location;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class App extends Application
      */
      public static void main(String[] args) throws Exception {
 
+         
         //Solution 1    
         pathToIndexBaseCorrect1="file:////"+pathToIndexBase1.substring(0, pathToIndexBase1.indexOf("target")+6)+"/clientFolder";
        
@@ -124,7 +126,22 @@ public class App extends Application
         } 
         finally {
                // JWebSocketFactory.stop();
-        }       
+        } 
+        
+        //*************************************************************
+        // Проверка работоспособности Получения координат по IP
+        Location locData = new Location();
+        if ( locData.getIpGeoBaseDataByIp("213.180.193.1") == 0  )
+        {
+            locData.getLatitude(); // широта и долгота
+            locData.getLongitude();
+            System.out.println("City = " + locData.getCityName() + " Country: " + locData.getCountryName());
+            System.out.println("Latitude = " + locData.getLatitude() + " Longitude: " + locData.getLongitude());
+        } else 
+        {
+            System.out.println("Произошла ошибка");
+        }
+         //*************************************************************
     }
     
     @Override
