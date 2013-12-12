@@ -12,6 +12,7 @@ package com.github.skart123.geotracert.geotracertserver;
 
 import com.github.skart123.geotracert.geotracertserver.IpTocoordinates.Location;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.jwebsocket.config.JWebSocketConfig;
@@ -56,6 +57,8 @@ public class App extends Application
         //Solution 2
         pathToIndexBaseCorrect2="file:"+File.separator+File.separator+File.separator+File.separator+pathToIndexBase2.replaceAll("/", File.separator)+File.separator+File.separator+"target"+File.separator+File.separator+"clientFolder";
        
+        //*************************************************************
+        //RESTLET
         Component component = new Component();
        
      
@@ -101,8 +104,8 @@ public class App extends Application
         // Start the component.
         component.start();
         
-        
-        //SOCKETS!!!!       
+        //*************************************************************
+        //SOCKETS START!!!!       
         try {
             String temp=pathToIndexBase2+File.separator+File.separator+"socketConfig"+File.separator+File.separator+"jWebSocket.xml";
             System.out.println("MyDebug");
@@ -128,8 +131,10 @@ public class App extends Application
                // JWebSocketFactory.stop();
         } 
         
+        
+        
         //*************************************************************
-        // Проверка работоспособности Получения координат по IP
+        // Пример работы: Получения координат по IP
         Location locData = new Location();
         if ( locData.getIpGeoBaseDataByIp("213.180.193.1") == 0  )
         {
@@ -142,6 +147,17 @@ public class App extends Application
             System.out.println("Произошла ошибка");
         }
          //*************************************************************
+        
+        //*************************************************************
+        // Пример работы: Получения координат по IP
+        String ip="91.192.189.223";
+        Traceroute TracerouteMy=new Traceroute();
+        ArrayList<TracerouteItem> resultMy =TracerouteMy.traceroute(ip);
+        for (int i=0; i< resultMy.size(); i++)
+        {
+            System.out.println(resultMy.get(i).toString());
+        }
+        
     }
     
     @Override

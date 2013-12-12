@@ -11,6 +11,7 @@ package com.github.skart123.geotracert.geotracertserver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import org.apache.commons.lang.SystemUtils;
 
@@ -56,7 +57,7 @@ public class Traceroute {
          * Это будет наш результат.
          */
         ArrayList<TracerouteItem> result = new ArrayList<TracerouteItem>();
-
+        boolean firstLineFlag=true;
         /*
          * Процесс для вызов команды.
          */
@@ -87,12 +88,25 @@ public class Traceroute {
          */
         String line = "";
         try {
-            while ((line = buf.readLine()) != null) {
-                if (line.length() > 10) {
-                    if ("Tra".equals(line.substring(0, 3)) || "ove".equals(line.substring(0, 3)) || "Reque".equals(line.substring(32, 37))) {
-                    } else {
-                        TracerouteItem item = parse(line);
-                        result.add(item);
+             while ((line = buf.readLine()) != null) {
+                line=new String(buf.readLine().getBytes(), Charset.forName("CP866"));
+                if (line.length() > 37) {                  
+                   if (firstLineFlag || "Tra".equals(line.substring(0, 3)) || "ove".equals(line.substring(0, 3)) || "Reque".equals(line.substring(32, 37))) 
+                    {
+                       firstLineFlag=false;
+                    } 
+                    else {
+                        firstLineFlag=false;
+                        if (OSType==0) //if windows
+                        {                           
+                            TracerouteItem item = parse(line);
+                            result.add(item);
+                        }
+                        else 
+                        {
+                            TracerouteItem item = parse(line);
+                            result.add(item);
+                        }   
                     }
                 }
             }
@@ -141,9 +155,15 @@ public class Traceroute {
      * @return правильная traceroute команда
      */
     public String getTracerouteCommand(String destination) {
-        //для linux
-        String cmd = ("traceroute " + destination);
-        //для windows была бы tracert
+        String cmd="";
+        if(OSType==0)////для Windows tracert
+        {
+             cmd = ("tracert " + destination);
+        } 
+        else if(OSType==1)//для linux
+        {
+             cmd = ("traceroute " + destination); 
+        };      
         return cmd;
     }
 }
