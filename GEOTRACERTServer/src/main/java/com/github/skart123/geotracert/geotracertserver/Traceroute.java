@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * Класс который отвечает за команду traceroute
@@ -22,11 +23,24 @@ public class Traceroute {
      * runtime.
      */
     private Runtime run;
-
+    private int OSType;
     /**
      * Иницилизация runtime для того команды работали
      */
-    public Traceroute() {
+    public Traceroute() throws Exception {
+        if(SystemUtils.IS_OS_WINDOWS==true)////для Windows tracert
+        {
+            OSType=0;
+        } 
+        else if(SystemUtils.IS_OS_UNIX==true)//для linux
+        {
+             OSType=1; 
+        }
+        else
+        {    
+            OSType=3;
+            throw new Exception("Unknown operating system");
+        }
         run = Runtime.getRuntime();
     }
 
