@@ -13,6 +13,7 @@ package com.github.skart123.geotracert.geotracertserver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,7 +91,8 @@ public class Traceroute {
 		String line = "";
 		try {
 			while ((line = buf.readLine()) != null) {
-//				line = new String(buf.readLine().getBytes(), Charset.forName("CP866"));
+                            line = new String(buf.readLine().getBytes(), Charset.forName("CP866"));
+//				
 //                if (line.length() > 37) {                  
 //                   if (firstLineFlag || "Tra".equals(line.substring(0, 3)) || "ove".equals(line.substring(0, 3)) || "Reque".equals(line.substring(32, 37))) 
 //                    {
