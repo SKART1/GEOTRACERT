@@ -6,6 +6,7 @@ package com.github.skart123.geotracert.geotracertserver;
  */
 import com.github.skart123.geotracert.geotracertserver.IpTocoordinates.Location;
 import java.io.File;
+<<<<<<< HEAD
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -22,6 +23,15 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import org.jwebsocket.config.JWebSocketConfig;
+import org.jwebsocket.config.JWebSocketServerConstants;
+import org.jwebsocket.factory.JWebSocketFactory;
+import org.jwebsocket.server.TokenServer;
+>>>>>>> origin/workBranch
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
@@ -52,8 +62,15 @@ public class App extends Application {
         pathToIndexBaseCorrect1 = "file:////" + pathToIndexBase1.substring(0, pathToIndexBase1.indexOf("target") + 6) + "/clientFolder";
 
         //Solution 2
+<<<<<<< HEAD
         pathToIndexBaseCorrect2 = "file:" + File.separator + File.separator + File.separator + File.separator + pathToIndexBase2.replaceAll("/", File.separator) + File.separator + File.separator + "target" + File.separator + File.separator + "clientFolder";
 
+=======
+        pathToIndexBaseCorrect2="file:"+File.separator+File.separator+File.separator+File.separator+pathToIndexBase2.replaceAll("/", File.separator)+File.separator+File.separator+"target"+File.separator+File.separator+"clientFolder";
+       
+        //*************************************************************
+        //RESTLET
+>>>>>>> origin/workBranch
         Component component = new Component();
 
         /*System.out.println("App.class.getProtectionDomain().getCodeSource().getLocation().getPath()"); 
@@ -92,6 +109,7 @@ public class App extends Application {
 
         // Start the component.
         component.start();
+<<<<<<< HEAD
 
         /* 
          //SOCKETS!!!!       
@@ -100,6 +118,16 @@ public class App extends Application {
          System.out.println("MyDebug");
          System.out.println(temp);
          JWebSocketFactory.start(temp);           
+=======
+        
+        //*************************************************************
+        //SOCKETS START!!!!       
+        try {
+            String temp=pathToIndexBase2+File.separator+File.separator+"socketConfig"+File.separator+File.separator+"jWebSocket.xml";
+            System.out.println("MyDebug");
+            System.out.println(temp);
+            JWebSocketFactory.start(temp);           
+>>>>>>> origin/workBranch
             
          
          TokenServer lServer = (TokenServer)JWebSocketFactory.getServer("ts0");
@@ -146,8 +174,10 @@ public class App extends Application {
  
         
         
+        
+        
         //*************************************************************
-        // Проверка работоспособности Получения координат по IP
+        // Пример работы: Получения координат по IP
         Location locData = new Location();
         if (locData.getIpGeoBaseDataByIp("213.180.193.1") == 0) {
             locData.getLatitude(); // широта и долгота
@@ -157,7 +187,22 @@ public class App extends Application {
         } else {
             System.out.println("Произошла ошибка");
         }
+<<<<<<< HEAD
         //*************************************************************
+=======
+         //*************************************************************
+        
+        //*************************************************************
+        // Пример работы: Получения координат по IP
+        String ip="91.192.189.223";
+        Traceroute TracerouteMy=new Traceroute();
+        ArrayList<TracerouteItem> resultMy =TracerouteMy.traceroute(ip);
+        for (int i=0; i< resultMy.size(); i++)
+        {
+            System.out.println(resultMy.get(i).toString());
+        }
+        
+>>>>>>> origin/workBranch
     }
 
     @Override
