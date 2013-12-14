@@ -20,7 +20,34 @@
 	<script src="layer/Google.js"></script>	
 	<script src="layer/Yandex.js"></script>
 	<script src="list/iplist.js"></script>
+       
+<script>
+    var ws = new WebSocket("ws://localhost:8183");
 
+ws.onopen = function() {
+    alert("Connection opened!");
+    ws.send("Hello Server, I Client message");
+};
+
+ws.onmessage = function (evt) {
+    alert("ClientMessage: " + evt.data);
+};
+
+ws.onclose = function() {
+    alert("Connection closed!");
+};
+
+ws.onerror = function(err) {
+    alert("Error: " + err);
+};
+function send(){
+    var msg = document.getElementById("InputBox").value;
+    alert("I send this message to server: " + msg + "\nЕго можно увидеть в окне ВЫВОД в NetBeans");
+    ws.send(msg); // ТУТ ПОКАЗЫВАЕТСЯ IP адрес   
+    msg.value = "";
+}
+</script>
+        
 <script type="text/javascript">
 var map;
 var pointsList;
@@ -45,7 +72,8 @@ var polyline;
 
 		map.addControl(new L.Control.Layers({'OSM':osm, 'CloudMade':cldmd, 'Yandex':yndx, 'Google-road map':googleRoadMap},{}, {collapsed: false}));
 		
-		document.getElementById('SearchButton').onclick = verify;
+		document.getElementById('SearchButton').onclick = verify; 
+               // document.getElementById('SearchButton').onclick = send;
                 
                 document.getElementById('InputBox').onkeypress = function() {
                     if (window.event.keyCode == 13)
@@ -71,7 +99,8 @@ var polyline;
 				alert('Invalid IP!');
 			}
 			else {
-				var temp = myPointsToo;
+                                send();
+                       		var temp = myPointsToo;
 				myPointsToo = myPoints;
 				myPoints = temp;
 				if(polyline) {
@@ -118,6 +147,9 @@ var polyline;
 
 
 </script>
+
+    
+
 </head>
 <body>
 	<div id="main">
