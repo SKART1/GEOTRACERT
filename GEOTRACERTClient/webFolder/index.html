@@ -19,12 +19,12 @@
 	
 	<script src="layer/Google.js"></script>	
 	<script src="layer/Yandex.js"></script>
-	<script src="list/iplist.js"></script>
        
 <script type="text/javascript">
     var ws; // = new WebSocket("ws://localhost:8183");
     var map;
-    var myPoints = checkPoints;
+//    var myPoints = checkPoints;
+    var myPoints;
 function websocket_run() {
     function start_connection() {
         ws = new WebSocket("ws://localhost:8183");
@@ -38,6 +38,15 @@ function websocket_run() {
                 if(error != 1)
                 {
                     map.setView([json.IPs[0].coordinates[0], json.IPs[0].coordinates[1]], 4);   
+                    
+                    myPoints = new Array(json.Count);
+                    for(var i = 0; i < myPoints.length; i++){
+                        myPoints[i] = {
+                            coords: [json.IPs[i].coordinates[0], json.IPs[i].coordinates[1]], 
+                            ip: jspn.IPs[i].IP, 
+                            text: json.IPs[i].country
+                        }
+                    }
                 }
                 else
                 {
@@ -163,7 +172,7 @@ var polyline;
                     var table = document.getElementById('table');
                     table.innerHTML = '';
                     for(var i=0; i < myPoints.length; i++)
-                            table.innerHTML += '<li>IP: <a id="ipline' + i + '" href="javascript:map.setView([' + myPoints[i].coords[0] + ', ' + myPoints[i].coords[1] + '], 18);">' + myPoints[i].ip + '</li>';
+                            table.innerHTML += '<li>IP: <a id="ipline' + i + '" href="javascript:map.setView([' + myPoints[i].coords[0] + ', ' + myPoints[i].coords[1] + '], 18);">' + myPoints[i].IP + '</li>';
             }
 };
 
