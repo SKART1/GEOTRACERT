@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 /**
@@ -91,8 +92,8 @@ public class Location {
      * @param ip Ip-адрес
      * @return тип Location. Результаты можно получить через get* и set*
      */
-    public int getIpGeoBaseDataByIp(String ip) {
-        try {
+    public int getIpGeoBaseDataByIp(String ip) throws JAXBException, IOException/*, Exception */{
+       
             /*
              * Получаем экземпляр объекта типа JAXBContext с помощью вызова
              * статического метода newInstance() в него мы должны передать класс с
@@ -134,12 +135,15 @@ public class Location {
           
                 this.setLatitude(ipGeoBaseLocation.getLatitude());
                 this.setLongitude(ipGeoBaseLocation.getLongitude());
-           
-            return 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
+           if( (this.getLatitude()==0) && (this.getLongitude()==0))           
+           {
+              // throw (new Exception("Нет в БД", null));
+               return -1;
+           }
+           else
+           {
+                return 0;       
+           }       
     }
 
     /**

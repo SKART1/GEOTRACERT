@@ -109,12 +109,12 @@ public class App extends Application {
         // Пример работы: Получения координат по IP
         String ip="91.192.189.223";
         Traceroute TracerouteMy=new Traceroute();
-        ArrayList<TracerouteItem> resultMy =TracerouteMy.traceroute(ip);
-        for (int i=0; i< resultMy.size(); i++)
+       // ArrayList<TracerouteItem> resultMy =TracerouteMy.traceroute(ip);
+     /*   for (int i=0; i< resultMy.size(); i++)
         {
             System.out.println("TRACERT "+i);
             System.out.println(resultMy.get(i).toString());
-        }       
+        }   */    
 //*************************************************************
          
          

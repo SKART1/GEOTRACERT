@@ -23,14 +23,9 @@ public class TracerouteItem {
      */
     private String hostname;
 
-    public TracerouteItem(String hostname, String address) {
-        this.hostname = hostname;
-        try {
-            this.address = InetAddress.getByName(address);
-        } catch (UnknownHostException e) {
-            // если IP address не правилный
-            e.printStackTrace();
-        }
+    public TracerouteItem(String hostname, String address) throws UnknownHostException {
+        this.hostname = hostname;       
+        this.address = InetAddress.getByName(address);       
     }
 
     public String toStringIP() {
