@@ -112,33 +112,41 @@ public class MyWebSocketHandler {
 
             if (TracerouteItemObject == null) //Если возвращаеться ноль то последняя строчка трассировка окончена. Цикл завершён
             {
+                 // Юра! Получен последний хоп - сигнализируй об окончании
                 break;
-            } 
-            else { //Иначе айпи обрабатывать дальше
-                //Юра! Отправить ip в клиент для отображения в консоли               
-                int resultStatus;
-                Location locData = new Location();
-                try {
-                    resultStatus = locData.getIpGeoBaseDataByIp(TracerouteItemObject.toString());
-                } catch ( JAXBException | IOException ex) {
-                    Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
-                    // Юра! Выдать пользователю сообщение "Системная ошибка"
-                    return;
-                }
-                
-                if (resultStatus==0) {//Если он есть в первой БД
-                   //System.out.println("City = " + locData.getCityName() + " Country: " + locData.getCountryName());
-                   //System.out.println("Latitude = " + locData.getLatitude() + " Longitude: " + locData.getLongitude());
-                   //Юра! Вывести в консоль координаты                    
-                }
-                else if (false)//Если его нет в первой БД IP обратиться ко второй
-                {                
-                
-                }
-                else
+            }              
+            else if( TracerouteItemObject.haveAnyIP()){ //Иначе айпи обрабатывать дальше
+                if(TracerouteItemObject.isLocal()==false)//Если вы трасеровке не локальный адрес
                 {
-                    //Юра! Вывести в консоль что нет таких координат нигде
+                    //Юра! Отправить ip в клиент для отображения в консоли               
+                    int resultStatus;
+                    Location locData = new Location();
+                    try {
+                        resultStatus = locData.getIpGeoBaseDataByIp(TracerouteItemObject.toStringIP());
+                    } catch ( JAXBException | IOException ex) {
+                        Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        // Юра! Выдать пользователю сообщение "Системная ошибка"
+                        return;
+                    }
+
+                    if (resultStatus==0) {//Если он есть в первой БД
+                       //System.out.println("City = " + locData.getCityName() + " Country: " + locData.getCountryName());
+                       //System.out.println("Latitude = " + locData.getLatitude() + " Longitude: " + locData.getLongitude());
+                       //Юра! Вывести в консоль координаты                    
+                    }
+                    else if (false)//Если его нет в первой БД IP обратиться ко второй
+                    {                
+
+                    }
+                    else
+                    {
+                        //Юра! Вывести в консоль что нет таких координат нигде
+                    }
                 }
+            }
+            else
+            {
+                //Юра! Вывести в консоль "* * * превышен лимит ожидания ответа"
             }
         }
         /*  try {
@@ -156,9 +164,9 @@ public class MyWebSocketHandler {
          for (int i=0; i< result.size(); i++)
          {
          //                System.out.println("TRACERT "+i);
-         //                System.out.println(result.get(i).toString());
+         //                System.out.println(result.get(i).toStringIP());
 
-         if (locData.getIpGeoBaseDataByIp(result.get(i).toString()) == 0) {
+         if (locData.getIpGeoBaseDataByIp(result.get(i).toStringIP()) == 0) {
          locData.getLatitude(); // широта и долгота
          locData.getLongitude();
          System.out.println("City = " + locData.getCityName() + " Country: " + locData.getCountryName());

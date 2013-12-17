@@ -28,15 +28,30 @@ public class TracerouteItem {
         this.address = InetAddress.getByName(address);       
     }
 
-    public String toStringIP() {
+    public String toStringIPHost() {
         return hostname + ", " + address.getHostAddress();
     }
 
-    public String toString() {
+    public String toStringIP() {
         return address.getHostAddress();
     }
 
     public String toStringHostName() {
         return hostname;
     }
+    
+     public boolean isLocal() {
+        return address.isAnyLocalAddress();
+    }
+     
+     public boolean haveAnyIP(){
+         if (address.getHostAddress() == null)
+         {
+             return false;
+         }
+         else
+         {
+            return true;
+         }
+     }
 }
