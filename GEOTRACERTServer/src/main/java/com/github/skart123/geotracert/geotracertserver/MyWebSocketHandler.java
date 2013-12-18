@@ -123,6 +123,7 @@ public class MyWebSocketHandler {
                     Location locData = new Location();
                     try {
                         resultStatus = locData.getIpGeoBaseDataByIp(TracerouteItemObject.toStringIP());
+                        //System.out.println("***" + TracerouteItemObject.toStringIP()); // debug
                     } catch ( JAXBException | IOException ex) {
                         Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
                         // Юра! Выдать пользователю сообщение "Системная ошибка"

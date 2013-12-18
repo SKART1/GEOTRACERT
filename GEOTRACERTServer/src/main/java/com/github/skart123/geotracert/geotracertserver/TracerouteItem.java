@@ -25,7 +25,8 @@ public class TracerouteItem {
 
     public TracerouteItem(String hostname, String address) throws UnknownHostException {
         this.hostname = hostname;       
-        this.address = InetAddress.getByName(address);       
+        this.address = InetAddress.getByName(address); 
+       
     }
 
     public String toStringIPHost() {
@@ -45,7 +46,7 @@ public class TracerouteItem {
     }
      
      public boolean haveAnyIP(){
-         if (address.getHostAddress() == null)
+         if (address.getHostAddress().contentEquals("127.0.0.1"))
          {
              return false;
          }
