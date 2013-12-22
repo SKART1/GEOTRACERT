@@ -11,7 +11,6 @@ package com.github.skart123.geotracert.geotracertserver;
  */
 import com.github.skart123.geotracert.geotracertserver.IpTocoordinates.Location;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
@@ -31,6 +30,7 @@ public class MyWebSocketHandler {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         System.out.println("Close: statusCode=" + statusCode + ", reason=" + reason);
+        sendMessage(connection, "connection closed: " + reason);
     }
 
     @OnWebSocketError
@@ -43,7 +43,7 @@ public class MyWebSocketHandler {
         connection = session;
         System.out.println("Connect: " + session.getRemoteAddress().getAddress());
         try {
-            session.getRemote().sendString("Hello browser, I ServerMessage");
+            session.getRemote().sendString("connection established");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,19 +51,20 @@ public class MyWebSocketHandler {
 
     private String msgToJSON(String[] unit) {
         if (unit.length == 4) {
-            return "[{\"country\":\"" + unit[0] + "\",\"coordinates\":[" + unit[1] + "," + unit[2] + "], \"IP\":\"" + unit[3] + "\"}]";
+            return "{\"country\":\"" + unit[0] + "\",\"coordinates\":[" + unit[1] + "," + unit[2] + "], \"IP\":\"" + unit[3] + "\"}";
         } else {
             return "";
         }
     }
 
     private void sendMessage(Session session, String msg) {
-
         try {
             session.getRemote().sendString(msg);
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println(e);
         }
+        System.out.println("Sending Message: " + msg);
     }
 
     @OnWebSocketMessage    
@@ -72,7 +73,6 @@ public class MyWebSocketHandler {
         System.out.println(msg);
 
       
-        String sendmsg;
         //*************************************************************
         // Пример работы: Получения координат по IP
         Traceroute TracerouteMy;
@@ -81,7 +81,8 @@ public class MyWebSocketHandler {
             TracerouteMy = new Traceroute();
         } catch (Exception except) {
             Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, except);
-            System.out.println("Ошибка создания tracert");
+            System.out.println("Error while tracert creating");
+            sendMessage(connection, "syserror");
             // Юра! Выдать пользователю сообщение "Системная ошибка"          
             return;
         }
@@ -91,7 +92,8 @@ public class MyWebSocketHandler {
         } 
         catch (IOException ex) {
             Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Ошибка внутри tracert");
+            System.out.println("Tracert error");
+            sendMessage(connection, "syserror");
             // Юра! Выдать пользователю сообщение "Системная ошибка"
             return; //Если ошибка - то цикл окончен
         }
@@ -104,6 +106,7 @@ public class MyWebSocketHandler {
             } catch (IOException ex) {
                 Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("Ошибка внутри tracert");
+                sendMessage(connection, "syserror");
                 // Юра! Выдать пользователю сообщение "Системная ошибка"
                 return; //Если ошибка - то цикл окончен
             }
@@ -112,11 +115,12 @@ public class MyWebSocketHandler {
 
             if (TracerouteItemObject == null) //Если возвращаеться ноль то последняя строчка трассировка окончена. Цикл завершён
             {
-                 // Юра! Получен последний хоп - сигнализируй об окончании
+                System.out.println("Получение закончено");
+                sendMessage(connection, "endflag");
                 break;
             }              
             else if( TracerouteItemObject.haveAnyIP()){ //Иначе айпи обрабатывать дальше
-                if(TracerouteItemObject.isLocal()==false)//Если вы трасеровке не локальный адрес
+                if(TracerouteItemObject.isLocal()==false)//Если в трассировке не локальный адрес
                 {
                     //Юра! Отправить ip в клиент для отображения в консоли               
                     int resultStatus;
@@ -125,14 +129,34 @@ public class MyWebSocketHandler {
                         resultStatus = locData.getIpGeoBaseDataByIp(TracerouteItemObject.toStringIP());
                     } catch ( JAXBException | IOException ex) {
                         Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
-                        // Юра! Выдать пользователю сообщение "Системная ошибка"
+                        sendMessage(connection, "syserror");
                         return;
                     }
 
                     if (resultStatus==0) {//Если он есть в первой БД
                        //System.out.println("City = " + locData.getCityName() + " Country: " + locData.getCountryName());
                        //System.out.println("Latitude = " + locData.getLatitude() + " Longitude: " + locData.getLongitude());
-                       //Юра! Вывести в консоль координаты                    
+                       //Юра! Вывести в консоль координаты          
+//////////////////////////////////////////////////////////////////////////////
+//                        locData.getLatitude(); // широта и долгота
+//                        locData.getLongitude();
+                        System.out.println("City = " + locData.getCityName() + " Country: " + locData.getCountryName());
+                        System.out.println("Latitude = " + locData.getLatitude() + " Longitude: " + locData.getLongitude());
+                        String[] unit = {"", "", "", ""};
+                        String temp = locData.getCityName();
+                        if(temp != "")
+                        {
+                            unit[0] += "City = " + temp;
+                        }
+                        unit[0] += " Country: " + locData.getCountryName();
+                        unit[1] = String.valueOf(locData.getLatitude());
+                        unit[2] = String.valueOf(locData.getLongitude());
+                        unit[3] = locData.getIp();
+                        //sendMessage(connection, "[{\"country\":\"" + unit[0] + "\",\"coordinates\":{\"Latitude\":" + unit[1] + ",\"Longitude\":" + unit[3] + "}}]");            //"(\"IPs\":" + msgToJSON(unit) + ")"
+                        //sendMessage(connection, "[{\"country\":\"" + unit[0] + "\", \"coordinates\":{\"Latitude\":" + unit[1] + ",\"Longitude\":" + unit[2] + "}}]");
+                        //sendMessage(connection, "{\"Count\":" + result.size() + ", \"IPs\":" + sendmsg + "}");
+                        sendMessage(connection, msgToJSON(unit));
+//////////////////////////////////////////////////////////////////////////////
                     }
                     else if (false)//Если его нет в первой БД IP обратиться ко второй
                     {                
@@ -140,13 +164,15 @@ public class MyWebSocketHandler {
                     }
                     else
                     {
+                        sendMessage(connection, "skip IP");
                         //Юра! Вывести в консоль что нет таких координат нигде
                     }
                 }
             }
             else
             {
-                //Юра! Вывести в консоль "* * * превышен лимит ожидания ответа"
+                sendMessage(connection, "expiredlimit");
+                sendMessage(connection, "endflag");
             }
         }
         /*  try {
