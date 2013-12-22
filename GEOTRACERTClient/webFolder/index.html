@@ -19,105 +19,199 @@
 	
 	<script src="layer/Google.js"></script>	
 	<script src="layer/Yandex.js"></script>
-	<script src="list/iplist.js"></script>
-
+       
 <script type="text/javascript">
-var map;
-var pointsList;
-var polyline;
-	window.onload=function(){
-
-		//Определяем карту, координаты центра и начальный масштаб
-		map = L.map('map').setView([60,20], 8);
-		var mypol = new Array();
-	
-                //определим слои карт
-		var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-		var cldmd = new L.tileLayer('http://{s}.tile.cloudmade.com/56eded06210846ecbb758f29e7c28152/997/256/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-			maxZoom: 18 });
-		// Possible types: map, satellite, hybrid, publicMap, publicMapHybrid
-		var yndx = new L.Yandex();
-		// Possible types: SATELLITE, ROADMAP, HYBRID, TERRAIN
-		var googleRoadMap = new L.Google('ROADMAP');
-		
-		map.addLayer(osm);
-
-		map.addControl(new L.Control.Layers({'OSM':osm, 'CloudMade':cldmd, 'Yandex':yndx, 'Google-road map':googleRoadMap},{}, {collapsed: false}));
-		
-		document.getElementById('SearchButton').onclick = verify;
-                
-                document.getElementById('InputBox').onkeypress = function() {
-                    if (window.event.keyCode == 13)
+    var ws; // = new WebSocket("ws://localhost:8183");
+    var map;
+    var onTracert = false;
+    var polyline;
+//    var myPoints = checkPoints;
+    var myPoints = new Array();
+    var pointsList;
+function websocket_run() {
+    function start_connection() {
+        ws = new WebSocket("ws://localhost:8183");
+        ws.onmessage = function (evt) {    
+            if(evt.data == "syserror")
+            {
+                onTracert = false;
+                console.log("System error.");
+            }
+            else if(evt.data == "endflag")
+            {
+                // ломаная между точками
+                polyline = L.polyline(mypol,{
+                    color: 'blue',		//цвет
+                    weight: 5,              //толщина
+                    opacity: 0.9,		//мутность
+                    smoothFactor: 1
+                });
+                polyline.addTo(map);
+                onTracert = false;
+            }
+            if(evt.data != "")
+            {
+                var error = false;
+                var json;
+                try{json = JSON.parse(evt.data);}
+                catch(e) {error = true;}
+                if(!error)
+                {
+                    if(!onTracert)
                     {
-                        verify();
+                        
+                         mypol = new Array();
+                         myPoints = new Array();
+                         onTracert = true;
                     }
+
+                    myPoints.push(json);
+                    pointsList = new Array();
+                    for(var i = 0; i < myPoints.length; i++){
+                        mypol.push(json.coordinates);
+                        pointsList.push(L.marker(json.coordinates));
+                        pointsList[i].addTo(map);
+                        pointsList[i]
+                            .bindPopup(json.country)
+                            .openPopup();
+                    };
+
+
+                    var table = document.getElementById('table');
+                    table.innerHTML += '<li>IP: <a href="javascript:map.setView([' + json.coordinates[0] + ', ' + json.coordinates[1] + '], 4);">' + json.IP + '</li>';
+                    map.setView([json.coordinates[0], json.coordinates[1]], 4);
+                    //map.setView([json.IPs[0].coordinates[0], json.IPs[0].coordinates[1]], 4);   
+                    
+                    
+/*                    myPoints = new Array(json.Count);
+                    for(var i = 0; i < myPoints.length; i++){
+                        myPoints[i] = {
+                            coords: [json.IPs[i].coordinates[0], json.IPs[i].coordinates[1]], 
+                            ip: jspn.IPs[i].IP, 
+                            text: json.IPs[i].country
+                        }
+                    } */
+
                 }
+                else
+                {
+                    console.log(evt.data);
+                }
+            }
+        };
 
-                //document.getElementById('InputBox').onkeypress = function(){
-		//	this.value = this.value.replace(/[^\d\.]/g, '');
-                //        return true;
-		//}
-		
-		function verify(){		//Валидация введённого значения
+        ws.onclose = function() {
+            console.log("Connection closed. Restore connection...");
+            setTimeout(function() {start_connection()}, 5000);
+        };
 
-			var valid = /^(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}$/;
-			var textbox = document.getElementById('InputBox');
-			// Для поиска отправляется запрос.
-			if(textbox.value == ""){
-				alert('Enter IP!');
-			}
-			else if(!valid.test(textbox.value)){
-				alert('Invalid IP!');
-			}
-			else {
-				var temp = myPointsToo;
-				myPointsToo = myPoints;
-				myPoints = temp;
-				if(polyline) {
-					map.removeLayer(polyline);
-				}
-				if(pointsList) {
-					for(var iter = 0; iter < pointsList.length; iter++)
-						map.removeLayer(pointsList[iter]);
-				}
-				pointsList = new Array();
-				listing();
-				mypol = new Array();
-				for(var i = 0; i < myPoints.length; i++){
-					mypol.push(myPoints[i].coords);
-					pointsList.push(L.marker(myPoints[i].coords));
-					pointsList[i].addTo(map);
-					pointsList[i].bindPopup(myPoints[i].text);
-				};
-		
-				// ломаная между точками
-				polyline = L.polyline(mypol,{
-					color: 'blue',							//цвет
-					weight: 5,								//толщина
-					opacity: 0.9,							//мутность
-					smoothFactor: 1
-				});
-				polyline.addTo(map);
+        ws.onopen = function() {
+            console.log("Connection opened.");
+        };
 
-				// в фокусе все метки
-				map.fitBounds(polyline.getBounds());
-			}
-			textbox.value = "";
-			textbox.focus();
-		}
-				
-		function listing () {
+        ws.onerror = function(err) {
+            console.log("Error: " + err);
+        };
+    }
 
-			var table = document.getElementById('table');
-			table.innerHTML = '';
-			for(var i=0; i < myPoints.length; i++)
-				table.innerHTML += '<li>IP: <a id="ipline' + i + '" href="javascript:map.setView([' + myPoints[i].coords[0] + ', ' + myPoints[i].coords[1] + '], 18);">' + myPoints[i].ip + '</li>';
-		}
+    start_connection();
+    }
+    function send(){
+        if (ws.readyState != WebSocket.OPEN) {
+            return false;
+        }
+        var msg = document.getElementById("InputBox").value;
+        alert("I send this message to server: " + msg + "\nЕго можно увидеть в окне ВЫВОД в NetBeans");
+        ws.send(msg); // ТУТ ПОКАЗЫВАЕТСЯ IP адрес   
+    }
+
+    
+//var pointsList;
+//var polyline;
+	window.onload=function(){
+            websocket_run();
+            //Определяем карту, координаты центра и начальный масштаб
+            map = L.map('map').setView([60,20], 8);
+
+            //определим слои карт
+            var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+            var cldmd = new L.tileLayer('http://{s}.tile.cloudmade.com/56eded06210846ecbb758f29e7c28152/997/256/{z}/{x}/{y}.png', {
+                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                    maxZoom: 18 });
+            // Possible types: map, satellite, hybrid, publicMap, publicMapHybrid
+            var yndx = new L.Yandex();
+            // Possible types: SATELLITE, ROADMAP, HYBRID, TERRAIN
+            var googleRoadMap = new L.Google('ROADMAP');
+
+            map.addLayer(osm);
+
+            map.addControl(new L.Control.Layers({'OSM':osm, 'CloudMade':cldmd, 'Yandex':yndx, 'Google-road map':googleRoadMap},{}, {collapsed: false}));
+
+            document.getElementById('SearchButton').onclick = verify; 
+           // document.getElementById('SearchButton').onclick = send;
+
+            document.getElementById('InputBox').onkeypress = function() {
+                if (window.event.keyCode == 13)
+                {
+                    verify();
+                }
+            };
+
+            //document.getElementById('InputBox').onkeypress = function(){
+            //	this.value = this.value.replace(/[^\d\.]/g, '');
+            //        return true;
+            //}
+
+            function verify(){		//Валидация введённого значения
+
+                    var valid = /^(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}$/;
+                    var textbox = document.getElementById('InputBox');
+                    // Для поиска отправляется запрос.
+                    if(textbox.value == ""){
+                            alert('Enter IP!');
+                    }
+                    else if(!valid.test(textbox.value)){
+                            alert('Invalid IP!');
+                    }
+                    else {
+//                            var temp = myPointsToo;
+//                            myPointsToo = myPoints;
+//                            myPoints = temp;
+                        if(polyline && mypol)
+                        {
+                            if(pointsList) {
+                                for(var iter in pointsList)
+                                        map.removeLayer(iter);
+                            }
+                            map.removeLayer(polyline);                                
+
+                        }
+
+                        var table = document.getElementById('table');
+                        table.innerHTML = "";                        
+                        send();
+
+                        // в фокусе все метки
+                        // map.fitBounds(polyline.getBounds());
+                    }
+                    textbox.focus();
+            }
+/*                    
+            function listing () {
+
+                    var table = document.getElementById('table');
+                    table.innerHTML = '';
+                    for(var i=0; i < myPoints.length; i++)
+                            table.innerHTML += '<li>IP: <a id="ipline' + i + '" href="javascript:map.setView([' + myPoints[i].coords[0] + ', ' + myPoints[i].coords[1] + '], 18);">' + myPoints[i].IP + '</li>';
+            }
+*/
 };
 
 
 </script>
+
+    
+
 </head>
 <body>
 	<div id="main">

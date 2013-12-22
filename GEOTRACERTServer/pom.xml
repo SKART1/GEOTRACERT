@@ -44,22 +44,14 @@
             <name>Maven Central Repository</name>
             <url>http://repo2.maven.org/maven2</url>
         </repository>
-        
-        <!-- Temp jWebSocket local repo-->
+                
+        <!-- use jetty repository -->
         <repository>
-            <id>jWebSocket-local-repo</id>
-            <name>jWebSocket Repository</name>
-            <url>file:///${basedir}//..//jWebSocketTempLocalRepository</url>           
-        </repository>  
-        
-        <!-- use jWebSocket repository as final fallback -->
-        <repository>
-            <id>jWebSocket-repo</id>
-            <name>jWebSocket Repository</name>
-            <url>http://jwebsocket.googlecode.com/svn/repo </url>         
+            <id>jetty-repo</id>
+            <name>Jetty Repository</name>
+            <url>http://git.eclipse.org/c/jetty/org.eclipse.jetty.project.git/</url>         
         </repository> 
     </repositories> 
-    
     
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!--                               DEPENDENCIED                              -->
@@ -77,25 +69,73 @@
             <version>2.1.4</version>
             <type>jar</type>
         </dependency>    
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!--                              JWebSocket Server Dependency               -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->       
-        <dependency>
-            <groupId>org.jwebsocket</groupId>
-            <artifactId>jWebSocketServer</artifactId>
-            <version>1.0</version> 
-            <type>jar</type>           
-        </dependency>
         
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!--                              JWebSocket Server Samples Dependency       -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->      
+        <!--                              Jetty WebSocket Server Dependency               -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->       
+        
         <dependency>
-            <groupId>org.jwebsocket</groupId>
-            <artifactId>jWebSocketSamples</artifactId>
-            <version>1.0</version>  
-            <type>jar</type>          
-        </dependency>    
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.1.0.v20131115</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+            <version>9.1.0.v20131115</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.1.0.v20131115</version>
+        </dependency>
+
+     <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-io</artifactId>
+      <version>9.1.0.v20131115</version>
+    </dependency>
+
+            
+    
+    <!-- Jetty-Websocket -->
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-websocket</artifactId>
+      <version>8.1.14.v20131031</version>
+    </dependency>
+  
+    
+   <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-server</artifactId>
+      <version>9.1.0.v20131115</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-core</artifactId>
+      <version>9.0.0.M2</version>
+    </dependency>
+ 
+    
+    <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.5</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.5</version>
+                <scope>provided</scope>
+            </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     
     
@@ -104,6 +144,10 @@
     
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+            </plugin>
             
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <!--                               PLUGIN FOR EXECUTABLE JAR                 -->

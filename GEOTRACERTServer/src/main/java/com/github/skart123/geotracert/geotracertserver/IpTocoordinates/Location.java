@@ -6,7 +6,7 @@
 
     Формат использования: 
         Location locData = new Location(); 
-        locData.getIpGeoBaseDataByIp("194.226.100.138"); // 
+        locData.getIpGeoBaseDataByIp("213.180.193.1"); // 
         locData.getLatitude(); // возвращается широта 
         locData.getLongitude(); // возвращается долгота
  */
@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 /**
@@ -91,10 +92,8 @@ public class Location {
      * @param ip Ip-адрес
      * @return тип Location. Результаты можно получить через get* и set*
      */
-    public Location getIpGeoBaseDataByIp(String ip) {
-        // Создаем экземпляр объекта типа Location, который потом заполним данными.
-        Location locationInfo = new Location();
-        try {
+    public int getIpGeoBaseDataByIp(String ip) throws JAXBException, IOException/*, Exception */{
+       
             /*
              * Получаем экземпляр объекта типа JAXBContext с помощью вызова
              * статического метода newInstance() в него мы должны передать класс с
@@ -121,24 +120,30 @@ public class Location {
                     );
             // Сохранение полученных данных в переменных класса Locate
             if (ipGeoBaseLocation.getCountryName() != null) {
-                locationInfo.setCountryName(ipGeoBaseLocation.getCountryName());
+                this.setCountryName(ipGeoBaseLocation.getCountryName());
             }
             if (ipGeoBaseLocation.getIp() != null) {
-                locationInfo.setIp(ipGeoBaseLocation.getIp());
+                this.setIp(ipGeoBaseLocation.getIp());
             }
 
             if (ipGeoBaseLocation.getCity() != null) {
-                locationInfo.setCityName(ipGeoBaseLocation.getCity());
+                this.setCityName(ipGeoBaseLocation.getCity());
             }
 
-            locationInfo.setLatitude(ipGeoBaseLocation.getLatitude());
-            locationInfo.setLongitude(ipGeoBaseLocation.getLongitude());
-
-            return locationInfo;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return locationInfo;
+            //Было замечено, что при IP, не найденном в базе возвращается 
+            //нулевые координаты
+          
+                this.setLatitude(ipGeoBaseLocation.getLatitude());
+                this.setLongitude(ipGeoBaseLocation.getLongitude());
+           if( (this.getLatitude()==0) && (this.getLongitude()==0))           
+           {
+              // throw (new Exception("Нет в БД", null));
+               return -1;
+           }
+           else
+           {
+                return 0;       
+           }       
     }
 
     /**

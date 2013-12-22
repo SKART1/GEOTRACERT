@@ -23,25 +23,36 @@ public class TracerouteItem {
      */
     private String hostname;
 
-    public TracerouteItem(String hostname, String address) {
-        this.hostname = hostname;
-        try {
-            this.address = InetAddress.getByName(address);
-        } catch (UnknownHostException e) {
-            // если IP address не правилный
-            e.printStackTrace();
-        }
+    public TracerouteItem(String hostname, String address) throws UnknownHostException {
+        this.hostname = hostname;       
+        this.address = InetAddress.getByName(address); 
+       
     }
 
-    public String toStringIP() {
+    public String toStringIPHost() {
         return hostname + ", " + address.getHostAddress();
     }
 
-    public String toString() {
+    public String toStringIP() {
         return address.getHostAddress();
     }
 
     public String toStringHostName() {
         return hostname;
     }
+    
+     public boolean isLocal() {
+        return address.isAnyLocalAddress();
+    }
+     
+     public boolean haveAnyIP(){
+         if ((address.getHostAddress() == null) || (address.getHostAddress().contentEquals("127.0.0.1")))
+         {
+             return false;
+         }
+         else
+         {
+            return true;
+         }
+     }
 }
