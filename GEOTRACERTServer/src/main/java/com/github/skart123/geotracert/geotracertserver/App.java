@@ -40,10 +40,15 @@ public class App extends Application {
     public static void main(String[] args) throws Exception {
 
         //Solution 1    
-        pathToIndexBaseCorrect1 = "file:////" + pathToIndexBase1.substring(0, pathToIndexBase1.indexOf("target") + 6) + "/clientFolder";
+        pathToIndexBaseCorrect1 = "file:////" + 
+                pathToIndexBase1.substring(0, pathToIndexBase1.indexOf("target") + 6) + 
+                "/clientFolder";
 
         //Solution 2
-        pathToIndexBaseCorrect2="file:"+File.separator+File.separator+File.separator+File.separator+pathToIndexBase2.replaceAll("/", File.separator)+File.separator+File.separator+"target"+File.separator+File.separator+"clientFolder";
+        pathToIndexBaseCorrect2="file:"+File.separator+File.separator+
+                File.separator+File.separator+pathToIndexBase2.
+                        replaceAll("/", File.separator)+File.separator+File.separator+
+                        "target"+File.separator+File.separator+"clientFolder";
        
         
         //*************************RESTLET************************************

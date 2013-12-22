@@ -8,6 +8,7 @@ package com.github.skart123.geotracert.geotracertserver;
  *
  * @authors Goko dm-kiselev
  */
+import com.github.skart123.geotracert.geotracertserver.TracerouteItem;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

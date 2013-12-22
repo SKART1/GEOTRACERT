@@ -123,7 +123,7 @@ public class MyWebSocketHandler {
                 if(TracerouteItemObject.isLocal()==false)//Если в трассировке не локальный адрес
                 {
                     //Юра! Отправить ip в клиент для отображения в консоли               
-                    int resultStatus;
+                    int resultStatus = -1;
                     Location locData = new Location();
                     try {
                         String tempStr=TracerouteItemObject.toStringIP();
@@ -131,7 +131,7 @@ public class MyWebSocketHandler {
                     } catch ( JAXBException | IOException ex) {
                         Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
                         sendMessage(connection, "syserror");
-                        return;
+                        //return;
                     }
 
                     if (resultStatus==0) {//Если он есть в первой БД
@@ -172,8 +172,9 @@ public class MyWebSocketHandler {
             }
             else
             {
-                sendMessage(connection, "expiredlimit");
-                sendMessage(connection, "endflag");
+                //sendMessage(connection, "expiredlimit");
+                //sendMessage(connection, "endflag");
+                //break;
             }
         }
         /*  try {
