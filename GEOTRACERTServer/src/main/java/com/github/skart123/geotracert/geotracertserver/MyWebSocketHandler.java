@@ -126,7 +126,8 @@ public class MyWebSocketHandler {
                     int resultStatus;
                     Location locData = new Location();
                     try {
-                        resultStatus = locData.getIpGeoBaseDataByIp(TracerouteItemObject.toStringIP());
+                        String tempStr=TracerouteItemObject.toStringIP();
+                        resultStatus = locData.getIpGeoBaseDataByIp(tempStr);
                     } catch ( JAXBException | IOException ex) {
                         Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
                         sendMessage(connection, "syserror");

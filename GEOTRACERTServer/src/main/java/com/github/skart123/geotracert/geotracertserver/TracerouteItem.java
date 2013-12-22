@@ -45,7 +45,7 @@ public class TracerouteItem {
     }
      
      public boolean haveAnyIP(){
-         if (address.getHostAddress() == null)
+         if ((address.getHostAddress() == null) || (address.getHostAddress().contentEquals("127.0.0.1")))
          {
              return false;
          }
