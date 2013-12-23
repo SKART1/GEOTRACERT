@@ -94,15 +94,15 @@ public class Location {
      * ответ.
      *
      * @author AndrewMendrew
-     * @param ip Ip-адрес
+     * @param Ip Ip-адрес
      * @return тип Location. Результаты можно получить через get* и set*
      */
-    public int getIpGeoBaseDataByIp(String ip) throws JAXBException, IOException, XPatherException {
-        getCoordinatesWithFreegeoip(ip);
+    public int getIpGeoBaseDataByIp(String Ip) throws JAXBException, IOException, XPatherException {
+        getCoordinatesWithFreegeoip(Ip);
         if ((this.getLatitude() == 0) && (this.getLongitude() == 0)) {
             // Через Freegeoip не получилось, 
             //попробуем через Geoiptool;
-            getCoordinatesWithGeoiptool(ip);
+            getCoordinatesWithGeoiptool(Ip);
             if ((this.getLatitude() == 0) && (this.getLongitude() == 0)) {
                 return -1;
             }
@@ -116,7 +116,7 @@ public class Location {
      *
      * @author AndrewMendrew
      */
-    private static String makeGetRequest(String myURL) throws IOException {
+    private String makeGetRequest(String myURL) throws IOException {
         URL url = new URL(myURL);
         URLConnection connection = url.openConnection();
         connection.setDoOutput(true);
@@ -164,7 +164,7 @@ public class Location {
         //Посылка запроса и парсинг ответа.
         ipGeoBaseLocation = (IpGeoBaseLocation) jaxbUnmarshaller
                 .unmarshal(new ByteArrayInputStream(makeGetRequest(
-                                        "http://freegeoip.net/xml/" + ip).getBytes())
+                                        "http://freegeoip.net/xml/" + Ip).getBytes())
                 );
 
         // Сохранение полученных данных в переменных класса Locate
