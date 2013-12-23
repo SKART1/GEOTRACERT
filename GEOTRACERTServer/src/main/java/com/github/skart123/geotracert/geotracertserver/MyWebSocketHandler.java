@@ -20,6 +20,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.htmlcleaner.XPatherException;
 
 @WebSocket
 public class MyWebSocketHandler {
@@ -68,7 +69,7 @@ public class MyWebSocketHandler {
     }
 
     @OnWebSocketMessage    
-    public void onText(String msg) {
+    public void onText(String msg) throws XPatherException {
         System.out.println("IP from index.html:");
         System.out.println(msg);
 

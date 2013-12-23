@@ -144,6 +144,8 @@ public class App extends Application {
             System.out.println("Произошла ошибка");
         }
 //*************************************************************
+        System.out.println("**********************************");
+        locData.showResultFreegeoipAndGeoiptool("213.180.193.1");
         
 
         

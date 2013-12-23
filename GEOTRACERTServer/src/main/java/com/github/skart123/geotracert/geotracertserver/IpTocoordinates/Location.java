@@ -1,14 +1,14 @@
 /*
  *Класс Location, в поля которого будут записаны полученные данные
-    Метод getIpGeoBaseDataByIp() для получения объекта типа Location
-    Метод makeGetRequest() для выполнения Get запроса
-    Класс IpGeoBaseLocation, в объект этого типа будет проходить демаршалинг данных полученных с ipgeobase.ru
+ Метод getIpGeoBaseDataByIp() для получения объекта типа Location
+ Метод makeGetRequest() для выполнения Get запроса
+ Класс IpGeoBaseLocation, в объект этого типа будет проходить демаршалинг данных полученных с ipgeobase.ru
 
-    Формат использования: 
-        Location locData = new Location(); 
-        locData.getIpGeoBaseDataByIp("213.180.193.1"); // 
-        locData.getLatitude(); // возвращается широта 
-        locData.getLongitude(); // возвращается долгота
+ Формат использования: 
+ Location locData = new Location(); 
+ locData.getIpGeoBaseDataByIp("213.180.193.1"); // 
+ locData.getLatitude(); // возвращается широта 
+ locData.getLongitude(); // возвращается долгота
  */
 package com.github.skart123.geotracert.geotracertserver.IpTocoordinates;
 
@@ -16,11 +16,16 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.TagNode;
+import org.htmlcleaner.XPatherException;
 
 /**
  * Отвечает за преобразование IP адреса в координаты. Реализован через c
@@ -92,58 +97,18 @@ public class Location {
      * @param ip Ip-адрес
      * @return тип Location. Результаты можно получить через get* и set*
      */
-    public int getIpGeoBaseDataByIp(String ip) throws JAXBException, IOException/*, Exception */{
-       
-            /*
-             * Получаем экземпляр объекта типа JAXBContext с помощью вызова
-             * статического метода newInstance() в него мы должны передать класс с
-             * которым будет происходить "связывание" XML ответа,
-             */
-
-            JAXBContext jaxbContext = JAXBContext //JAXB для работы с xml
-                    .newInstance(IpGeoBaseLocation.class);
-
-            /*
-             создаем демаршалер и 
-             * вызываем его метод unmarshal() в который мы передаем поток байтов на 
-             * полученный XML документ - в результате после приведения типа к 
-             * IpGeoBaseLocation используем его экземпляр ipGeoBaseLocation для 
-             * заполнения нашего локейшена и возвращаем его.
-             */
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-            IpGeoBaseLocation ipGeoBaseLocation;
-            //Посылка запроса и парсинг ответа.
-            ipGeoBaseLocation = (IpGeoBaseLocation) jaxbUnmarshaller
-                    .unmarshal(new ByteArrayInputStream(makeGetRequest(
-                                            "http://freegeoip.net/xml/" + ip).getBytes())
-                    );
-            // Сохранение полученных данных в переменных класса Locate
-            if (ipGeoBaseLocation.getCountryName() != null) {
-                this.setCountryName(ipGeoBaseLocation.getCountryName());
+    public int getIpGeoBaseDataByIp(String ip) throws JAXBException, IOException, XPatherException {
+        getCoordinatesWithFreegeoip(ip);
+        if ((this.getLatitude() == 0) && (this.getLongitude() == 0)) {
+            // Через Freegeoip не получилось, 
+            //попробуем через Geoiptool;
+            getCoordinatesWithGeoiptool(ip);
+            if ((this.getLatitude() == 0) && (this.getLongitude() == 0)) {
+                return -1;
             }
-            if (ipGeoBaseLocation.getIp() != null) {
-                this.setIp(ipGeoBaseLocation.getIp());
-            }
+        }
+        return 0;
 
-            if (ipGeoBaseLocation.getCity() != null) {
-                this.setCityName(ipGeoBaseLocation.getCity());
-            }
-
-            //Было замечено, что при IP, не найденном в базе возвращается 
-            //нулевые координаты
-          
-                this.setLatitude(ipGeoBaseLocation.getLatitude());
-                this.setLongitude(ipGeoBaseLocation.getLongitude());
-           if( (this.getLatitude()==0) && (this.getLongitude()==0))           
-           {
-              // throw (new Exception("Нет в БД", null));
-               return -1;
-           }
-           else
-           {
-                return 0;       
-           }       
     }
 
     /**
@@ -166,6 +131,109 @@ public class Location {
         reader.close();
 
         return response.toString();
+
+    }
+    
+    /**
+     * Получаем координаты через сервис Freegeoip 
+     * Метод парсит xml-ответ сервиса  
+     * 
+     * @author AndrewMendrew
+     */
+    private void getCoordinatesWithFreegeoip(String Ip) throws JAXBException, IOException/*, Exception */ {
+
+        /*
+         * Получаем экземпляр объекта типа JAXBContext с помощью вызова
+         * статического метода newInstance() в него мы должны передать класс с
+         * которым будет происходить "связывание" XML ответа,
+         */
+        JAXBContext jaxbContext = JAXBContext //JAXB для работы с xml
+                .newInstance(IpGeoBaseLocation.class
+                );
+
+        /*
+         создаем демаршалер и 
+         * вызываем его метод unmarshal() в который мы передаем поток байтов на 
+         * полученный XML документ - в результате после приведения типа к 
+         * IpGeoBaseLocation используем его экземпляр ipGeoBaseLocation для 
+         * заполнения нашего локейшена и возвращаем его.
+         */
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+        IpGeoBaseLocation ipGeoBaseLocation;
+        //Посылка запроса и парсинг ответа.
+        ipGeoBaseLocation = (IpGeoBaseLocation) jaxbUnmarshaller
+                .unmarshal(new ByteArrayInputStream(makeGetRequest(
+                                        "http://freegeoip.net/xml/" + ip).getBytes())
+                );
+
+        // Сохранение полученных данных в переменных класса Locate
+        if (ipGeoBaseLocation.getCountryName()
+                != null) {
+            this.setCountryName(ipGeoBaseLocation.getCountryName());
+        }
+
+        if (ipGeoBaseLocation.getIp()
+                != null) {
+            this.setIp(ipGeoBaseLocation.getIp());
+        }
+
+        if (ipGeoBaseLocation.getCity()
+                != null) {
+            this.setCityName(ipGeoBaseLocation.getCity());
+        }
+
+        //Было замечено, что при IP, не найденном в базе возвращается 
+        //нулевые координаты
+        this.setLatitude(ipGeoBaseLocation.getLatitude());
+
+        this.setLongitude(ipGeoBaseLocation.getLongitude());
+    }
+    
+    /**
+     * Получаем координаты через сервис Geoiptool 
+     * Метод парсит html-страницу сервиса  
+     * 
+     * @author AndrewMendrew
+     */
+    private void getCoordinatesWithGeoiptool(String Ip) throws XPatherException, MalformedURLException, IOException {
+
+        CleanerProperties props = new CleanerProperties();
+        // set some properties to non-default values
+        props.setTranslateSpecialEntities(true);
+        props.setTransResCharsToNCR(true);
+        props.setOmitComments(true);
+        // do parsing
+        TagNode tagNode = new HtmlCleaner(props).clean(new URL("http://geoiptool.com/en/?IP=" + Ip));
+        // Находим элементы td где аттрибут align = 'left' в любом месте
+        // в котором такой путь //body/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/
+        //Таких элементов много (около 10), обходим все.
+        Object[] tags;
+        tags = tagNode.evaluateXPath("//body/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[@align = 'left']");
+        //("//div[@class='menu']/a");
+        //("//body/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[@align = 'left']");
+        // Опытным путём известно, что два последних найденных элемента это и есть широта и долгота
+
+        // Поолучаем долготу и записываем в пременную longitude класса Location
+        TagNode aTag = (TagNode) tags[tags.length - 2];
+        this.setLongitude(Double.parseDouble(aTag.getText().toString()));
+        // Получаем широту
+        aTag = (TagNode) tags[tags.length - 1];
+        // Записываем в переменную latitude класса Location
+        this.setLatitude(Double.parseDouble(aTag.getText().toString().trim()));
+
+        //System.out.println("Longitude: " + longitude + "\t" + "Latitude: " + latitude);
     }
 
+    
+    public void showResultFreegeoipAndGeoiptool(String Ip) throws JAXBException, IOException, XPatherException{
+        
+        getCoordinatesWithFreegeoip(Ip);
+        System.out.println("FreeGeoIp: \n Longitude: " + this.longitude + 
+                 "Latitude: " + this.latitude);
+       
+        getCoordinatesWithGeoiptool(Ip);
+        System.out.println("GeoIpTool: \n Longitude: " + this.longitude + 
+                 "Latitude: " + this.latitude);
+    }
 }
