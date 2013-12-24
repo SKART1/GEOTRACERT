@@ -21,11 +21,10 @@
 	<script src="layer/Yandex.js"></script>
        
 <script type="text/javascript">
-    var ws; // = new WebSocket("ws://http://91.192.189.223:8183");
+    var ws;
     var map;
     var onTracert = false;
     var polyline;
-//    var myPoints = checkPoints;
     var pointsList;
     var lastPoint;
     var msg;
@@ -72,17 +71,9 @@ function websocket_run() {
                             .addTo(map)
                             .bindPopup(json.country)
                             .openPopup();
-/*                    for(var i = 0; i < mypol.length; i++){
-                        pointsList.push(new L.marker(json.coordinates));
-                        pointsList[i].addTo(map);
-                        pointsList[i]
-                            .bindPopup(json.country)
-                            .openPopup(); 
-                    };*/
-
 
                     var table = document.getElementById('table');
-                    table.innerHTML += '<li>IP: <a href="javascript:map.setView([' + json.coordinates[0] + ', ' + json.coordinates[1] + '], 4);">' + json.IP + '</li>';
+                    table.innerHTML += '<li>IP: <a href="javascript:map.setView([' + json.coordinates[0] + ', ' + json.coordinates[1] + '], 4), pointsList[' + (pointsList.length - 1) + '].openPopup()">' + json.IP + '</li>';
                     map.setView([json.coordinates[0], json.coordinates[1]], 4);
 
                     // ломаная между точками
@@ -93,19 +84,6 @@ function websocket_run() {
                         smoothFactor: 1
                     });
                     polyline.addTo(map);
-
-                    //map.setView([json.IPs[0].coordinates[0], json.IPs[0].coordinates[1]], 4);   
-                    
-                    
-/*                    myPoints = new Array(json.Count);
-                    for(var i = 0; i < myPoints.length; i++){
-                        myPoints[i] = {
-                            coords: [json.IPs[i].coordinates[0], json.IPs[i].coordinates[1]], 
-                            ip: jspn.IPs[i].IP, 
-                            text: json.IPs[i].country
-                        }
-                    } */
-
                 }
                 else
                 {
@@ -136,17 +114,13 @@ function websocket_run() {
         }
         var box = document.getElementById("InputBox");
         msg = box.value;
-//        alert("I send this message to server: " + msg + "\nЕго можно увидеть в окне ВЫВОД в NetBeans");
         box.value = "Cooking some IP adresses..";
         box.disabled = true;
         document.getElementById("SearchButton").disabled = "disabled";
-//        document.getElementById("inright").disabled = "disabled";
-        ws.send(msg); // ТУТ ПОКАЗЫВАЕТСЯ IP адрес   
+        ws.send(msg);
     }
 
     
-//var pointsList;
-//var polyline;
 	window.onload=function(){
             websocket_run();
             //Определяем карту, координаты центра и начальный масштаб
@@ -167,7 +141,7 @@ function websocket_run() {
             map.addControl(new L.Control.Layers({'OSM':osm, 'CloudMade':cldmd, 'Yandex':yndx, 'Google-road map':googleRoadMap},{}, {collapsed: false}));
 
             document.getElementById('SearchButton').onclick = verify; 
-           // document.getElementById('SearchButton').onclick = send;
+            // document.getElementById('SearchButton').onclick = send;
 
             document.getElementById('InputBox').onkeypress = function() {
                 if (window.event.keyCode == 13)
@@ -175,11 +149,6 @@ function websocket_run() {
                     verify();
                 }
             };
-
-            //document.getElementById('InputBox').onkeypress = function(){
-            //	this.value = this.value.replace(/[^\d\.]/g, '');
-            //        return true;
-            //}
 
             function verify(){		//Валидация введённого значения
 
@@ -193,10 +162,6 @@ function websocket_run() {
                             alert('Invalid IP!');
                     }
                     else {
-//                            var temp = myPointsToo;
-//                            myPointsToo = myPoints;
-//                            myPoints = temp;
-
                         if(polyline)
                         {
                             map.removeLayer(polyline);
@@ -218,15 +183,6 @@ function websocket_run() {
                     }
                     textbox.focus();
             }
-/*                    
-            function listing () {
-
-                    var table = document.getElementById('table');
-                    table.innerHTML = '';
-                    for(var i=0; i < myPoints.length; i++)
-                            table.innerHTML += '<li>IP: <a id="ipline' + i + '" href="javascript:map.setView([' + myPoints[i].coords[0] + ', ' + myPoints[i].coords[1] + '], 18);">' + myPoints[i].IP + '</li>';
-            }
-*/
 };
 
 
