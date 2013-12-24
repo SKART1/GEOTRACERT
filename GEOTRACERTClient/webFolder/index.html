@@ -31,8 +31,8 @@
     var msg;
 function websocket_run() {
     function start_connection() {
-//        ws = new WebSocket("ws://91.192.189.223:8183");
-        ws = new WebSocket("ws://localhost:8183");
+        ws = new WebSocket("ws://91.192.189.223:8183");
+//        ws = new WebSocket("ws://localhost:8183");
         ws.onmessage = function (evt) {    
             if(evt.data == "syserror")
             {
