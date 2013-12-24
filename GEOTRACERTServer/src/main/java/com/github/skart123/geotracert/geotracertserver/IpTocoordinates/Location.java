@@ -216,12 +216,31 @@ public class Location {
 
         // Поолучаем долготу и записываем в пременную longitude класса Location
         TagNode aTag = (TagNode) tags[tags.length - 2];
-        this.setLongitude(Double.parseDouble(aTag.getText().toString()));
+        
+        String tmp=aTag.getText().toString();
+        if(!("".equals(tmp)))            
+        {
+         this.setLongitude(Double.parseDouble(tmp));
+        }
+        else
+        {
+            this.setLongitude(0);
+        }
+        
         // Получаем широту
         aTag = (TagNode) tags[tags.length - 1];
         // Записываем в переменную latitude класса Location
-        this.setLatitude(Double.parseDouble(aTag.getText().toString().trim()));
-
+        tmp=aTag.getText().toString().trim();
+        if(!("".equals(tmp)))            
+        {
+            this.setLatitude(Double.parseDouble(tmp));
+        }
+        else
+        {
+            this.setLatitude(0);
+        }
+        
+        
         //System.out.println("Longitude: " + longitude + "\t" + "Latitude: " + latitude);
     }
 
