@@ -84,7 +84,6 @@ public class MyWebSocketHandler {
             Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, except);
             System.out.println("Error while tracert creating");
             sendMessage(connection, "syserror");
-            // Юра! Выдать пользователю сообщение "Системная ошибка"          
             return;
         }
 
@@ -95,7 +94,6 @@ public class MyWebSocketHandler {
             Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Tracert error");
             sendMessage(connection, "syserror");
-            // Юра! Выдать пользователю сообщение "Системная ошибка"
             return; //Если ошибка - то цикл окончен
         }
 
@@ -108,7 +106,6 @@ public class MyWebSocketHandler {
                 Logger.getLogger(MyWebSocketHandler.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("Ошибка внутри tracert");
                 sendMessage(connection, "syserror");
-                // Юра! Выдать пользователю сообщение "Системная ошибка"
                 return; //Если ошибка - то цикл окончен
             }
           
@@ -123,7 +120,6 @@ public class MyWebSocketHandler {
             else if( TracerouteItemObject.haveAnyIP()){ //Иначе айпи обрабатывать дальше
                 if(TracerouteItemObject.isLocal()==false)//Если в трассировке не локальный адрес
                 {
-                    //Юра! Отправить ip в клиент для отображения в консоли               
                     int resultStatus = -1;
                     Location locData = new Location();
                     try {
@@ -138,7 +134,6 @@ public class MyWebSocketHandler {
                     if (resultStatus==0) {//Если он есть в первой БД
                        //System.out.println("City = " + locData.getCityName() + " Country: " + locData.getCountryName());
                        //System.out.println("Latitude = " + locData.getLatitude() + " Longitude: " + locData.getLongitude());
-                       //Юра! Вывести в консоль координаты          
 //////////////////////////////////////////////////////////////////////////////
 //                        locData.getLatitude(); // широта и долгота
 //                        locData.getLongitude();
@@ -167,7 +162,7 @@ public class MyWebSocketHandler {
                     else
                     {
                         sendMessage(connection, "skip IP");
-                        //Юра! Вывести в консоль что нет таких координат нигде
+                        System.out.println("Coordinates not found");
                     }
                 }
             }
