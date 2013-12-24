@@ -141,7 +141,7 @@ public class MyWebSocketHandler {
                         System.out.println("Latitude = " + locData.getLatitude() + " Longitude: " + locData.getLongitude());
                         String[] unit = {"", "", "", ""};
                         String temp = locData.getCityName();
-                        if(temp != "")
+                        if(!temp.isEmpty())
                         {
                             unit[0] += "City = " + temp;
                         }
