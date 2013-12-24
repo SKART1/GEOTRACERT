@@ -123,8 +123,7 @@ public class Location {
 
         StringBuffer response = new StringBuffer();
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                //connection.getInputStream(), "windows-1251"));
-                connection.getInputStream(), "UTF-8"));
+                connection.getInputStream(), "windows-1251"));
         String line;
         while ((line = reader.readLine()) != null) {
             response.append(line);

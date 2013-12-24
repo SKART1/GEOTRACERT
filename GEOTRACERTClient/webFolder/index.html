@@ -68,7 +68,7 @@ function websocket_run() {
 
                     myPoints.push(json);
                     pointsList = new Array();
-                    for(var i = 0; i < myPoints.length; i++){
+                    for(var i = 0; i <= myPoints.length; i++){
                         mypol.push(json.coordinates);
                         pointsList.push(L.marker(json.coordinates));
                         pointsList[i].addTo(map);
