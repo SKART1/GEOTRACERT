@@ -30,8 +30,8 @@
     var pointsList;
 function websocket_run() {
     function start_connection() {
-        ws = new WebSocket("ws://91.192.189.223:8183");
-		//ws = new WebSocket("ws://localhost:8183");
+        //ws = new WebSocket("ws://91.192.189.223:8183");
+		ws = new WebSocket("ws://localhost:8183");
         ws.onmessage = function (evt) {    
             if(evt.data == "syserror")
             {
@@ -122,7 +122,7 @@ function websocket_run() {
             return false;
         }
         var msg = document.getElementById("InputBox").value;
-        alert("I send this message to server: " + msg + "\nЕго можно увидеть в окне ВЫВОД в NetBeans");
+        alert("Please wait..");
         ws.send(msg); // ТУТ ПОКАЗЫВАЕТСЯ IP адрес   
     }
 

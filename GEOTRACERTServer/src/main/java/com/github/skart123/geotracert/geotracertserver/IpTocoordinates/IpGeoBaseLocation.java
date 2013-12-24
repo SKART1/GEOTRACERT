@@ -28,11 +28,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  </Response>
 
  */
-@XmlRootElement(name = "Response")
+@XmlRootElement(name = "geoip")
 public class IpGeoBaseLocation {
 
     @XmlElement
-    private String Ip;
+    private String source;
+    @XmlElement
+    private String host;
     @XmlElement
     private String CountryName;
     @XmlElement
@@ -47,11 +49,11 @@ public class IpGeoBaseLocation {
     @XmlElement
 
     public String getIp() {
-        return Ip;
+        return host;
     }
 
     public void setIp(String Ip) {
-        this.Ip = Ip;
+        this.host = Ip;
     }
 
     public String getCountryName() {

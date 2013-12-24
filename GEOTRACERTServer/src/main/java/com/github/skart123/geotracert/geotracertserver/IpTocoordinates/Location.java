@@ -164,7 +164,7 @@ public class Location {
         //Посылка запроса и парсинг ответа.
         ipGeoBaseLocation = (IpGeoBaseLocation) jaxbUnmarshaller
                 .unmarshal(new ByteArrayInputStream(makeGetRequest(
-                                        "http://freegeoip.net/xml/" + Ip).getBytes())
+                                        "http://ru.smart-ip.net/geoip-xml/" + Ip).getBytes())
                 );
 
         // Сохранение полученных данных в переменных класса Locate
