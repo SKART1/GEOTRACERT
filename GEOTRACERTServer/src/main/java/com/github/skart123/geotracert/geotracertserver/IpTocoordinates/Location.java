@@ -123,7 +123,8 @@ public class Location {
 
         StringBuffer response = new StringBuffer();
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                connection.getInputStream(), "windows-1251"));
+                //connection.getInputStream(), "windows-1251"));
+                connection.getInputStream(), "UTF-8"));
         String line;
         while ((line = reader.readLine()) != null) {
             response.append(line);
@@ -164,7 +165,7 @@ public class Location {
         //Посылка запроса и парсинг ответа.
         ipGeoBaseLocation = (IpGeoBaseLocation) jaxbUnmarshaller
                 .unmarshal(new ByteArrayInputStream(makeGetRequest(
-                                        "http://ru.smart-ip.net/geoip-xml/" + Ip).getBytes())
+                                        "http://smart-ip.net/geoip-xml/" + Ip).getBytes())
                 );
 
         // Сохранение полученных данных в переменных класса Locate
