@@ -115,7 +115,7 @@ public class MyWebSocketHandler {
             {
                 System.out.println("Получение закончено");
                 sendMessage(connection, "endflag");
-                break;
+                return;
             }              
             else if( TracerouteItemObject.haveAnyIP()){ //Иначе айпи обрабатывать дальше
                 if(TracerouteItemObject.isLocal()==false)//Если в трассировке не локальный адрес
